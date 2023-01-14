@@ -1,22 +1,27 @@
 ---
 import { Image } from '@astrojs/image/components';
 import imgProfile from '~/assets/images/professional_256.jpg';
+import Container from './Container.astro';
 ---
 
 <section>
-  <div class="max-w-6xl mx-auto px-4 sm:px-6">
+  <Container>
     <div class="py-12 md:py-20">
-      <div class="text-center pb-10 md:pb-16 max-w-5xl mx-auto">
-        <Image class="mx-auto rounded-full mb-6" src={imgProfile} alt="Profile picture" />
+      <div class="p-6 md:p-12 max-w-xl mx-auto backdrop-blur-sm text-center rounded-2xl shadow-xl border border-white/90 dark:border-gray-900/95 bg-white/5 dark:bg-slate-900/60">
+        <Image
+          class="mx-auto rounded-full p-1 mb-6 border-2 border-slate-600 dark:border-slate-300"
+          src={imgProfile}
+          alt="Profile picture"
+        />
         <h1 class="text-5xl md:text-[3.50rem] font-bold leading-tighter tracking-tighter mb-4 font-heading">
-          Hello
+          Hello world.
         </h1>
         <div class="max-w-3xl mx-auto">
-          <p class="text-xl font-medium text-gray-500 mb-8 dark:text-slate-400">
-            Welcome to the personal website of Justin Williams
+          <p class="text-xl font-medium text-gray-500 dark:text-slate-400">
+            Under Construction
           </p>
         </div>
       </div>
     </div>
-  </div>
+  </Container>
 </section>

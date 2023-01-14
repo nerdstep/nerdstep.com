@@ -1,5 +1,6 @@
 ---
 import { Icon } from 'astro-icon';
+import Container from './Container.astro';
 
 const social = [
   //{ label: 'Twitter', icon: 'tabler:brand-twitter', href: '#' },
@@ -9,9 +10,9 @@ const social = [
 ]
 ---
 
-<footer class="border-t border-gray-200 dark:border-slate-800">
-  <div class="max-w-6xl mx-auto px-4 sm:px-6">
-    <div class="md:flex md:items-center md:justify-between py-6 md:py-8">
+<footer class="border-t border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-900">
+  <Container>
+    <div class="md:flex md:items-center md:justify-between py-4 md:py-6">
       <ul class="flex mb-4 md:order-1 -ml-2 md:ml-4 md:mb-0">
         {
           social.map(({ label, href, icon }) => (
@@ -20,6 +21,7 @@ const social = [
                 class="text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 rounded-lg text-sm p-2.5 inline-flex items-center"
                 aria-label={label}
                 href={href}
+                target="_blank"
               >
                 <Icon name={icon} class="w-5 h-5" />
               </a>
@@ -27,10 +29,9 @@ const social = [
           ))
         }
       </ul>
-
       <div class="text-sm text-gray-700 mr-4 dark:text-slate-400">
-        Made by <a class="text-blue-600 hover:underline dark:text-gray-200" href="https://nerdstep.com/">nerdstep</a> in Oakland, California
+        Created by <a class="text-blue-600 hover:underline dark:text-gray-200" href="https://nerdstep.com/">nerdstep</a> with Astro
       </div>
     </div>
-  </div>
+  </Container>
 </footer>
