@@ -1,7 +1,10 @@
 /** @type {import('prettier').Config} */
 module.exports = {
-  printWidth: 120,
-  semi: true,
+  arrowParens: 'always',
+  bracketSameLine: true,
+  bracketSpacing: true,
+  printWidth: 80,
+  semi: false,
   singleQuote: true,
   tabWidth: 2,
   trailingComma: 'es5',
@@ -10,4 +13,4 @@ module.exports = {
   plugins: [require.resolve('prettier-plugin-astro')],
 
   overrides: [{ files: '*.astro', options: { parser: 'astro' } }],
-};
+}

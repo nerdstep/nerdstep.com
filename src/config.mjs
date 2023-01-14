@@ -1,4 +1,4 @@
-import defaultImage from './assets/images/default.png';
+import defaultImage from './assets/images/default.png'
 
 const CONFIG = {
   name: 'AstroWind',
@@ -7,7 +7,8 @@ const CONFIG = {
   basePathname: '/',
   trailingSlash: false,
 
-  title: 'AstroWind — Free template for create a website with Astro + Tailwind CSS',
+  title:
+    'AstroWind — Free template for create a website with Astro + Tailwind CSS',
   description:
     '🚀 Suitable for Startups, Small Business, Sass Websites, Professional Portfolios, Marketing Websites, Landing Pages & Blogs.',
   defaultImage: defaultImage,
@@ -55,8 +56,8 @@ const CONFIG = {
       disabled: false,
     },
   },
-};
+}
 
-export const SITE = { ...CONFIG, blog: undefined };
-export const BLOG = CONFIG.blog;
-export const DATE_FORMATTER = CONFIG.dateFormatter;
+export const SITE = { ...CONFIG, blog: undefined }
+export const BLOG = CONFIG.blog
+export const DATE_FORMATTER = CONFIG.dateFormatter

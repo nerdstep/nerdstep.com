@@ -1,4 +1,7 @@
+.changeset
+.github
+.next
+coverage
 dist
 node_modules
-.github
-.changeset
+pnpm-lock.yaml

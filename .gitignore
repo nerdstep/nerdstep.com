@@ -1,25 +1,45 @@
-# build output
-dist/
-.output/
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
 # dependencies
-node_modules/
+/node_modules
+/.pnp
+.pnp.js
+
+# testing
+/coverage
+
+# database
+/prisma/db.sqlite
+/prisma/db.sqlite-journal
+
+# next.js
+/.next/
+/out/
+
+# build output
+/.output/
+/build/
+/dist/
+
+# misc
+.DS_Store
+.idea
+.swc
+*.pem
 
 # logs
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
-pnpm-debug.log*
-
+.pnpm-debug.log*
 
 # environment variables
-.env
+.env*.local
 .env.production
 
-# macOS-specific files
-.DS_Store
+# vercel
+.vercel
 
-package-lock.json
-pnpm-lock.yaml
-
+# typescript
+*.tsbuildinfo
 src/content/types.generated.d.ts
