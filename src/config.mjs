@@ -1,19 +1,17 @@
-import defaultImage from './assets/images/default.png'
+import defaultImage from './assets/images/professional_256.jpg'
 
 const CONFIG = {
-  name: 'AstroWind',
+  name: 'nerdstep.com',
 
-  origin: 'https://astrowind.vercel.app',
+  origin: 'https://nerdstep.vercel.app',
   basePathname: '/',
   trailingSlash: false,
 
-  title:
-    'AstroWind — Free template for create a website with Astro + Tailwind CSS',
-  description:
-    '🚀 Suitable for Startups, Small Business, Sass Websites, Professional Portfolios, Marketing Websites, Landing Pages & Blogs.',
+  title: 'nerdstep.com',
+  description: '',
   defaultImage: defaultImage,
-
-  defaultTheme: 'system', // Values: "system" | "light" | "dark" | "light:only" | "dark:only"
+  // Values: "system" | "light" | "dark" | "light:only" | "dark:only"
+  defaultTheme: 'system',
 
   language: 'en',
   textDirection: 'ltr',
@@ -29,35 +27,9 @@ const CONFIG = {
   googleSiteVerificationId: 'orcPxI47GSa-cRvY11tUe6iGg2IO_RPvnA1q95iEM3M',
 
   blog: {
-    disabled: false,
-    postsPerPage: 4,
-
-    list: {
-      pathname: 'blog', // blog main path, you can change this to "articles" (/articles)
-      noindex: false,
-      disabled: false,
-    },
-
-    post: {
-      pathname: '', // empty for /some-post, value for /pathname/some-post
-      noindex: false,
-      disabled: false,
-    },
-
-    category: {
-      pathname: 'category', // set empty to change from /category/some-category to /some-category
-      noindex: true,
-      disabled: false,
-    },
-
-    tag: {
-      pathname: 'tag', // set empty to change from /tag/some-tag to /some-tag
-      noindex: true,
-      disabled: false,
-    },
+    disabled: true,
   },
 }
 
 export const SITE = { ...CONFIG, blog: undefined }
-export const BLOG = CONFIG.blog
 export const DATE_FORMATTER = CONFIG.dateFormatter

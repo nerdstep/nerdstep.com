@@ -1,17 +1,13 @@
-import path from 'path'
-import { fileURLToPath } from 'url'
-
-import { defineConfig } from 'astro/config'
-
 import image from '@astrojs/image'
 import mdx from '@astrojs/mdx'
 import partytown from '@astrojs/partytown'
 import sitemap from '@astrojs/sitemap'
 import tailwind from '@astrojs/tailwind'
 import compress from 'astro-compress'
-
+import { defineConfig } from 'astro/config'
+import path from 'path'
+import { fileURLToPath } from 'url'
 import { SITE } from './src/config.mjs'
-import { remarkReadingTime } from './src/utils/frontmatter.mjs'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 
@@ -59,7 +55,7 @@ export default defineConfig({
   ],
 
   markdown: {
-    remarkPlugins: [remarkReadingTime],
+    remarkPlugins: [],
     extendDefaultPlugins: true,
   },
 
