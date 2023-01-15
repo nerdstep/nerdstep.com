@@ -1,6 +1,7 @@
 import image from '@astrojs/image'
 import mdx from '@astrojs/mdx'
 import partytown from '@astrojs/partytown'
+import react from '@astrojs/react'
 import sitemap from '@astrojs/sitemap'
 import tailwind from '@astrojs/tailwind'
 import compress from 'astro-compress'
@@ -18,13 +19,12 @@ const whenExternalScripts = (items = []) =>
       : [items()]
     : []
 
+// https://astro.build/config
 export default defineConfig({
   site: SITE.origin,
   base: SITE.basePathname,
   trailingSlash: SITE.trailingSlash ? 'always' : 'never',
-
   output: 'static',
-
   integrations: [
     tailwind({
       config: {
@@ -36,29 +36,27 @@ export default defineConfig({
       serviceEntryPoint: '@astrojs/image/sharp',
     }),
     mdx(),
-
     ...whenExternalScripts(() =>
       partytown({
-        config: { forward: ['dataLayer.push'] },
+        config: {
+          forward: ['dataLayer.push'],
+        },
       })
     ),
-
     compress({
       css: true,
       html: true,
       img: false,
       js: true,
       svg: false,
-
       logger: 1,
     }),
+    react(),
   ],
-
   markdown: {
     remarkPlugins: [],
     extendDefaultPlugins: true,
   },
-
   vite: {
     resolve: {
       alias: {
@@ -66,7 +64,6 @@ export default defineConfig({
       },
     },
   },
-
   experimental: {
     contentCollections: true,
   },
