@@ -1,14 +1,15 @@
 import defaultImage from './assets/images/professional_256.jpg'
 
 const CONFIG = {
-  name: 'nerdstep.com',
+  name: 'nerdstep',
 
-  origin: 'https://nerdstep.vercel.app',
+  origin: 'https://www.nerdstep.com',
   basePathname: '/',
   trailingSlash: false,
 
-  title: 'nerdstep.com',
-  description: '',
+  title: 'nerdstep',
+  description:
+    'Justin Williams is a full-stack software engineer in Oakland, California.',
   defaultImage: defaultImage,
   // Values: "system" | "light" | "dark" | "light:only" | "dark:only"
   defaultTheme: 'system',
@@ -25,11 +26,7 @@ const CONFIG = {
 
   googleAnalyticsId: false, // or "G-XXXXXXXXXX",
   googleSiteVerificationId: 'orcPxI47GSa-cRvY11tUe6iGg2IO_RPvnA1q95iEM3M',
-
-  blog: {
-    disabled: true,
-  },
 }
 
-export const SITE = { ...CONFIG, blog: undefined }
+export const SITE = { ...CONFIG }
 export const DATE_FORMATTER = CONFIG.dateFormatter
