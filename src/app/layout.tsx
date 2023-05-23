@@ -4,6 +4,7 @@ import { ThemeProvider } from '@/components/theme-provider'
 import { siteConfig, themeColor } from '@/lib/config'
 import { fontSans } from '@/lib/fonts'
 import '@/styles/globals.css'
+import { Analytics } from '@vercel/analytics/react'
 import clsx from 'clsx'
 import { type Metadata } from 'next'
 
@@ -55,6 +56,7 @@ export default function RootLayout({
           <main className="container flex flex-auto py-8">{children}</main>
           <Footer />
         </ThemeProvider>
+        <Analytics />
       </body>
     </html>
   )
