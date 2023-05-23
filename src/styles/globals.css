@@ -99,3 +99,15 @@
 }
 
 @layer components {}
+
+@layer utilities {}
+
+@media (max-width: 640px) {
+  .container {
+    @apply px-4;
+  }
+}
+
+.tilt {
+  transform: translateZ(10px) scale(0.96);
+}

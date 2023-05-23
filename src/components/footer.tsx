@@ -3,9 +3,9 @@ import { Anchor } from './ui/anchor'
 
 export function Footer() {
   return (
-    <footer className="border-t bg-background/90">
+    <footer className="flex h-16 items-center border-t bg-background/90 md:h-20">
       <div className="container">
-        <div className="py-4 text-sm text-muted-foreground md:flex md:items-center md:justify-between md:py-6">
+        <div className="w-full text-sm text-muted-foreground md:flex md:items-center md:justify-between">
           <div>
             &copy; {siteConfig.copyright} (
             <Anchor

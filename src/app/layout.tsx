@@ -48,7 +48,7 @@ export default function RootLayout({
       lang={language}>
       <body
         className={clsx(
-          'flex min-h-screen flex-col bg-background/90 font-sans text-foreground antialiased',
+          'flex min-h-screen min-w-min flex-col bg-background/90 font-sans text-foreground antialiased',
           fontSans.variable
         )}>
         <ThemeProvider enableSystem attribute="class" defaultTheme="system">

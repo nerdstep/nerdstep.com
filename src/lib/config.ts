@@ -22,10 +22,10 @@ export const twitterHandle = 'n3rdstep'
 
 // Order by display preference
 export const socialLinks = {
-  linkedin: 'https://www.linkedin.com/in/jwilliams42',
+  //linkedin: 'https://www.linkedin.com/in/jwilliams42',
   twitter: `https://twitter.com/${twitterHandle}`,
   github: 'https://github.com/nerdstep',
-} as const satisfies Record<keyof typeof iconMap, string>
+} as const satisfies Partial<Record<keyof typeof iconMap, string>>
 
 const socialLinkEntries = Object.entries(socialLinks) as Entries<
   typeof socialLinks
