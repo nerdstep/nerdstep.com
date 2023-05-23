@@ -1,0 +1,48 @@
+{
+  "$schema": "https://json.schemastore.org/eslintrc",
+  "root": true,
+  "plugins": ["@typescript-eslint", "tailwindcss"],
+  "extends": [
+    "next/core-web-vitals",
+    "prettier",
+    "plugin:@typescript-eslint/recommended",
+    "plugin:react/recommended",
+    "plugin:tailwindcss/recommended"
+  ],
+  "settings": {
+    "next": {
+      "rootDir": ["./"]
+    },
+    "react": {
+      "createClass": "createReactClass",
+      "pragma": "React"
+    }
+  },
+  "rules": {
+    "@next/next/no-img-element": "off",
+    "@typescript-eslint/no-unused-vars": [
+      "error",
+      { "argsIgnorePattern": "^_", "varsIgnorePattern": "^_" }
+    ],
+    "tailwindcss/no-contradicting-classname": "warn",
+    "react/react-in-jsx-scope": "off",
+    "react/jsx-sort-props": [
+      "warn",
+      {
+        "callbacksLast": true,
+        "shorthandFirst": true,
+        "multiline": "ignore",
+        "ignoreCase": false,
+        "reservedFirst": true,
+        "locale": "auto"
+      }
+    ],
+    "tailwindcss/no-custom-classname": "off"
+  },
+  "overrides": [
+    {
+      "files": ["*.ts", "*.tsx"],
+      "parser": "@typescript-eslint/parser"
+    }
+  ]
+}
