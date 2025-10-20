@@ -12,7 +12,7 @@ export function Header() {
     <header
       className={cn(
         'sticky top-0 z-40 h-16 w-full flex-none transition-all duration-100 ease-in md:h-20',
-        y > 40 && 'bg-background/80 shadow-lg backdrop-blur-sm md:shadow-lg'
+        y > 40 && 'bg-background/80 shadow-lg backdrop-blur-xs md:shadow-lg'
       )}>
       <div className="container h-full">
         <div className="flex h-full items-center justify-between">

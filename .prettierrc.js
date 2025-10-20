@@ -10,8 +10,4 @@ module.exports = {
   trailingComma: 'es5',
   useTabs: false,
   pluginSearchDirs: false,
-  plugins: [
-    // prettier-plugin-tailwindcss must be loaded last
-    require('prettier-plugin-tailwindcss'),
-  ],
 }
