@@ -1,6 +1,4 @@
-'use client'
 import { IconDeviceDesktop, IconMoon, IconSun } from '@tabler/icons-react'
-import { useTheme } from 'next-themes'
 import { Button } from './ui/button'
 import {
   DropdownMenu,

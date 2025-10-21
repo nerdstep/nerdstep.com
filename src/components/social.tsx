@@ -1,3 +1,4 @@
+import { JSX } from 'react'
 import { socialLinkLitems } from '@/lib/config'
 import { cn } from '@/lib/utils'
 import { Button } from './ui/button'

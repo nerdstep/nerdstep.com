@@ -1,8 +1,9 @@
 import {
   IconBrandGithubFilled,
   IconBrandLinkedin,
-  IconBrandTwitterFilled,
+  IconBrandXFilled,
 } from '@tabler/icons-react'
+import { JSX } from 'react'
 
 export type IconConfig = {
   label: string
@@ -20,8 +21,8 @@ export const iconMap = {
     label: 'LinkedIn',
     icon: <IconBrandLinkedin />,
   },
-  twitter: {
-    label: 'Twitter',
-    icon: <IconBrandTwitterFilled />,
+  x: {
+    label: 'X',
+    icon: <IconBrandXFilled />,
   },
 } as const satisfies IconMap

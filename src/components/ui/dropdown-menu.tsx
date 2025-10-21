@@ -1,4 +1,3 @@
-'use client'
 import * as DropdownMenuPrimitive from '@radix-ui/react-dropdown-menu'
 import { IconCheck, IconChevronRight, IconCircle } from '@tabler/icons-react'
 import React from 'react'

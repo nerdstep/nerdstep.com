@@ -1,4 +1,3 @@
-'use client'
 import { useWindowScroll } from 'react-use'
 import { Logo } from '@/components/logo'
 import { Social } from '@/components/social'

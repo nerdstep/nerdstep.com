@@ -1,30 +1,70 @@
-import { ThemeColorDescriptor } from 'next/dist/lib/metadata/types/metadata-types'
 import { Entries } from 'type-fest'
 import { iconMap } from '@/lib/icon-map'
 
-export const themeColor: ThemeColorDescriptor[] = [
+export const themeColor: { media: string; color: string }[] = [
   { media: '(prefers-color-scheme: light)', color: 'transparent' },
   { media: '(prefers-color-scheme: dark)', color: 'transparent' },
 ]
 
+export interface SiteConfig {
+  name: string
+  url: string
+  metadataBase: URL
+  title: string
+  description: string
+  keywords: string
+  copyright: string
+  language: string
+  textDirection: string
+  image?: string
+  manifest: string
+  social: {
+    github: string
+    linkedin: string
+    x: string
+  },
+  icons: {
+    icon: string
+    shortcut: string
+    apple: string
+  },
+
+}
+
+export const BASE_URL = 'https://www.nerdstep.com'
+
 export const siteConfig = {
   name: 'nerdstep',
-  url: 'https://www.nerdstep.com',
+  url: BASE_URL,
+  metadataBase: new URL(BASE_URL),
   title: 'nerdstep',
   description:
     'Justin Williams is a full-stack software engineer in Oakland, California.',
+  keywords: '',
   copyright: 'Justin Williams',
   language: 'en',
   textDirection: 'ltr',
-} as const
+  image: `${BASE_URL}/img/nerdstep-icon.svg`,
+  manifest: `${BASE_URL}/site.webmanifest`,
+  social: {
+    github: 'nerdstep',
+    linkedin: 'jwilliams42',
+    x: 'n3rdstep',
+  },
+  icons: {
+    icon: '/favicon.ico',
+    shortcut: '/favicon-16x16.png',
+    apple: '/apple-touch-icon.png',
+  },
+} as const satisfies SiteConfig
 
-export const twitterHandle = 'n3rdstep'
+const { social } = siteConfig
 
 // Order by display preference
 export const socialLinks = {
   //linkedin: 'https://www.linkedin.com/in/jwilliams42',
-  twitter: `https://twitter.com/${twitterHandle}`,
-  github: 'https://github.com/nerdstep',
+  x: `https://x.com/${social.x}`,
+  github: `https://github.com/${social.github}`,
 } as const satisfies Partial<Record<keyof typeof iconMap, string>>
 
 const socialLinkEntries = Object.entries(socialLinks) as Entries<
