@@ -1,5 +1,5 @@
-import { cn } from '@/lib/utils'
 import { forwardRef, type HTMLAttributes } from 'react'
+import { cn } from '@/lib/utils'
 
 const Card = forwardRef<
   HTMLDivElement,
@@ -11,7 +11,7 @@ const Card = forwardRef<
     ref={ref}
     className={cn(
       'rounded-2xl border border-card-border bg-card text-card-foreground shadow-2xl backdrop-blur-xs',
-      className
+      className,
     )}
     {...props}
   />
@@ -41,8 +41,8 @@ const CardTitle = forwardRef<
   <h3
     ref={ref}
     className={cn(
-      'text-lg font-semibold leading-none tracking-tight',
-      className
+      'font-semibold text-lg leading-none tracking-tight',
+      className,
     )}
     {...props}
   />
@@ -57,7 +57,7 @@ const CardDescription = forwardRef<
 >(({ className, ...props }, ref) => (
   <p
     ref={ref}
-    className={cn('text-sm text-muted-foreground', className)}
+    className={cn('text-muted-foreground text-sm', className)}
     {...props}
   />
 ))

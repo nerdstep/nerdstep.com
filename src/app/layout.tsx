@@ -43,14 +43,14 @@ export default function RootLayout({
   return (
     <html
       suppressHydrationWarning
-      className="bg-white bg-[url('/img/bg.svg')] bg-cover bg-fixed bg-center bg-no-repeat"
+      className="bg-[url('/img/bg.svg')] bg-center bg-cover bg-white bg-fixed bg-no-repeat"
       dir={textDirection}
       lang={language}
     >
       <body
         className={clsx(
           'flex min-h-screen min-w-min flex-col bg-background/90 font-sans text-foreground antialiased',
-          fontSans.variable
+          fontSans.variable,
         )}
       >
         <ThemeProvider enableSystem attribute="class" defaultTheme="system">

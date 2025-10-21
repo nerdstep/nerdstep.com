@@ -5,7 +5,7 @@ export function Footer() {
   return (
     <footer className="flex h-16 items-center border-t bg-background/90 md:h-20">
       <div className="container">
-        <div className="w-full text-sm text-muted-foreground md:flex md:items-center md:justify-between">
+        <div className="w-full text-muted-foreground text-sm md:flex md:items-center md:justify-between">
           <div>
             &copy; {siteConfig.copyright} (
             <Anchor

@@ -1,6 +1,6 @@
-import { iconMap } from '@/lib/icon-map'
 import { ThemeColorDescriptor } from 'next/dist/lib/metadata/types/metadata-types'
 import { Entries } from 'type-fest'
+import { iconMap } from '@/lib/icon-map'
 
 export const themeColor: ThemeColorDescriptor[] = [
   { media: '(prefers-color-scheme: light)', color: 'transparent' },

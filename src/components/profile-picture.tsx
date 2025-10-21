@@ -5,7 +5,7 @@ export function ProfilePicture() {
   return (
     <div className="flex items-center justify-center">
       <Tilt
-        className="h-64 w-64 rounded-full border-2 border-gray-600 bg-[url('/img/profile-bg.png')] bg-contain bg-no-repeat shadow-[inset_0_0_0_4px_rgba(255,255,255,1)] transform-3d dark:border-slate-300 dark:shadow-[inset_0_0_0_4px_rgba(15,23,42,1)]"
+        className="transform-3d h-64 w-64 rounded-full border-2 border-gray-600 bg-[url('/img/profile-bg.png')] bg-contain bg-no-repeat shadow-[inset_0_0_0_4px_rgba(255,255,255,1)] dark:border-slate-300 dark:shadow-[inset_0_0_0_4px_rgba(15,23,42,1)]"
         glareBorderRadius="9999px"
         glareColor="#ffffff"
         glareEnable={true}
@@ -21,7 +21,7 @@ export function ProfilePicture() {
       >
         <img
           alt="profile picture"
-          className="tilt rounded-full "
+          className="tilt rounded-full"
           height="100%"
           src="/img/profile-fg.png"
           width="100%"

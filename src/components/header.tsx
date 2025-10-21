@@ -1,9 +1,9 @@
 'use client'
+import { useWindowScroll } from 'react-use'
 import { Logo } from '@/components/logo'
 import { Social } from '@/components/social'
 import { ThemeToggle } from '@/components/theme-toggle'
 import { cn } from '@/lib/utils'
-import { useWindowScroll } from 'react-use'
 
 export function Header() {
   const { y } = useWindowScroll()
@@ -12,7 +12,7 @@ export function Header() {
     <header
       className={cn(
         'sticky top-0 z-40 h-16 w-full flex-none transition-all duration-100 ease-in md:h-20',
-        y > 40 && 'bg-background/80 shadow-lg backdrop-blur-xs md:shadow-lg'
+        y > 40 && 'bg-background/80 shadow-lg backdrop-blur-xs md:shadow-lg',
       )}
     >
       <div className="container h-full">

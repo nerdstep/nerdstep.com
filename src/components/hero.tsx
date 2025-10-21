@@ -6,10 +6,10 @@ export function Hero() {
     <Card className="m-auto max-w-xl">
       <CardContent className="p-6 text-center md:p-12 md:pb-11">
         <ProfilePicture />
-        <h1 className="my-4 text-3xl font-bold leading-tight tracking-tight md:text-4xl">
+        <h1 className="my-4 font-bold text-3xl leading-tight tracking-tight md:text-4xl">
           Software engineer, outdoor enthusiast, cat dad.
         </h1>
-        <p className="text-2xl font-medium text-muted-foreground">
+        <p className="font-medium text-2xl text-muted-foreground">
           Under Construction
         </p>
       </CardContent>

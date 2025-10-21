@@ -18,7 +18,7 @@ export function ThemeToggle() {
       <DropdownMenuTrigger asChild>
         <Button aria-label="toggle theme" size="icon" variant="ghost">
           <Icon
-            className="rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0"
+            className="dark:-rotate-90 rotate-0 scale-100 transition-all dark:scale-0"
             size="lg"
           >
             <IconSun />

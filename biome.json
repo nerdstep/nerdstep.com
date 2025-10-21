@@ -1,62 +1,79 @@
 {
   "$schema": "node_modules/@biomejs/biome/configuration_schema.json",
-  "vcs": { "enabled": false, "clientKind": "git", "useIgnoreFile": true },
-  "files": { "ignoreUnknown": false },
+  "vcs": {
+    "enabled": false,
+    "clientKind": "git",
+    "useIgnoreFile": false
+  },
+  "files": {
+    "ignoreUnknown": false,
+    "includes": [
+      "**",
+      "!**/.tanstack",
+      "!**/node_modules",
+      "!**/routeTree.gen.ts"
+    ]
+  },
   "assist": {
     "enabled": true,
     "actions": { "source": { "organizeImports": "on" } }
   },
   "formatter": {
     "enabled": true,
-    "formatWithErrors": false,
-    "indentStyle": "space",
-    "indentWidth": 2,
-    "lineEnding": "lf",
-    "lineWidth": 80,
-    "attributePosition": "auto",
-    "bracketSameLine": false,
-    "bracketSpacing": true,
-    "expand": "auto",
-    "useEditorconfig": true,
-    "includes": [
-      "**",
-      "!**/.cache",
-      "!**/.next",
-      "!**/build",
-      "!**/dist",
-      "!**/node_modules",
-      "!**/out",
-      "!**/package-lock.json"
-    ]
+    "useEditorconfig": true
   },
   "javascript": {
     "formatter": {
-      "jsxQuoteStyle": "double",
-      "quoteProperties": "asNeeded",
-      "trailingCommas": "es5",
-      "semicolons": "asNeeded",
-      "arrowParentheses": "always",
-      "bracketSameLine": false,
+      "indentWidth": 2,
       "quoteStyle": "single",
-      "attributePosition": "auto",
-      "bracketSpacing": true
+      "lineWidth": 80,
+      "semicolons": "asNeeded",
+      "trailingCommas": "all"
+    }
+  },
+  "json": {
+    "parser": {
+      "allowComments": true
     }
   },
   "linter": {
     "enabled": true,
+    "includes": ["**"],
     "rules": {
       "recommended": false,
       "complexity": {
+        "noForEach": "error",
         "noBannedTypes": "error",
-        "noUselessTypeConstraint": "error"
+        "noUselessTypeConstraint": "error",
+        "noImplicitCoercions": "error"
       },
       "correctness": {
         "noChildrenProp": "error",
         "noPrecisionLoss": "error",
+        "noReactPropAssignments": "error",
+        "noUnusedImports": { "level": "error", "fix": "safe" },
         "noUnusedVariables": "error",
+        "useHookAtTopLevel": "error",
         "useJsxKeyInIterable": "error"
       },
-      "security": { "noDangerouslySetInnerHtmlWithChildren": "error" },
+      "nursery": {
+        "noFloatingPromises": "error",
+        "noImportCycles": "error",
+        "noSecrets": "off",
+        "noShadow": "error",
+        "useSortedClasses": {
+          "level": "info",
+          "options": {
+            "functions": ["cn", "cva"]
+          }
+        }
+      },
+      "performance": {
+        "noAwaitInLoops": "error"
+      },
+      "security": {
+        "noDangerouslySetInnerHtmlWithChildren": "error"
+      },
       "style": {
         "noInferrableTypes": "error",
         "noNamespace": "error",
@@ -78,5 +95,5 @@
     }
   },
   "html": { "formatter": { "selfCloseVoidElements": "always" } },
-  "overrides": [{ "includes": ["*.ts", "*.tsx"] }]
+  "overrides": []
 }
