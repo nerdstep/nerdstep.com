@@ -1,25 +1,39 @@
 {
   "compilerOptions": {
-    "target": "es2015",
-    "lib": ["dom", "dom.iterable", "esnext"],
-    "module": "esnext",
-    "moduleResolution": "node",
-    "allowJs": true,
+    "lib": ["ES2024", "DOM", "DOM.Iterable"],
+    "target": "ES2024",
+    "jsx": "react-jsx",
     "skipLibCheck": true,
-    "strict": true,
-    "forceConsistentCasingInFileNames": true,
+    "allowJs": false,
+
+    // Bundler mode
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "allowImportingTsExtensions": true,
+    // Enabling verbatimModuleSyntax can result in server bundles leaking
+    // into client bundles. It is recommended to keep this option disabled.
+    "verbatimModuleSyntax": false,
+    "isolatedModules": true,
     "noEmit": true,
+
+    // Linting
+    "strict": true,
+    "strictNullChecks": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noFallthroughCasesInSwitch": true,
+    "noUncheckedSideEffectImports": true,
+    "forceConsistentCasingInFileNames": true,
+
     "esModuleInterop": true,
     "incremental": true,
     "resolveJsonModule": true,
-    "strictNullChecks": true,
-    "isolatedModules": true,
-    "jsx": "preserve",
-    "plugins": [{ "name": "next" }],
+
+    "baseUrl": ".",
     "paths": {
       "@/*": ["./src/*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
+  "include": ["**/*.ts", "**/*.tsx"],
   "exclude": ["node_modules"]
 }
