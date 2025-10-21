@@ -17,7 +17,8 @@ export function ProfilePicture() {
         tiltEnable={true}
         tiltMaxAngleX={10}
         tiltMaxAngleY={20}
-        transitionSpeed={1500}>
+        transitionSpeed={1500}
+      >
         <img
           alt="profile picture"
           className="tilt rounded-full "

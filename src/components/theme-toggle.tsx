@@ -19,12 +19,14 @@ export function ThemeToggle() {
         <Button aria-label="toggle theme" size="icon" variant="ghost">
           <Icon
             className="rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0"
-            size="lg">
+            size="lg"
+          >
             <IconSun />
           </Icon>
           <Icon
             className="absolute rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100"
-            size="lg">
+            size="lg"
+          >
             <IconMoon />
           </Icon>
         </Button>

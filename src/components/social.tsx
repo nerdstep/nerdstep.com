@@ -29,7 +29,8 @@ export function Social({
             aria-label={label}
             href={url}
             rel="noopener noreferrer"
-            target="_blank">
+            target="_blank"
+          >
             <Icon size={iconSize}>{icon}</Icon>
           </a>
         </Button>

@@ -10,7 +10,8 @@ export function Footer() {
             &copy; {siteConfig.copyright} (
             <Anchor
               aria-label={`@${twitterHandle}'s twitter`}
-              href={socialLinks.twitter}>
+              href={socialLinks.twitter}
+            >
               @{twitterHandle}
             </Anchor>
             )
