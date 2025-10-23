@@ -21,4 +21,10 @@ export default defineConfig({
     }),
     viteReact(),
   ],
+  ssr: {
+    noExternal: ['react-use'],
+  },
+  optimizeDeps: {
+    include: ['react-use'],
+  },
 })

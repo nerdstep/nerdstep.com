@@ -1,7 +1,7 @@
 import { useWindowScroll } from 'react-use'
 import { Logo } from '@/components/logo'
 import { Social } from '@/components/social'
-import { ThemeToggle } from '@/components/theme-toggle'
+import { ThemeSwitch } from '@/components/theme-switch'
 import { cn } from '@/lib/utils'
 
 export function Header() {
@@ -19,7 +19,7 @@ export function Header() {
           <Logo />
           <nav className="flex grow items-center justify-end gap-1 md:gap-4">
             <Social iconSize="lg" />
-            <ThemeToggle />
+            <ThemeSwitch />
           </nav>
         </div>
       </div>
