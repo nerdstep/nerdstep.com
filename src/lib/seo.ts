@@ -1,11 +1,6 @@
-import { SiteConfig } from "./config"
+import { SiteConfig } from './config'
 
-export const seo = ({
-  title,
-  description,
-  keywords,
-  image,
-}: SiteConfig) => {
+export const seo = ({ title, description, keywords, image }: SiteConfig) => {
   // @TODO set theme-color
   const tags = [
     { title },

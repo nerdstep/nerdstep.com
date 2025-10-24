@@ -9,7 +9,9 @@
     "ignoreUnknown": false,
     "includes": [
       "**",
-      "!**/.tanstack",
+      "!!**/.tanstack",
+      "!!**/.wrangler",
+      "!!**/dist",
       "!**/node_modules",
       "!**/routeTree.gen.ts"
     ]
@@ -21,6 +23,11 @@
   "formatter": {
     "enabled": true,
     "useEditorconfig": true
+  },
+  "css": {
+    "parser": {
+      "tailwindDirectives": true
+    }
   },
   "javascript": {
     "formatter": {
@@ -59,7 +66,6 @@
       "nursery": {
         "noFloatingPromises": "error",
         "noImportCycles": "error",
-        "noSecrets": "off",
         "noShadow": "error",
         "useSortedClasses": {
           "level": "info",
@@ -72,7 +78,8 @@
         "noAwaitInLoops": "error"
       },
       "security": {
-        "noDangerouslySetInnerHtmlWithChildren": "error"
+        "noDangerouslySetInnerHtmlWithChildren": "error",
+        "noSecrets": "off"
       },
       "style": {
         "noInferrableTypes": "error",

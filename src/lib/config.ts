@@ -22,13 +22,12 @@ export interface SiteConfig {
     github: string
     linkedin: string
     x: string
-  },
+  }
   icons: {
     icon: string
     shortcut: string
     apple: string
-  },
-
+  }
 }
 
 export const BASE_URL = 'https://www.nerdstep.com'
