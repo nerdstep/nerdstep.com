@@ -99,10 +99,18 @@ export function useHexagons(): HexagonGridData {
         const vertices = createHexagonVertices(x, y)
 
         for (const vertex of vertices) {
-          if (vertex.x < minX) minX = vertex.x
-          if (vertex.y < minY) minY = vertex.y
-          if (vertex.x > maxX) maxX = vertex.x
-          if (vertex.y > maxY) maxY = vertex.y
+          if (vertex.x < minX) {
+            minX = vertex.x
+          }
+          if (vertex.y < minY) {
+            minY = vertex.y
+          }
+          if (vertex.x > maxX) {
+            maxX = vertex.x
+          }
+          if (vertex.y > maxY) {
+            maxY = vertex.y
+          }
 
           // register vertex globally
           ensureVertexIndex(vertex)

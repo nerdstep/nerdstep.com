@@ -10,8 +10,11 @@ export function Footer() {
         <div className="w-full text-muted-foreground text-sm md:flex md:items-center md:justify-between">
           <div>
             &copy; {copyright} (
-            <Anchor aria-label={`@${social.x} on X`} href={socialLinks.x}>
-              @{social.x}
+            <Anchor
+              aria-label={`${social.github} on GitHub`}
+              href={socialLinks.github}
+            >
+              {social.github}
             </Anchor>
             )
           </div>
@@ -21,11 +24,11 @@ export function Footer() {
               alt="tanstack logo"
               className="inline-block dark:invert"
               height={16}
-              src="/img/tanstack-black.svg"
+              src="/img/tanstack-logo-color-100.png"
               width={16}
             />
             <Anchor href="https://tanstack.com/">TanStack</Anchor>
-            <span>and</span>
+            <span>+</span>
             <img
               alt="tailwind logo"
               className="inline-block"

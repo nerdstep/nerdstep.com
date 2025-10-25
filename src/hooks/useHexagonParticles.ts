@@ -31,6 +31,10 @@ export interface UseHexagonParticlesOptions {
    * Easing function for particle movement between vertices
    */
   easing?: EasingFn
+  /** If true, avoid reversing direction (prefer forward-only). */
+  forwardOnly?: boolean
+  /** Minimum dot(prevDir, nextDir) to accept; 0 = no more than 90° turn. */
+  forwardMinDot?: number
   /**
    * Number of trail particles to create for each main particle
    * @default 30
@@ -51,6 +55,9 @@ export interface UseHexagonParticlesOptions {
 export interface UseHexagonParticlesResult {
   getCircleRef: (index: number) => (el: SVGCircleElement | null) => void
   getTrailPathRef: (index: number) => (el: SVGPathElement | null) => void
+  getGradientRef: (
+    index: number,
+  ) => (el: SVGLinearGradientElement | null) => void
   radius: number
 }
 
@@ -86,11 +93,14 @@ export function useHexagonParticles(
     trailCount = 30,
     trailSampleMs = 40,
     trailMaxOpacity = 0.35,
+    forwardOnly = true,
+    forwardMinDot = 0,
   } = opts
 
   // Imperative store for circle elements
   const circlesRef = useRef<Array<SVGCircleElement | null>>([])
   const trailsPathRef = useRef<Array<SVGPathElement | null>>([])
+  const gradientsRef = useRef<Array<SVGLinearGradientElement | null>>([])
   const statesRef = useRef<ParticleState[]>([])
   const rafRef = useRef<number | null>(null)
 
@@ -108,6 +118,13 @@ export function useHexagonParticles(
     [],
   )
 
+  const getGradientRef = useCallback(
+    (index: number) => (el: SVGLinearGradientElement | null) => {
+      gradientsRef.current[index] = el
+    },
+    [],
+  )
+
   const randomDuration = useCallback(
     () => minDurationMs + Math.random() * (maxDurationMs - minDurationMs),
     [minDurationMs, maxDurationMs],
@@ -116,15 +133,50 @@ export function useHexagonParticles(
   const pickNextVertex = useCallback(
     (from: number, previous: number): number | null => {
       const nbrs = vertexNeighbors[from] ?? []
-      if (!nbrs.length) return null
-      const pool =
+      if (!nbrs.length) {
+        return null
+      }
+
+      // Step 1: avoid immediate backtrack
+      let pool =
         avoidBacktrack && previous >= 0
           ? nbrs.filter((i) => i !== previous)
-          : nbrs
+          : [...nbrs]
+
+      // Step 2: forward-only constraint based on angle to previous direction
+      if (forwardOnly && previous >= 0 && vertices.length) {
+        const prevP = vertices[previous]
+        const currP = vertices[from]
+        const vx = currP.x - prevP.x
+        const vy = currP.y - prevP.y
+        const vlen = Math.hypot(vx, vy) || 1
+        const ux = vx / vlen
+        const uy = vy / vlen
+
+        const constrained = pool.filter((cand) => {
+          const nextP = vertices[cand]
+          const wx = nextP.x - currP.x
+          const wy = nextP.y - currP.y
+          const wlen = Math.hypot(wx, wy) || 1
+          const dot = (wx / wlen) * ux + (wy / wlen) * uy
+          return dot >= forwardMinDot
+        })
+        if (constrained.length) {
+          pool = constrained
+        }
+      }
+
       const arr = pool.length ? pool : nbrs
       return arr[randomInt(arr.length)] ?? null
     },
-    [vertexNeighbors, avoidBacktrack, randomInt],
+    [
+      vertexNeighbors,
+      avoidBacktrack,
+      forwardOnly,
+      forwardMinDot,
+      vertices,
+      randomInt,
+    ],
   )
 
   // Reset or initialize particles when inputs change
@@ -132,7 +184,9 @@ export function useHexagonParticles(
   const verticesStable = vertices
 
   useEffect(() => {
-    if (verticesStable.length === 0) return
+    if (verticesStable.length === 0) {
+      return
+    }
 
     // Initialize particle states
     statesRef.current = new Array(particleCount).fill(0).map(() => {
@@ -153,7 +207,9 @@ export function useHexagonParticles(
     // Place circles initially and hide until positioned
     for (let i = 0; i < particleCount; i++) {
       const circle = circlesRef.current[i]
-      if (!circle) continue
+      if (!circle) {
+        continue
+      }
       circle.style.opacity = '0'
       const p = verticesStable[statesRef.current[i].curr]
       circle.setAttribute('cx', String(p.x))
@@ -163,7 +219,13 @@ export function useHexagonParticles(
         circle.style.opacity = '1'
       })
       const path = trailsPathRef.current[i]
-      if (path) path.setAttribute('opacity', '0')
+      if (path) {
+        path.setAttribute('opacity', '0')
+      }
+      const grad = gradientsRef.current[i]
+      if (grad) {
+        grad.setAttribute('gradientUnits', 'userSpaceOnUse')
+      }
     }
 
     const step = (ts: number) => {
@@ -171,11 +233,15 @@ export function useHexagonParticles(
       for (let i = 0; i < particleCount; i++) {
         const state = statesRef.current[i]
         const circle = circlesRef.current[i]
-        if (!circle || state.next == null) continue
+        if (!circle || state.next == null) {
+          continue
+        }
 
         anyActive = true
 
-        if (state.lastTs == null) state.lastTs = ts
+        if (state.lastTs == null) {
+          state.lastTs = ts
+        }
         const delta = ts - state.lastTs
         state.lastTs = ts
         state.progress += delta / state.duration
@@ -194,7 +260,9 @@ export function useHexagonParticles(
         if (state.sampleAcc >= trailSampleMs) {
           state.sampleAcc = 0
           state.trail.unshift({ x: cx, y: cy })
-          if (state.trail.length > trailCount) state.trail.length = trailCount
+          if (state.trail.length > trailCount) {
+            state.trail.length = trailCount
+          }
           const path = trailsPathRef.current[i]
           if (path) {
             if (state.trail.length > 1) {
@@ -205,6 +273,15 @@ export function useHexagonParticles(
                   .join(' ')
               path.setAttribute('d', d)
               path.setAttribute('opacity', String(trailMaxOpacity))
+              const head = state.trail[0]
+              const tail = state.trail[state.trail.length - 1]
+              const grad = gradientsRef.current[i]
+              if (grad && head && tail) {
+                grad.setAttribute('x1', String(tail.x))
+                grad.setAttribute('y1', String(tail.y))
+                grad.setAttribute('x2', String(head.x))
+                grad.setAttribute('y2', String(head.y))
+              }
             } else {
               path.setAttribute('opacity', '0')
             }
@@ -225,7 +302,9 @@ export function useHexagonParticles(
             x: verticesStable[state.curr].x,
             y: verticesStable[state.curr].y,
           })
-          if (state.trail.length > trailCount) state.trail.length = trailCount
+          if (state.trail.length > trailCount) {
+            state.trail.length = trailCount
+          }
           const path = trailsPathRef.current[i]
           if (path) {
             if (state.trail.length > 1) {
@@ -236,6 +315,15 @@ export function useHexagonParticles(
                   .join(' ')
               path.setAttribute('d', d)
               path.setAttribute('opacity', String(trailMaxOpacity))
+              const head = state.trail[0]
+              const tail = state.trail[state.trail.length - 1]
+              const grad = gradientsRef.current[i]
+              if (grad && head && tail) {
+                grad.setAttribute('x1', String(tail.x))
+                grad.setAttribute('y1', String(tail.y))
+                grad.setAttribute('x2', String(head.x))
+                grad.setAttribute('y2', String(head.y))
+              }
             } else {
               path.setAttribute('opacity', '0')
             }
@@ -252,7 +340,9 @@ export function useHexagonParticles(
 
     rafRef.current = requestAnimationFrame(step)
     return () => {
-      if (rafRef.current != null) cancelAnimationFrame(rafRef.current)
+      if (rafRef.current != null) {
+        cancelAnimationFrame(rafRef.current)
+      }
       rafRef.current = null
     }
   }, [
@@ -266,7 +356,7 @@ export function useHexagonParticles(
   ])
 
   return useMemo(
-    () => ({ getCircleRef, getTrailPathRef, radius, trailCount }),
-    [getCircleRef, getTrailPathRef, radius, trailCount],
+    () => ({ getCircleRef, getTrailPathRef, getGradientRef, radius }),
+    [getCircleRef, getTrailPathRef, getGradientRef, radius],
   )
 }

@@ -11,6 +11,10 @@ export type HexagonGridProps = {
   trailSampleMs?: number
   trailMaxOpacity?: number
   glow?: boolean
+  colors?: string[]
+  randomizeColors?: boolean
+  colorSaturation?: number
+  colorLightness?: number
 }
 
 export function HexagonGrid({
@@ -22,12 +26,33 @@ export function HexagonGrid({
   trailSampleMs,
   trailMaxOpacity = 0.25,
   glow = true,
+  colors,
+  randomizeColors = true,
+  colorSaturation = 70,
+  colorLightness = 60,
 }: HexagonGridProps) {
   const { hexagons, viewBox, scale, vertices, vertexNeighbors } = useHexagons()
 
   const particleRadius = useMemo(() => radius * scale, [radius, scale])
 
-  const { getCircleRef, getTrailPathRef } = useHexagonParticles(
+  const particleColors = useMemo(() => {
+    if (colors && colors.length) {
+      return Array.from({ length: particleCount }).map(
+        (_, i) => colors[i % colors.length],
+      )
+    }
+    if (randomizeColors) {
+      const seed = Math.floor(Math.random() * 360)
+      const step = 360 / Math.max(1, particleCount)
+      return Array.from({ length: particleCount }).map(
+        (_, i) =>
+          `hsl(${Math.round(seed + i * step) % 360} ${colorSaturation}% ${colorLightness}%)`,
+      )
+    }
+    return Array.from({ length: particleCount }).map(() => 'currentColor')
+  }, [colors, randomizeColors, particleCount, colorSaturation, colorLightness])
+
+  const { getCircleRef, getTrailPathRef, getGradientRef } = useHexagonParticles(
     vertices,
     vertexNeighbors,
     {
@@ -63,6 +88,17 @@ export function HexagonGrid({
               <feMergeNode in="SourceGraphic" />
             </feMerge>
           </filter>
+          {Array.from({ length: particleCount }).map((_, i) => (
+            <linearGradient
+              key={`grad-${i}`}
+              id={`trailGrad-${i}`}
+              ref={getGradientRef(i)}
+              gradientUnits="userSpaceOnUse"
+            >
+              <stop offset="0" stopColor={particleColors[i]} stopOpacity={0} />
+              <stop offset="1" stopColor={particleColors[i]} stopOpacity={1} />
+            </linearGradient>
+          ))}
         </defs>
         {/* Render hexagon outlines */}
         {hexagons.map((hex, i) => (
@@ -81,7 +117,7 @@ export function HexagonGrid({
             <path
               ref={getTrailPathRef(i)}
               fill="none"
-              stroke="currentColor"
+              stroke={`url(#trailGrad-${i})`}
               strokeWidth={particleRadius * 0.55}
               strokeLinecap="round"
               strokeLinejoin="round"
@@ -91,7 +127,7 @@ export function HexagonGrid({
             <circle
               ref={getCircleRef(i)}
               r={particleRadius}
-              fill="currentColor"
+              fill={particleColors[i]}
               className="text-muted-foreground transition-opacity duration-500"
               filter={glow ? 'url(#particleGlow)' : undefined}
             />

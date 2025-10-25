@@ -89,7 +89,10 @@
         "noNonNullAssertion": "warn",
         "useArrayLiterals": "error",
         "useAsConstAssertion": "error",
-        "useBlockStatements": "off"
+        "useBlockStatements": {
+          "level": "error",
+          "fix": "unsafe"
+        }
       },
       "suspicious": {
         "noCommentText": "error",
