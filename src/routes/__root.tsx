@@ -8,6 +8,7 @@ import {
 import clsx from 'clsx'
 import { Footer } from '@/components/footer'
 import { Header } from '@/components/header'
+import { HexagonGrid } from '@/components/hexagon-grid'
 import {
   getSystemTheme,
   getThemeServerFn,
@@ -77,6 +78,7 @@ function RootLayout() {
   return (
     <ThemeProvider initialTheme={preferredTheme}>
       <RootDocument theme={initialResolvedTheme}>
+        <HexagonGrid />
         <Header />
         <main className="container flex flex-auto py-8">
           <Outlet />
