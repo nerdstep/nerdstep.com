@@ -3,17 +3,6 @@ import { ProfilePicture } from './profile-picture'
 import { Card, CardContent } from './ui/card'
 
 export function Hero() {
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.2,
-        delayChildren: 0.3,
-      },
-    },
-  } as const
-
   const itemVariants = {
     hidden: { opacity: 0, y: 20 },
     visible: {
@@ -30,11 +19,31 @@ export function Hero() {
     <Card className="m-auto max-w-xl">
       <CardContent className="p-6 text-center md:p-12 md:pb-11">
         <motion.div
-          variants={containerVariants}
+          variants={{
+            hidden: { opacity: 0 },
+            visible: {
+              opacity: 1,
+              transition: {
+                staggerChildren: 0.2,
+                delayChildren: 0.3,
+              },
+            },
+          }}
           initial="hidden"
           animate="visible"
         >
-          <motion.div variants={itemVariants}>
+          <motion.div
+            variants={{
+              hidden: { opacity: 0, scale: 0.4 },
+              visible: {
+                opacity: 1,
+                scale: 1,
+                transition: {
+                  duration: 0.5,
+                },
+              },
+            }}
+          >
             <ProfilePicture />
           </motion.div>
           <motion.h1
@@ -47,7 +56,7 @@ export function Hero() {
             variants={itemVariants}
             className="font-medium text-2xl text-muted-foreground"
           >
-            Under Construction
+            Perpetually Under Construction
           </motion.p>
         </motion.div>
       </CardContent>
