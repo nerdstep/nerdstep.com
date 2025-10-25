@@ -5,7 +5,7 @@ const { copyright, social } = siteConfig
 
 export function Footer() {
   return (
-    <footer className="flex h-16 items-center border-t bg-background/90 md:h-20">
+    <footer className="z-10 flex h-16 items-center border-t bg-background/80 md:h-20">
       <div className="container">
         <div className="w-full text-muted-foreground text-sm md:flex md:items-center md:justify-between">
           <div>

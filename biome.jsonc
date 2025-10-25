@@ -22,6 +22,7 @@
   },
   "formatter": {
     "enabled": true,
+    "indentStyle": "space",
     "useEditorconfig": true
   },
   "css": {
@@ -45,7 +46,6 @@
   },
   "linter": {
     "enabled": true,
-    "includes": ["**"],
     "rules": {
       "recommended": false,
       "complexity": {
@@ -69,8 +69,10 @@
         "noShadow": "error",
         "useSortedClasses": {
           "level": "info",
+          "fix": "unsafe",
           "options": {
-            "functions": ["cn", "cva"]
+            "attributes": ["className"],
+            "functions": ["clsx", "cn", "cva", "tw"]
           }
         }
       },
