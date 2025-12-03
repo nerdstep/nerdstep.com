@@ -16,7 +16,7 @@ export function Hero() {
   } as const
 
   return (
-    <Card className="m-auto max-w-xl">
+    <Card className="m-auto max-w-xl bg-card/50 backdrop-blur-sm">
       <CardContent className="p-6 text-center md:p-12 md:pb-11">
         <motion.div
           variants={{
