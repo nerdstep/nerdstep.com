@@ -2,6 +2,8 @@ import { useMemo } from 'react'
 import { useHexagonParticles } from '@/hooks/useHexagonParticles'
 import { useHexagons } from '@/hooks/useHexagons'
 
+const GOLDEN_ANGLE = 137.508 // degrees
+
 export type HexagonGridProps = {
   particleCount?: number
   minDurationMs?: number
@@ -42,8 +44,9 @@ export function HexagonGrid({
       )
     }
     if (randomizeColors) {
-      const seed = Math.floor(Math.random() * 360)
-      const step = 360 / Math.max(1, particleCount)
+      const seed = (particleCount * 23) % 360
+      // use golden angle step for pleasing separation
+      const step = GOLDEN_ANGLE
       return Array.from({ length: particleCount }).map(
         (_, i) =>
           `hsl(${Math.round(seed + i * step) % 360} ${colorSaturation}% ${colorLightness}%)`,
