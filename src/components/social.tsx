@@ -23,9 +23,15 @@ export function Social({
   items = socialLinkLitems,
 }: SocialProps) {
   return (
-    <div className={cn('flex gap-1', className)}>
+    <div className={cn('flex gap-1.5', className)}>
       {items.map(({ icon, key, label, url }) => (
-        <Button key={key} asChild size="icon" variant="ghost">
+        <Button
+          key={key}
+          asChild
+          effect="ringHover"
+          size="icon-sm"
+          variant="outline"
+        >
           <a
             aria-label={label}
             href={url}
