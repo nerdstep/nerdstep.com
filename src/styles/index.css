@@ -229,3 +229,35 @@
 .tilt {
   transform: translateZ(10px) scale(0.96);
 }
+
+.logo-glow::before {
+  background-image: radial-gradient(circle, white, transparent);
+}
+
+.logo-glow::after {
+  background-image: conic-gradient(
+    from 180deg at 50% 50%,
+    rgb(186, 230, 253),
+    rgb(191, 219, 254),
+    transparent
+  );
+}
+
+.dark .logo-glow::before {
+  background-image: linear-gradient(
+    to bottom right,
+    transparent,
+    rgb(29, 78, 216)
+  );
+  opacity: 0.1;
+}
+
+.dark .logo-glow::after {
+  background-image: conic-gradient(
+    from 180deg at 50% 50%,
+    rgb(12, 74, 110),
+    rgb(28, 100, 242),
+    transparent
+  );
+  opacity: 0.4;
+}

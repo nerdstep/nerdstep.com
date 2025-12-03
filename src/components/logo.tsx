@@ -34,7 +34,7 @@ export function Logo() {
   const location = useLocation()
 
   return (
-    <span className="before:-translate-x-1/3 after:-z-20 after:-translate-x-1/4 relative flex place-items-center before:absolute before:h-8 before:w-[480px] before:rounded-full before:bg-gradient-radial before:from-white before:to-transparent before:blur-2xl before:content-[''] after:absolute after:h-32 after:w-60 after:bg-gradient-conic after:from-sky-200 after:via-blue-200 after:blur-2xl after:content-[''] lg:before:h-16 dark:after:from-sky-900 dark:after:via-blue-600 dark:after:opacity-40 dark:before:bg-linear-to-br dark:before:from-transparent dark:before:to-blue-700 dark:before:opacity-10">
+    <span className="logo-glow before:-translate-x-1/3 after:-z-20 after:-translate-x-1/4 relative flex place-items-center before:absolute before:h-8 before:w-[480px] before:rounded-full before:blur-2xl before:content-[''] after:absolute after:h-32 after:w-60 after:blur-2xl after:content-[''] before:lg:h-16">
       {location.pathname === '/' ? (
         <motion.img
           {...imageProps}
