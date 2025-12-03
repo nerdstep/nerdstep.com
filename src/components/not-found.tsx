@@ -1,27 +1,33 @@
-import { Link } from '@tanstack/react-router'
 import type { ReactNode } from 'react'
-import { Button } from './ui/button'
+import {
+  Empty,
+  EmptyContent,
+  EmptyDescription,
+  EmptyHeader,
+  EmptyTitle,
+} from '@/components/ui/empty'
+import { Button, ButtonLink } from './ui/button'
+import { Card, CardContent } from './ui/card'
 
 export function NotFound({ children }: { children?: ReactNode }) {
   return (
-    <div className="space-y-2 p-2">
-      <div className="text-gray-600 dark:text-gray-400">
-        {children || <p>The page you are looking for does not exist.</p>}
-      </div>
-      <p className="flex flex-wrap items-center gap-2">
-        <Button
-          className="rounded bg-emerald-500 px-2 py-1 font-black text-sm text-white uppercase"
-          onClick={() => window.history.back()}
-        >
-          Go back
-        </Button>
-        <Link
-          to="/"
-          className="rounded bg-cyan-600 px-2 py-1 font-black text-sm text-white uppercase"
-        >
-          Start Over
-        </Link>
-      </p>
-    </div>
+    <Card className="m-auto max-w-xl">
+      <CardContent className="p-6 md:p-12 md:pb-11">
+        <Empty>
+          <EmptyHeader>
+            <EmptyTitle>404 - Not Found</EmptyTitle>
+            <EmptyDescription>
+              {children || <p>The page you are looking for does not exist.</p>}
+            </EmptyDescription>
+          </EmptyHeader>
+          <EmptyContent>
+            <p className="flex flex-wrap items-center gap-2">
+              <Button onClick={() => window.history.back()}>Go back</Button>
+              <ButtonLink to="/">Start Over</ButtonLink>
+            </p>
+          </EmptyContent>
+        </Empty>
+      </CardContent>
+    </Card>
   )
 }

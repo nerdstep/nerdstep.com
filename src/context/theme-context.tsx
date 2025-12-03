@@ -53,7 +53,9 @@ export const setThemeServerFn = createServerFn({ method: 'POST' })
  * to apply the correct class.
  */
 export const getSystemTheme = () => {
-  if (typeof window === 'undefined') return 'light'
+  if (typeof window === 'undefined') {
+    return 'light'
+  }
   return window.matchMedia('(prefers-color-scheme: dark)').matches
     ? 'dark'
     : 'light'

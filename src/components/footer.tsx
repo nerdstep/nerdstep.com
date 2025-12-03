@@ -22,7 +22,7 @@ export function Footer() {
             <span>Created with</span>
             <img
               alt="tanstack logo"
-              className="inline-block dark:invert"
+              className="inline-block"
               height={16}
               src="/img/tanstack-logo-color-100.png"
               width={16}
