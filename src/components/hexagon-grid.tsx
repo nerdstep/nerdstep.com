@@ -1,6 +1,6 @@
 import { useMemo } from 'react'
-import { useHexagonParticles } from '@/hooks/useHexagonParticles'
-import { useHexagons } from '@/hooks/useHexagons'
+import { useHexagonParticles } from '@/hooks/use-hexagon-particles'
+import { useHexagons } from '@/hooks/use-hexagons'
 
 const GOLDEN_ANGLE = 137.508 // degrees
 

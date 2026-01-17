@@ -1,38 +1,42 @@
-import { Slot, Slottable } from '@radix-ui/react-slot'
+import { Button as ButtonPrimitive } from '@base-ui/react/button'
 import { createLink, type LinkComponent } from '@tanstack/react-router'
 import { cva, type VariantProps } from 'class-variance-authority'
-import type React from 'react'
 import { cn } from '@/lib/utils'
 import type { IconElement } from '@/types'
 import { Spinner } from './spinner'
 
 export const buttonVariants = cva(
-  "inline-flex shrink-0 cursor-pointer items-center justify-center gap-2 whitespace-nowrap rounded-md font-medium text-sm outline-none transition-all focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 [&_svg:not([class*='size-'])]:size-4 [&_svg]:pointer-events-none [&_svg]:shrink-0",
+  "group/button inline-flex shrink-0 cursor-pointer select-none items-center justify-center whitespace-nowrap rounded-lg border border-transparent bg-clip-padding font-medium text-sm outline-none transition-all focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 aria-invalid:border-destructive aria-invalid:ring-[3px] aria-invalid:ring-destructive/20 data-disabled:pointer-events-none data-disabled:opacity-50 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40 [&_svg:not([class*='size-'])]:size-4 [&_svg]:pointer-events-none [&_svg]:shrink-0",
   {
     variants: {
       variant: {
         default: 'bg-primary text-primary-foreground hover:bg-primary/90',
         destructive:
-          'bg-destructive text-white hover:bg-destructive/90 focus-visible:ring-destructive/20 dark:bg-destructive/60 dark:focus-visible:ring-destructive/40',
+          'bg-destructive/10 text-destructive hover:bg-destructive/20 focus-visible:border-destructive/40 focus-visible:ring-destructive/20 dark:bg-destructive/20 dark:focus-visible:ring-destructive/40 dark:hover:bg-destructive/30',
         outline:
-          'border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:border-input dark:bg-input/30 dark:hover:bg-input/50',
+          'border-border bg-background hover:bg-muted hover:text-foreground aria-expanded:bg-muted aria-expanded:text-foreground dark:border-input dark:bg-input/30 dark:hover:bg-input/50',
         secondary:
-          'bg-secondary text-secondary-foreground hover:bg-secondary/80',
+          'bg-secondary text-secondary-foreground hover:bg-secondary/80 aria-expanded:bg-secondary aria-expanded:text-secondary-foreground',
         ghost:
-          'hover:bg-accent hover:text-accent-foreground dark:hover:bg-accent/50',
+          'hover:bg-muted hover:text-foreground aria-expanded:bg-muted aria-expanded:text-foreground dark:hover:bg-muted/50',
         link: 'text-primary underline-offset-4 hover:underline',
       },
       effect: {
         ringHover:
-          'transition-all duration-300 hover:ring-2 hover:ring-primary/80 hover:ring-offset-2',
+          'ring-offset-background transition-all duration-300 hover:ring-2 hover:ring-primary/80 hover:ring-offset-2',
       },
       size: {
-        default: 'h-9 px-4 py-2 has-[>svg]:px-3',
-        sm: 'h-8 gap-1.5 rounded-md px-3 has-[>svg]:px-2.5',
-        lg: 'h-10 rounded-md px-6 has-[>svg]:px-4',
-        icon: 'size-9',
-        'icon-sm': 'size-8',
-        'icon-lg': 'size-10',
+        default:
+          'h-8 gap-1.5 px-2.5 has-data-[icon=inline-end]:pr-2 has-data-[icon=inline-start]:pl-2',
+        xs: "h-6 gap-1 in-data-[slot=button-group]:rounded-lg rounded-[min(var(--radius-md),10px)] px-2 text-xs has-data-[icon=inline-end]:pr-1.5 has-data-[icon=inline-start]:pl-1.5 [&_svg:not([class*='size-'])]:size-3",
+        sm: "h-7 gap-1 in-data-[slot=button-group]:rounded-lg rounded-[min(var(--radius-md),12px)] px-2.5 text-[0.8rem] has-data-[icon=inline-end]:pr-1.5 has-data-[icon=inline-start]:pl-1.5 [&_svg:not([class*='size-'])]:size-3.5",
+        lg: 'h-9 gap-1.5 px-2.5 has-data-[icon=inline-end]:pr-3 has-data-[icon=inline-start]:pl-3',
+        icon: 'size-8',
+        'icon-xs':
+          "size-6 in-data-[slot=button-group]:rounded-lg rounded-[min(var(--radius-md),10px)] [&_svg:not([class*='size-'])]:size-3",
+        'icon-sm':
+          'size-7 in-data-[slot=button-group]:rounded-lg rounded-[min(var(--radius-md),12px)]',
+        'icon-lg': 'size-9',
       },
     },
     defaultVariants: {
@@ -42,18 +46,15 @@ export const buttonVariants = cva(
   },
 )
 
-export interface ButtonProps
-  extends React.ComponentProps<'button'>,
-    VariantProps<typeof buttonVariants> {
-  asChild?: boolean
-  icon?: IconElement
-  iconPlacement?: 'left' | 'right'
-  isLoading?: boolean
-  loadingText?: string
-}
+export type ButtonProps = ButtonPrimitive.Props &
+  VariantProps<typeof buttonVariants> & {
+    icon?: IconElement
+    iconPlacement?: 'left' | 'right'
+    isLoading?: boolean
+    loadingText?: string
+  }
 
 export function Button({
-  asChild = false,
   children,
   className,
   disabled,
@@ -66,42 +67,28 @@ export function Button({
   variant,
   ...props
 }: ButtonProps) {
-  if (asChild) {
-    return (
-      <Slot
-        className={cn(buttonVariants({ className, effect, size, variant }))}
-        {...props}
-      >
-        {children}
-      </Slot>
-    )
-  }
-
+  const isDisabled = disabled || isLoading
   return (
-    <button
+    <ButtonPrimitive
       data-slot="button"
-      disabled={disabled || isLoading}
+      disabled={isDisabled}
       className={cn(buttonVariants({ className, effect, size, variant }))}
+      focusableWhenDisabled={isDisabled}
       {...props}
     >
       {isLoading ? (
         <>
           <Spinner />
-          {loadingText ? loadingText : <Slottable>{children}</Slottable>}
+          {loadingText ? loadingText : children}
         </>
       ) : (
         <>
-          {Icon && iconPlacement === 'left' && (
-            <Icon
-              aria-hidden="true"
-              className="absolute top-1/2 left-1.5 -translate-y-1/2"
-            />
-          )}
-          <Slottable>{children}</Slottable>
+          {Icon && iconPlacement === 'left' && <Icon aria-hidden="true" />}
+          {children}
           {Icon && iconPlacement === 'right' && <Icon aria-hidden="true" />}
         </>
       )}
-    </button>
+    </ButtonPrimitive>
   )
 }
 

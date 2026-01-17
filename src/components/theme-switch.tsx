@@ -1,5 +1,5 @@
 import { CheckIcon, MoonIcon, SunIcon } from 'lucide-react'
-import { useEffect } from 'react'
+import { useTheme } from 'tanstack-theme-kit'
 import { Button } from '@/components/ui/button'
 import {
   DropdownMenu,
@@ -7,31 +7,21 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
-import { useTheme } from '@/context/theme-context'
+import { useIsMounted } from '@/hooks/use-mounted'
 import { cn } from '@/lib/utils'
 
 export function ThemeSwitch() {
   const { theme, setTheme } = useTheme()
+  const isMounted = useIsMounted()
 
-  /* Update theme-color meta tag
-   * when theme is updated */
-  useEffect(() => {
-    const themeColor = theme === 'dark' ? '#020817' : '#fff'
-    const metaThemeColor = document.querySelector("meta[name='theme-color']")
-    if (metaThemeColor) {
-      metaThemeColor.setAttribute('content', themeColor)
-    }
-  }, [theme])
+  if (!isMounted) {
+    return null
+  }
 
   return (
     <DropdownMenu modal={false}>
-      <DropdownMenuTrigger asChild>
-        <Button
-          variant="outline"
-          size="icon"
-          effect="ringHover"
-          className="scale-95 rounded-full"
-        >
+      <DropdownMenuTrigger>
+        <Button variant="ghost" size="icon" className="scale-95 rounded-full">
           <SunIcon className="size-[1.2rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
           <MoonIcon className="absolute size-[1.2rem] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
           <span className="sr-only">Toggle theme</span>
@@ -39,7 +29,7 @@ export function ThemeSwitch() {
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
         <DropdownMenuItem onClick={() => setTheme('light')}>
-          Light
+          Light{' '}
           <CheckIcon
             size={14}
             className={cn('ml-auto', theme !== 'light' && 'hidden')}
