@@ -42,11 +42,11 @@ export interface HexagonGridData {
 }
 
 const createHexagonVertices = (x: number, y: number): Point[] => [
-  { x: x, y: y },
-  { x: x + EDGE_MEDIUM, y: y },
+  { x, y },
+  { x: x + EDGE_MEDIUM, y },
   { x: x + EDGE_LONG, y: y + HEX_HALF_HEIGHT },
   { x: x + EDGE_MEDIUM, y: y + HEX_HEIGHT },
-  { x: x, y: y + HEX_HEIGHT },
+  { x, y: y + HEX_HEIGHT },
   { x: x - EDGE_SHORT, y: y + HEX_HALF_HEIGHT },
 ]
 

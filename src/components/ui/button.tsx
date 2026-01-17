@@ -94,7 +94,7 @@ export function Button({
           {Icon && iconPlacement === 'left' && (
             <Icon
               aria-hidden="true"
-              className="-translate-y-1/2 absolute top-1/2 left-1.5"
+              className="absolute top-1/2 left-1.5 -translate-y-1/2"
             />
           )}
           <Slottable>{children}</Slottable>

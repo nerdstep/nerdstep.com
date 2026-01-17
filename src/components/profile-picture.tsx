@@ -19,7 +19,7 @@ export function ProfilePicture() {
         transitionSpeed={1500}
       >
         <img
-          alt="profile picture"
+          alt="profile"
           className="tilt rounded-full"
           height="100%"
           src="/img/profile-fg.png"

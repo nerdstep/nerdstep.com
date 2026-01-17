@@ -38,7 +38,7 @@ export function HexagonGrid({
   const particleRadius = useMemo(() => radius * scale, [radius, scale])
 
   const particleColors = useMemo(() => {
-    if (colors && colors.length) {
+    if (colors && colors.length > 0) {
       return Array.from({ length: particleCount }).map(
         (_, i) => colors[i % colors.length],
       )
@@ -75,6 +75,8 @@ export function HexagonGrid({
   return (
     <div className="pointer-events-none fixed inset-0 overflow-hidden">
       <svg
+        role="img"
+        aria-label="decorative hexagon grid"
         className="h-full w-full"
         viewBox={`${viewBox.minX} ${viewBox.minY} ${viewBoxWidth} ${viewBoxHeight}`}
         preserveAspectRatio="xMidYMid slice"

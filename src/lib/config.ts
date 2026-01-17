@@ -1,4 +1,4 @@
-import { Entries } from 'type-fest'
+import type { Entries } from 'type-fest'
 import { iconMap } from '@/lib/icon-map'
 
 export const themeColor: { media: string; color: string }[] = [

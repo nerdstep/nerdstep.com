@@ -133,7 +133,7 @@ export function useHexagonParticles(
   const pickNextVertex = useCallback(
     (from: number, previous: number): number | null => {
       const nbrs = vertexNeighbors[from] ?? []
-      if (!nbrs.length) {
+      if (nbrs.length === 0) {
         return null
       }
 
@@ -144,7 +144,7 @@ export function useHexagonParticles(
           : [...nbrs]
 
       // Step 2: forward-only constraint based on angle to previous direction
-      if (forwardOnly && previous >= 0 && vertices.length) {
+      if (forwardOnly && previous >= 0 && vertices.length > 0) {
         const prevP = vertices[previous]
         const currP = vertices[from]
         const vx = currP.x - prevP.x
@@ -161,26 +161,19 @@ export function useHexagonParticles(
           const dot = (wx / wlen) * ux + (wy / wlen) * uy
           return dot >= forwardMinDot
         })
-        if (constrained.length) {
+        if (constrained.length > 0) {
           pool = constrained
         }
       }
 
-      const arr = pool.length ? pool : nbrs
+      const arr = pool.length > 0 ? pool : nbrs
       return arr[randomInt(arr.length)] ?? null
     },
-    [
-      vertexNeighbors,
-      avoidBacktrack,
-      forwardOnly,
-      forwardMinDot,
-      vertices,
-      randomInt,
-    ],
+    [vertexNeighbors, avoidBacktrack, forwardOnly, forwardMinDot, vertices],
   )
 
   // Reset or initialize particles when inputs change
-  const particleCount = Math.max(0, count | 0)
+  const particleCount = Math.max(0, count || 0)
   const verticesStable = vertices
 
   useEffect(() => {
@@ -274,7 +267,7 @@ export function useHexagonParticles(
               path.setAttribute('d', d)
               path.setAttribute('opacity', String(trailMaxOpacity))
               const head = state.trail[0]
-              const tail = state.trail[state.trail.length - 1]
+              const tail = state.trail.at(-1)
               const grad = gradientsRef.current[i]
               if (grad && head && tail) {
                 grad.setAttribute('x1', String(tail.x))
@@ -316,7 +309,7 @@ export function useHexagonParticles(
               path.setAttribute('d', d)
               path.setAttribute('opacity', String(trailMaxOpacity))
               const head = state.trail[0]
-              const tail = state.trail[state.trail.length - 1]
+              const tail = state.trail.at(-1)
               const grad = gradientsRef.current[i]
               if (grad && head && tail) {
                 grad.setAttribute('x1', String(tail.x))
@@ -347,12 +340,13 @@ export function useHexagonParticles(
     }
   }, [
     verticesStable,
-    vertexNeighbors,
     particleCount,
-    randomInt,
     randomDuration,
     pickNextVertex,
     easing,
+    trailCount,
+    trailMaxOpacity,
+    trailSampleMs,
   ])
 
   return useMemo(

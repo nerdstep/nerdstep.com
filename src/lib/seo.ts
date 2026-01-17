@@ -1,4 +1,4 @@
-import { SiteConfig } from './config'
+import type { SiteConfig } from './config'
 
 export const seo = ({ title, description, keywords, image }: SiteConfig) => {
   // @TODO set theme-color

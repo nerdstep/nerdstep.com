@@ -3,7 +3,7 @@ import {
   IconBrandLinkedin,
   IconBrandXFilled,
 } from '@tabler/icons-react'
-import { JSX } from 'react'
+import type { JSX } from 'react'
 
 export type IconConfig = {
   label: string
