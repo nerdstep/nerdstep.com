@@ -1,11 +1,6 @@
 import type { Entries } from 'type-fest'
 import { iconMap } from '@/lib/icon-map'
 
-export const themeColor: { media: string; color: string }[] = [
-  { media: '(prefers-color-scheme: light)', color: 'transparent' },
-  { media: '(prefers-color-scheme: dark)', color: 'transparent' },
-]
-
 export interface SiteConfig {
   name: string
   url: string

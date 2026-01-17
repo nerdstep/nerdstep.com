@@ -18,7 +18,7 @@ export function Header() {
         <div className="flex h-full items-center justify-between">
           <Logo />
           <nav className="flex grow items-center justify-end gap-1 md:gap-4">
-            <Social iconSize="lg" />
+            <Social />
             <ThemeSwitch />
           </nav>
         </div>
