@@ -24,6 +24,8 @@ interface Point {
 interface Hexagon {
   vertices: Point[]
   pathData: string
+  /** Deterministic per-cell shade in [0, 1) for the tiled background effect */
+  shade: number
 }
 
 interface HexagonGridBounds {
@@ -58,6 +60,12 @@ const createPathFromVertices = (vertices: Point[]): string =>
 
 const getVertexKey = (point: Point) =>
   `${Math.round(point.x * 1000)}:${Math.round(point.y * 1000)}`
+
+// Deterministic hash so the shading is stable across server and client renders
+const cellShade = (col: number, row: number): number => {
+  const s = Math.sin(col * 127.1 + row * 311.7) * 43_758.5453
+  return s - Math.floor(s)
+}
 
 export function useHexagons(): HexagonGridData {
   const data = useMemo((): HexagonGridData => {
@@ -124,7 +132,11 @@ export function useHexagons(): HexagonGridData {
           vertexNeighborSets[b].add(a)
         }
 
-        result.push({ vertices, pathData: createPathFromVertices(vertices) })
+        result.push({
+          vertices,
+          pathData: createPathFromVertices(vertices),
+          shade: cellShade(col, row),
+        })
       }
     }
 

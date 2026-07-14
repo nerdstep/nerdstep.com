@@ -12,6 +12,7 @@ export type HexagonGridProps = {
   trailCount?: number
   trailSampleMs?: number
   trailMaxOpacity?: number
+  cellMaxOpacity?: number
   glow?: boolean
   colors?: string[]
   randomizeColors?: boolean
@@ -27,6 +28,7 @@ export function HexagonGrid({
   trailCount = 48,
   trailSampleMs,
   trailMaxOpacity = 0.25,
+  cellMaxOpacity = 0.08,
   glow = true,
   colors,
   randomizeColors = true,
@@ -105,15 +107,14 @@ export function HexagonGrid({
             </linearGradient>
           ))}
         </defs>
-        {/* Render hexagon outlines */}
+        {/* Render hexagon cells: randomly shaded fill + outline, aligned by construction */}
         {hexagons.map((hex, i) => (
           <path
             key={i}
             d={hex.pathData}
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="0.5"
-            className="text-muted-foreground/10"
+            fillOpacity={hex.shade * cellMaxOpacity}
+            strokeWidth="0.25"
+            className="fill-foreground stroke-muted-foreground/10"
           />
         ))}
         {Array.from({ length: particleCount }).map((_, i) => (

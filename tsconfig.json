@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
+    "types": ["@types/bun", "./worker-configuration"],
     "lib": ["ES2024", "DOM", "DOM.Iterable"],
     "target": "ES2024",
     "jsx": "react-jsx",
@@ -30,5 +31,5 @@
     }
   },
   "include": ["**/*.ts", "**/*.tsx"],
-  "exclude": ["node_modules"]
+  "exclude": ["dist", "node_modules"]
 }

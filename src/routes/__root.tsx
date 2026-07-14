@@ -20,15 +20,11 @@ function RootDocument({
   children: React.ReactNode
 }>) {
   return (
-    <html
-      className="bg-[url('/img/bg.svg')] bg-center bg-cover bg-white bg-fixed bg-no-repeat"
-      dir={textDirection}
-      lang={language}
-    >
+    <html className="bg-background" dir={textDirection} lang={language}>
       <head>
         <HeadContent />
       </head>
-      <body className="flex min-h-screen min-w-min flex-col bg-background/90 font-sans text-foreground antialiased">
+      <body className="flex min-h-screen min-w-min flex-col bg-background font-sans text-foreground antialiased">
         {children}
         <Scripts />
       </body>
