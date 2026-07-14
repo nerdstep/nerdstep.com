@@ -57,7 +57,7 @@
   "linter": {
     "enabled": true,
     "rules": {
-      "recommended": true,
+      "preset": "recommended",
       "a11y": {
         "useSemanticElements": "off"
       },
@@ -79,8 +79,6 @@
       },
       "nursery": {
         "noFloatingPromises": "error",
-        "noImportCycles": "error",
-        "noShadow": "error",
         "useSortedClasses": {
           "level": "info",
           "fix": "safe",
@@ -128,7 +126,9 @@
         "noTsIgnore": "error",
         "noUnassignedVariables": "error",
         "noUnknownAtRules": "off",
-        "noUselessEscapeInString": "error"
+        "noUselessEscapeInString": "error",
+        "noImportCycles": "error",
+        "noShadow": "error"
       },
       "security": {
         "noSecrets": "off"
