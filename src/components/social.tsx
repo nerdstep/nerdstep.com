@@ -21,9 +21,10 @@ export function Social({ className, items = socialLinkLitems }: SocialProps) {
       {items.map(({ icon, key, label, url }) => (
         <Button
           key={key}
+          className="rounded-full"
           effect="ringHover"
           icon={icon}
-          size="icon"
+          size="icon-lg"
           variant="outline"
           render={(props) => (
             <a

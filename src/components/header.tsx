@@ -1,6 +1,5 @@
 import { useWindowScroll } from 'react-use'
 import { Logo } from '@/components/logo'
-import { Social } from '@/components/social'
 import { ThemeSwitch } from '@/components/theme-switch'
 import { cn } from '@/lib/utils'
 
@@ -18,7 +17,6 @@ export function Header() {
         <div className="flex h-full items-center justify-between">
           <Logo />
           <nav className="flex grow items-center justify-end gap-1 md:gap-4">
-            <Social />
             <ThemeSwitch />
           </nav>
         </div>

@@ -1,3 +1,4 @@
+import { useReducedMotion } from 'motion/react'
 import { useMemo } from 'react'
 import { useHexagonParticles } from '@/hooks/use-hexagon-particles'
 import { useHexagons } from '@/hooks/use-hexagons'
@@ -21,7 +22,7 @@ export type HexagonGridProps = {
 }
 
 export function HexagonGrid({
-  particleCount = 7,
+  particleCount: requestedParticleCount = 7,
   minDurationMs,
   maxDurationMs,
   radius = 0.9,
@@ -36,6 +37,11 @@ export function HexagonGrid({
   colorLightness = 60,
 }: HexagonGridProps) {
   const { hexagons, viewBox, scale, vertices, vertexNeighbors } = useHexagons()
+
+  // Respect prefers-reduced-motion: keep the static hex cells, drop the
+  // continuously-animating particles/trails entirely.
+  const prefersReducedMotion = useReducedMotion()
+  const particleCount = prefersReducedMotion ? 0 : requestedParticleCount
 
   const particleRadius = useMemo(() => radius * scale, [radius, scale])
 
