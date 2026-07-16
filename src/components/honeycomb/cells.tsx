@@ -14,15 +14,13 @@ interface ContentCellProps {
 function IntroHex({ hue, entrance }: ContentCellProps) {
   return (
     <Hex hue={hue} entrance={entrance}>
-      <div className="size-18 rounded-full border-2 border-gray-600/50">
-        <img
-          alt="profile"
-          className="tilt rounded-full"
-          height="100%"
-          src="/img/profile.webp"
-          width="100%"
-        />
-      </div>
+      <img
+        alt="profile"
+        className="rounded-full border-2 border-gray-600/50"
+        height={80}
+        src="/img/profile-sm.jpg"
+        width={80}
+      />
       <span className="mt-2 font-bold tracking-tight sm:text-base">
         {intro.name}
       </span>
@@ -50,18 +48,18 @@ function ProjectHex({
       onSelect={slug ? () => onSelect(slug) : undefined}
       label={`Open ${project.name} details`}
     >
-      <span className="hex-kind font-medium text-[0.8125rem] lowercase tracking-tight">
+      <span className="hex-hover-ink hex-kind font-medium text-[0.8125rem] lowercase tracking-tight">
         {projectKindLabel[project.kind]}
       </span>
       <span className="wrap-break-word mt-1 flex min-w-0 max-w-full flex-wrap items-center justify-center gap-1 font-semibold text-sm tracking-tight sm:text-base">
         {project.name}
         <IconPlus
           aria-hidden
-          className="size-3.5 text-muted-foreground/60 transition-all duration-200 group-hover:rotate-90 group-hover:text-(--hex-accent) sm:size-4"
+          className="hex-hover-accent-dark hex-hover-ink size-3.5 text-muted-foreground/60 in-data-suppress-hover-motion:transition-none transition-all duration-200 group-hover:rotate-90 group-focus-visible:rotate-90 sm:size-4"
         />
       </span>
       {project.status === 'wip' && (
-        <span className="mt-1.5 rounded-full border border-amber-500/50 px-2 py-0.5 font-medium text-[11px] text-amber-700 tracking-wide dark:text-amber-400">
+        <span className="hex-hover-ink hex-hover-ink-border mt-1.5 rounded-full border border-amber-500/50 px-2 py-0.5 font-medium text-[11px] text-amber-700 tracking-wide transition-colors duration-200 dark:text-amber-400">
           coming soon
         </span>
       )}

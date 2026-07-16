@@ -44,7 +44,7 @@ export function Honeycomb() {
           <HoneycombCell
             key={id}
             id={id}
-            entrance={entrance}
+            entrance={entrance && id !== 'logo'}
             onSelectProject={openProject}
             onSelectSite={() => setSiteDialogOpen(true)}
           />

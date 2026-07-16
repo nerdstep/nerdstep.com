@@ -36,7 +36,7 @@ export function OtherProjectsHex({ hue, entrance }: OtherProjectsHexProps) {
   return (
     <Dialog>
       <motion.div
-        className="relative shrink-0 bg-border transition-colors duration-200 has-[button:focus-visible]:z-10 has-[button:focus-visible]:bg-(--hex-accent) has-[button:hover]:bg-(--hex-accent)"
+        className="relative shrink-0 bg-border/45 in-data-suppress-hover-motion:transition-none transition-colors duration-200 has-[button:focus-visible]:z-10 has-[button:focus-visible]:bg-(--hex-accent) has-[button:hover]:bg-(--hex-accent)"
         style={hexStyle(hue)}
         {...motionProps}
       >
@@ -50,7 +50,7 @@ export function OtherProjectsHex({ hue, entrance }: OtherProjectsHexProps) {
               Other projects
               <IconPlus
                 aria-hidden
-                className="size-3.5 text-muted-foreground/60 transition-all duration-200 group-hover:rotate-90 group-hover:text-(--hex-accent) sm:size-4"
+                className="hex-hover-accent-dark hex-hover-ink size-3.5 text-muted-foreground/60 in-data-suppress-hover-motion:transition-none transition-all duration-200 group-hover:rotate-90 group-focus-visible:rotate-90 sm:size-4"
               />
             </span>
           </button>

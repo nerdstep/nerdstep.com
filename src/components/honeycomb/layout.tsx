@@ -177,6 +177,14 @@ function MorphingHoneycomb({
     progressRef.current = query.matches ? 0 : 1
     apply()
 
+    // The static entrance layout is replaced by this morphing layout. If the
+    // pointer is already over a cell during that handoff, let hover-dependent
+    // styles settle for one frame before restoring their transitions. This
+    // prevents icons from replaying the same hover animation after remounting.
+    const releaseHoverMotionFrame = requestAnimationFrame(() => {
+      container.removeAttribute('data-suppress-hover-motion')
+    })
+
     const onBreakpoint = () => tweenTo(query.matches ? 0 : 1)
     query.addEventListener('change', onBreakpoint)
 
@@ -196,12 +204,14 @@ function MorphingHoneycomb({
       window.removeEventListener('resize', onResize)
       cancelAnimationFrame(tweenFrame)
       cancelAnimationFrame(resizeFrame)
+      cancelAnimationFrame(releaseHoverMotionFrame)
     }
   }, [reducedMotion])
 
   return (
     <div
       ref={containerRef}
+      data-suppress-hover-motion=""
       className="relative w-full overflow-clip"
       style={flowerVars}
     >

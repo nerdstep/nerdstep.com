@@ -29,6 +29,7 @@ export const hexStyle = (hue: number): CSSProperties =>
     clipPath: HEX_CLIP,
     '--hex-hue': hue,
     '--hex-accent': 'hsl(var(--hex-hue) 70% 55%)',
+    '--hex-hover-ink': 'hsl(var(--hex-hue) 55% 18%)',
   }) as CSSProperties
 
 /**
@@ -46,12 +47,12 @@ export function HexFill() {
     <>
       <span
         aria-hidden
-        className="absolute inset-0.5 bg-[oklch(0.965_0.004_264.7/0.88)] lg:bg-[oklch(0.965_0.004_264.7/0.7)] lg:backdrop-blur-md dark:bg-[oklch(0.2_0.038_264.7/0.84)] lg:dark:bg-[oklch(0.2_0.038_264.7/0.64)]"
+        className="absolute inset-0.5 bg-[oklch(0.965_0.004_264.7/0.68)] lg:bg-[oklch(0.965_0.004_264.7/0.52)] lg:backdrop-blur-sm dark:bg-[oklch(0.2_0.038_264.7/0.84)] lg:dark:bg-[oklch(0.2_0.038_264.7/0.64)] lg:dark:backdrop-blur-md"
         style={{ clipPath: HEX_CLIP }}
       />
       <span
         aria-hidden
-        className="absolute inset-0.5 bg-linear-to-br from-white/50 via-transparent to-foreground/6 dark:from-white/12 dark:to-foreground/10"
+        className="absolute inset-0.5 bg-linear-to-br from-white/30 via-transparent to-foreground/6 dark:from-white/12 dark:to-foreground/10"
         style={{ clipPath: HEX_CLIP }}
       />
     </>
@@ -83,7 +84,7 @@ export function Hex({
 }: HexProps) {
   const isInteractive = Boolean(href || onSelect || interactive)
   const outerClass = cn(
-    'relative block shrink-0 bg-border transition-colors duration-200',
+    'relative block shrink-0 bg-border/45 in-data-[suppress-hover-motion]:transition-none transition-colors duration-200',
     isInteractive &&
       'hover:bg-(--hex-accent) focus-visible:z-10 focus-visible:bg-(--hex-accent) focus-visible:outline-none',
     isInteractive && 'cursor-pointer',
@@ -91,7 +92,7 @@ export function Hex({
   const inner = (
     <>
       <HexFill />
-      <span className="absolute inset-0 flex flex-col items-center justify-center px-[15%] text-center">
+      <span className="absolute inset-0 flex flex-col items-center justify-center px-[13%] text-center">
         {children}
       </span>
     </>

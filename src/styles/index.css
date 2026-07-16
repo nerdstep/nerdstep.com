@@ -197,10 +197,26 @@
  */
 .hex-kind {
   color: hsl(var(--hex-hue, 210) 60% 33%);
+  transition: color 200ms;
 }
 
 .dark .hex-kind {
   color: hsl(var(--hex-hue, 210) 70% 68%);
+}
+
+:root:not(.dark) .group:hover .hex-hover-ink,
+:root:not(.dark) .group:focus-visible .hex-hover-ink {
+  color: var(--hex-hover-ink);
+}
+
+:root:not(.dark) .group:hover .hex-hover-ink-border,
+:root:not(.dark) .group:focus-visible .hex-hover-ink-border {
+  border-color: var(--hex-hover-ink);
+}
+
+.dark .group:hover .hex-hover-accent-dark,
+.dark .group:focus-visible .hex-hover-accent-dark {
+  color: var(--hex-accent);
 }
 
 .logo-glow::before {
