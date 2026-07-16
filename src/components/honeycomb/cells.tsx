@@ -95,9 +95,18 @@ function NowHex({ hue, entrance }: ContentCellProps) {
   )
 }
 
-function LogoHex({ hue, entrance }: ContentCellProps) {
+function LogoHex({
+  hue,
+  entrance,
+  onSelect,
+}: ContentCellProps & { onSelect: () => void }) {
   return (
-    <Hex hue={hue} entrance={entrance}>
+    <Hex
+      hue={hue}
+      entrance={entrance}
+      label="About nerdstep.com"
+      onSelect={onSelect}
+    >
       <img
         alt="nerdstep"
         className="dark:drop-shadow-[0_0_0.3rem_#ffffff70] dark:invert"
@@ -125,14 +134,19 @@ interface HoneycombCellProps {
   id: HoneycombCellId
   entrance: boolean
   onSelectProject: (slug: string) => void
+  onSelectSite: () => void
 }
 
 type HoneycombCellRenderer = (
   props: Omit<HoneycombCellProps, 'id'>,
 ) => ReactNode
 
+export const SITE_HUE = hueFor(4)
+
 const cellRenderer: Record<HoneycombCellId, HoneycombCellRenderer> = {
-  logo: ({ entrance }) => <LogoHex hue={hueFor(4)} entrance={entrance} />,
+  logo: ({ entrance, onSelectSite }) => (
+    <LogoHex hue={SITE_HUE} entrance={entrance} onSelect={onSelectSite} />
+  ),
   recipes: ({ entrance, onSelectProject }) => (
     <ProjectHex
       hue={hueFor(0)}

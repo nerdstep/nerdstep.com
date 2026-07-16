@@ -6,14 +6,15 @@
  * modules under `./honeycomb`.
  */
 import { useNavigate, useSearch } from '@tanstack/react-router'
-import { useEffect } from 'react'
-import { projects } from '@/lib/projects'
-import { HoneycombCell } from './honeycomb/cells'
+import { useEffect, useState } from 'react'
+import { projects, siteProject } from '@/lib/projects'
+import { HoneycombCell, SITE_HUE } from './honeycomb/cells'
 import { ProjectDetailDialog } from './honeycomb/dialogs'
 import { HUE_SEED, hueFor } from './honeycomb/hex-cell'
 import { HoneycombLayout } from './honeycomb/layout'
 
 export function Honeycomb() {
+  const [siteDialogOpen, setSiteDialogOpen] = useState(false)
   const navigate = useNavigate({ from: '/' })
   const { p } = useSearch({ from: '/' })
   const selectedIndex = projects.findIndex((project) => project.slug === p)
@@ -45,6 +46,7 @@ export function Honeycomb() {
             id={id}
             entrance={entrance}
             onSelectProject={openProject}
+            onSelectSite={() => setSiteDialogOpen(true)}
           />
         )}
       />
@@ -53,6 +55,12 @@ export function Honeycomb() {
         hue={selectedIndex >= 0 ? hueFor(selectedIndex) : HUE_SEED}
         open={selectedProject !== null}
         onClose={closeProject}
+      />
+      <ProjectDetailDialog
+        project={siteProject}
+        hue={SITE_HUE}
+        open={siteDialogOpen}
+        onClose={() => setSiteDialogOpen(false)}
       />
     </>
   )

@@ -34,6 +34,19 @@ const hanstinWedding: Project = {
   description: 'Our wedding site (2023)',
 }
 
+export const siteProject: Project = {
+  name: 'nerdstep.com',
+  domain: 'nerdstep.com',
+  url: 'https://github.com/nerdstep/nerdstep.com',
+  status: 'live',
+  kind: 'oss',
+  description: 'Personal site built on the Cloudflare developer platform',
+  summary:
+    'My personal corner of the web and a playground for polished interface experiments. The site is open source and built as a TanStack Start application deployed to Cloudflare Workers.',
+  role: 'creator',
+  stack: ['TypeScript', 'React', 'TanStack Start', 'Cloudflare Workers'],
+}
+
 // The three cells that render in the honeycomb flower.
 export const projects: Project[] = [
   {
@@ -76,18 +89,8 @@ export const projects: Project[] = [
   },
 ]
 
-// Shown in the honeycomb's "other projects" dialog
-export const otherProjects: Project[] = [
-  hanstinWedding,
-  {
-    name: 'nerdstep.com',
-    domain: 'github.com/nerdstep/nerdstep.com',
-    url: 'https://github.com/nerdstep/nerdstep.com',
-    status: 'live',
-    kind: 'oss',
-    description: 'This site -- TanStack Start on Cloudflare Workers',
-  },
-]
+// Shown in the honeycomb's "other projects" dialog.
+export const otherProjects: Project[] = [hanstinWedding]
 
 export const intro = {
   name: 'Justin Williams',
