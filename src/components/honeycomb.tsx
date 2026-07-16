@@ -53,12 +53,25 @@ const cell = {
   },
 } as const
 
-// Frosted glass fill for a hex interior. The surface is a NEUTRAL glass — a
-// light frost in light mode, near-black smoky glass in dark — so the cell's hue
-// stays an accent, not the material. Two layers: (1) the neutral translucent
-// glass; (2) a top-left specular sheen fading into a whisper of the cell hue at
-// the far corner. `--hex-hue` is inherited; the rest of the accent lives in the
-// hover/focus rim and the label text.
+// Frosted glass fill for a hex interior. The surface is tuned to sit in the
+// SAME tonal family as the background hex grid, which is drawn straight from the
+// tokens (`fill-foreground` over `--background`):
+//
+//   light  canvas is near-neutral (white + a faint slate wash) -> low chroma
+//   dark   canvas is blue-slate  (--background oklch(0.129 0.042 264.7)) -> the
+//          glass needs REAL chroma or it reads grey on a blue canvas
+//
+// Hence the asymmetric chroma (0.004 light / 0.038 dark) at the shared slate hue
+// 264.7. The far-corner wash uses `foreground` — the very colour the grid is
+// painted with — so the two can't drift apart.
+//
+// The cell's hue deliberately does NOT touch this surface: tinting it per-cell
+// spread the glass across ~72° of hue and stopped it matching the canvas. The
+// hue lives in the label and the hover/focus rim, where it reads as accent
+// rather than material.
+//
+// Two layers: (1) the translucent glass; (2) a top-left specular sheen fading
+// into the grid's own wash at the far corner.
 //
 // Perf: `backdrop-filter` re-blurs every frame because the particle backdrop is
 // always animating, and it's costliest on the weakest GPUs. So the blur is
@@ -70,12 +83,12 @@ function HexFill() {
     <>
       <span
         aria-hidden
-        className="absolute inset-0.5 bg-[oklch(0.96_0.006_256/0.88)] lg:bg-[oklch(0.96_0.006_256/0.7)] lg:backdrop-blur-md dark:bg-[oklch(0.17_0.012_264/0.84)] lg:dark:bg-[oklch(0.17_0.012_264/0.64)]"
+        className="absolute inset-0.5 bg-[oklch(0.965_0.004_264.7/0.88)] lg:bg-[oklch(0.965_0.004_264.7/0.7)] lg:backdrop-blur-md dark:bg-[oklch(0.2_0.038_264.7/0.84)] lg:dark:bg-[oklch(0.2_0.038_264.7/0.64)]"
         style={{ clipPath: HEX_CLIP }}
       />
       <span
         aria-hidden
-        className="absolute inset-0.5 bg-linear-to-br from-white/50 via-transparent to-[hsl(var(--hex-hue)_70%_55%/0.06)] dark:from-white/12 dark:to-[hsl(var(--hex-hue)_80%_62%/0.12)]"
+        className="absolute inset-0.5 bg-linear-to-br from-white/50 via-transparent to-foreground/6 dark:from-white/12 dark:to-foreground/10"
         style={{ clipPath: HEX_CLIP }}
       />
     </>
