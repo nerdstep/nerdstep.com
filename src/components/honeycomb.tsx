@@ -539,6 +539,14 @@ function ProjectDetailDialog({
 // in height by one cell, items-center offsets them by half a hex so cells
 // nestle into their neighbors' notches. Columns of 1-2-3-2-1 form a big
 // hexagon; 5-4 forms a compact interlocked pair.
+//
+// The seam: for a UNIFORM gap `g` on all six sides of every hexagon, the two
+// spacings are not the same number. Stacked neighbours share a flat edge, so
+// their gap is simply `g`. Diagonal neighbours (adjacent columns) meet on a
+// slanted edge, so their centres separate along that diagonal — which works out
+// to `0.866·g` (√3/2) of extra horizontal distance on top of the -0.25 overlap.
+// Hence the two different multipliers below; they must move together, so both
+// derive from `--hex-gap`.
 function HexColumns({ cols }: { cols: ReactNode[][] }) {
   return (
     <div className="flex items-center justify-center">
@@ -546,8 +554,8 @@ function HexColumns({ cols }: { cols: ReactNode[][] }) {
         <div
           key={i}
           className={cn(
-            'flex flex-col items-center',
-            i > 0 && 'ml-[calc(var(--hex-w)*-0.25)]',
+            'flex flex-col items-center gap-(--hex-gap)',
+            i > 0 && 'ml-[calc(var(--hex-w)*-0.25+var(--hex-gap)*0.866)]',
           )}
         >
           {hexes}
@@ -617,18 +625,24 @@ function MeasureGrid({ cols }: { cols: CellId[][] }) {
 // FIXED hex size per formation — hexes no longer scale with the viewport (the
 // fluid shrink on resize read as awkward). The flower is generous on desktop;
 // the narrow 5-4 stack is a touch smaller so it fits a phone (its width is
-// ~1.75·size, so 180 stays inside ~320px). The collapse tweens between the two.
+// ~1.75·size, so 195 stays inside ~360px). The collapse tweens between the two.
 const FLOWER_HEX = 210
-const STACK_HEX = 210
+const STACK_HEX = 195
+
+// Uniform seam between neighbouring cells, on all six sides. `HexColumns` reads
+// this for both the stacked gap and the diagonal (0.866·gap) column spacing.
+const HEX_GAP = 4
 
 const flowerVars = {
   '--hex-w': `${FLOWER_HEX}px`,
   '--hex-h': `${FLOWER_HEX * 0.866}px`,
+  '--hex-gap': `${HEX_GAP}px`,
 } as CSSProperties
 
 const stackVars = {
   '--hex-w': `${STACK_HEX}px`,
   '--hex-h': `${STACK_HEX * 0.866}px`,
+  '--hex-gap': `${HEX_GAP}px`,
 } as CSSProperties
 
 // The collapse plays as ONE timed, eased animation the moment the `lg`
@@ -843,12 +857,17 @@ export function Honeycomb() {
     <>
       {mounted ? (
         // Nine cells that travel between formations when the breakpoint
-        // crosses. `overflow-x-clip`: the wide flower measurement grid is
-        // always laid out (for geometry) and would otherwise push horizontal
-        // scroll on phones.
+        // crosses. `overflow-clip`: both measurement grids are always laid out
+        // (for geometry), so whichever one isn't current spills past the
+        // container — the flower is wider than a phone, the stack is taller than
+        // the flower. Unclipped, that spill drives real page scrollbars.
+        // Clipping is safe because each formation exactly fills the container:
+        // both grids start at top-0 and the container height is the
+        // interpolation of their heights, so a visible cell can never sit
+        // outside it.
         <div
           ref={containerRef}
-          className="relative w-full overflow-x-clip"
+          className="relative w-full overflow-clip"
           style={flowerVars}
         >
           {/* hidden geometry: the two formations, measured but never shown */}
