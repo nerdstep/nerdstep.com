@@ -1,13 +1,16 @@
 import {
   createRootRoute,
+  type ErrorComponentProps,
   HeadContent,
   Outlet,
   Scripts,
 } from '@tanstack/react-router'
 import { ThemeProvider } from 'tanstack-theme-kit'
+import { ErrorPage } from '@/components/error-page'
 import { Footer } from '@/components/footer'
 import { Header } from '@/components/header'
 import { HexagonGrid } from '@/components/hexagon-grid'
+import { NotFound } from '@/components/not-found'
 import { siteConfig } from '@/lib/config'
 import { seo } from '@/lib/seo'
 import css from '@/styles/index.css?url'
@@ -24,7 +27,7 @@ function RootDocument({
       <head>
         <HeadContent />
       </head>
-      <body className="flex min-h-screen min-w-min flex-col bg-background font-sans text-foreground antialiased">
+      <body className="flex min-h-screen min-w-0 flex-col bg-background font-sans text-foreground antialiased">
         {children}
         <Scripts />
       </body>
@@ -34,16 +37,14 @@ function RootDocument({
 
 function RootLayout() {
   return (
-    <RootDocument>
-      <ThemeProvider attribute="class">
-        <HexagonGrid />
-        <Header />
-        <main className="container flex flex-auto py-8">
-          <Outlet />
-        </main>
-        <Footer />
-      </ThemeProvider>
-    </RootDocument>
+    <ThemeProvider attribute="class">
+      <HexagonGrid />
+      <Header />
+      <main className="container flex flex-auto py-8">
+        <Outlet />
+      </main>
+      <Footer />
+    </ThemeProvider>
   )
 }
 
@@ -63,4 +64,11 @@ export const Route = createRootRoute({
     ],
   }),
   component: RootLayout,
+  errorComponent: ({ error, reset }: ErrorComponentProps) => (
+    <main className="container flex min-h-screen py-8">
+      <ErrorPage error={error} onRetry={reset} />
+    </main>
+  ),
+  notFoundComponent: () => <NotFound />,
+  shellComponent: RootDocument,
 })

@@ -55,12 +55,16 @@ export function Honeycomb() {
         hue={selectedIndex >= 0 ? hueFor(selectedIndex) : HUE_SEED}
         open={selectedProject !== null}
         onClose={closeProject}
+        triggerId={
+          selectedProject?.slug ? `project-${selectedProject.slug}` : undefined
+        }
       />
       <ProjectDetailDialog
         project={siteProject}
         hue={SITE_HUE}
         open={siteDialogOpen}
         onClose={() => setSiteDialogOpen(false)}
+        triggerId="site-about"
       />
     </>
   )

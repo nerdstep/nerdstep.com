@@ -83,8 +83,8 @@ export function HexagonGrid({
   return (
     <div className="pointer-events-none fixed inset-0 overflow-hidden">
       <svg
-        role="img"
-        aria-label="decorative hexagon grid"
+        aria-hidden="true"
+        focusable="false"
         className="h-full w-full"
         viewBox={`${viewBox.minX} ${viewBox.minY} ${viewBoxWidth} ${viewBoxHeight}`}
         preserveAspectRatio="xMidYMid slice"

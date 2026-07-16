@@ -60,6 +60,7 @@ export function HexFill() {
 
 interface HexProps {
   children: ReactNode
+  id?: string
   hue?: number
   href?: string
   onSelect?: () => void
@@ -72,6 +73,7 @@ interface HexProps {
 /** Renders the visual, interaction, and accessibility contract for one cell. */
 export function Hex({
   children,
+  id,
   hue = HUE_SEED,
   href,
   onSelect,
@@ -101,6 +103,7 @@ export function Hex({
   if (onSelect) {
     return (
       <motion.button
+        id={id}
         aria-label={label}
         className={cn(outerClass, 'group text-inherit')}
         onClick={onSelect}
@@ -116,6 +119,7 @@ export function Hex({
   if (href) {
     return (
       <motion.a
+        id={id}
         aria-label={label}
         className={cn(
           outerClass,

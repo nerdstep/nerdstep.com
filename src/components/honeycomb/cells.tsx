@@ -44,6 +44,7 @@ function ProjectHex({
 
   return (
     <Hex
+      id={slug ? `project-${slug}` : undefined}
       hue={hue}
       entrance={entrance}
       onSelect={slug ? () => onSelect(slug) : undefined}
@@ -52,7 +53,7 @@ function ProjectHex({
       <span className="hex-kind font-medium text-[0.8125rem] lowercase tracking-tight">
         {projectKindLabel[project.kind]}
       </span>
-      <span className="mt-1 flex items-center gap-1 font-semibold text-sm tracking-tight sm:text-base">
+      <span className="wrap-break-word mt-1 flex min-w-0 max-w-full flex-wrap items-center justify-center gap-1 font-semibold text-sm tracking-tight sm:text-base">
         {project.name}
         <IconPlus
           aria-hidden
@@ -106,13 +107,14 @@ function LogoHex({
 }: ContentCellProps & { onSelect: () => void }) {
   return (
     <Hex
+      id="site-about"
       hue={hue}
       entrance={entrance}
       label="About nerdstep.com"
       onSelect={onSelect}
     >
       <img
-        alt="nerdstep"
+        alt=""
         className="dark:drop-shadow-[0_0_0.3rem_#ffffff70] dark:invert"
         src="/img/nerdstep-logo.svg"
       />

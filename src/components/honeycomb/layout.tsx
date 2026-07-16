@@ -12,6 +12,8 @@ import { type HoneycombCellId, honeycombCellIds } from './catalog'
 
 const FLOWER_HEX = 210
 const STACK_HEX = 195
+const STACK_HEX_WIDTH = 'clamp(8rem, calc(57.143vw - 1.267rem), 12.1875rem)'
+const STACK_HEX_HEIGHT = 'clamp(6.928rem, calc(49.486vw - 1.097rem), 10.554rem)'
 const HEX_GAP = 4
 const HEX_HEIGHT_RATIO = 0.866
 const LG_QUERY = '(min-width: 64rem)'
@@ -30,15 +32,18 @@ const stackColumns: HoneycombCellId[][] = [
   ['intro', 'recipes', 'parsers', 'socials', 'thesis'],
   ['logo', 'page', 'other', 'now'],
 ]
-const layoutVars = (size: number) =>
+const layoutVars = (size: number, height?: string) =>
   ({
     '--hex-w': `${size}px`,
-    '--hex-h': `${size * HEX_HEIGHT_RATIO}px`,
+    '--hex-h': height ?? `${size * HEX_HEIGHT_RATIO}px`,
     '--hex-gap': `${HEX_GAP}px`,
   }) as CSSProperties
 
 const flowerVars = layoutVars(FLOWER_HEX)
-const stackVars = layoutVars(STACK_HEX)
+const stackVars = {
+  ...layoutVars(STACK_HEX, STACK_HEX_HEIGHT),
+  '--hex-w': STACK_HEX_WIDTH,
+} as CSSProperties
 
 /** Tiles flat-top hexagons into interlocking vertical columns. */
 function HexColumns({ columns }: { columns: ReactNode[][] }) {
@@ -111,7 +116,10 @@ function MorphingHoneycomb({
 
     const apply = () => {
       const progress = progressRef.current
-      const hexWidth = FLOWER_HEX + (STACK_HEX - FLOWER_HEX) * progress
+      const measuredStackHex = stack.querySelector('[data-cell]')
+      const stackHexWidth =
+        measuredStackHex?.getBoundingClientRect().width ?? STACK_HEX
+      const hexWidth = FLOWER_HEX + (stackHexWidth - FLOWER_HEX) * progress
       container.style.setProperty('--hex-w', `${hexWidth}px`)
       container.style.setProperty('--hex-h', `${hexWidth * HEX_HEIGHT_RATIO}px`)
 

@@ -124,6 +124,7 @@ interface ProjectDetailDialogProps {
   hue: number
   open: boolean
   onClose: () => void
+  triggerId?: string
 }
 
 /** Controlled project dialog used by both cell clicks and deep links. */
@@ -132,10 +133,12 @@ export function ProjectDetailDialog({
   hue,
   open,
   onClose,
+  triggerId,
 }: ProjectDetailDialogProps) {
   return (
     <Dialog
       open={open}
+      triggerId={triggerId}
       onOpenChange={(next) => {
         if (!next) {
           onClose()
@@ -204,7 +207,7 @@ export function ProjectDetailDialog({
                         {project.stack.map((tech) => (
                           <li
                             key={tech}
-                            className="rounded-full border border-border bg-muted/40 px-2 py-0.5 font-medium text-foreground/80 text-xs"
+                            className="wrap-break-word max-w-full rounded-full border border-border bg-muted/40 px-2 py-0.5 font-medium text-foreground/80 text-xs"
                           >
                             {tech}
                           </li>
