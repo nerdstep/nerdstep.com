@@ -53,9 +53,6 @@ export function OtherProjectsHex({ hue, entrance }: OtherProjectsHexProps) {
                 className="size-3.5 text-muted-foreground/60 transition-all duration-200 group-hover:rotate-90 group-hover:text-(--hex-accent) sm:size-4"
               />
             </span>
-            <span className="mt-1.5 text-muted-foreground text-xs">
-              +{otherProjects.length} more →
-            </span>
           </button>
         </DialogTrigger>
       </motion.div>
@@ -176,8 +173,15 @@ export function ProjectDetailDialog({
               </span>
             </div>
 
-            <DialogDescription className="text-pretty text-muted-foreground text-sm leading-relaxed">
-              {project.summary ?? project.description}
+            <DialogDescription
+              className="space-y-3 text-pretty text-muted-foreground text-sm leading-relaxed"
+              render={<div />}
+            >
+              {Array.isArray(project.summary)
+                ? project.summary.map((paragraph) => (
+                    <p key={paragraph}>{paragraph}</p>
+                  ))
+                : (project.summary ?? project.description)}
             </DialogDescription>
 
             {project.role || (project.stack?.length ?? 0) > 0 ? (

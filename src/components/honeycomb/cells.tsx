@@ -59,13 +59,9 @@ function ProjectHex({
           className="size-3.5 text-muted-foreground/60 transition-all duration-200 group-hover:rotate-90 group-hover:text-(--hex-accent) sm:size-4"
         />
       </span>
-      {project.status === 'wip' ? (
+      {project.status === 'wip' && (
         <span className="mt-1.5 rounded-full border border-amber-500/50 px-2 py-0.5 font-medium text-[11px] text-amber-700 tracking-wide dark:text-amber-400">
           coming soon
-        </span>
-      ) : (
-        <span className="mt-1.5 hidden text-muted-foreground text-xs leading-snug lg:line-clamp-2">
-          {project.description}
         </span>
       )}
     </Hex>
@@ -83,13 +79,21 @@ function SocialsHex({ hue, entrance }: ContentCellProps) {
   )
 }
 
-function NowHex({ hue, entrance }: ContentCellProps) {
+function StatusHex({ hue, entrance }: ContentCellProps) {
   return (
     <Hex hue={hue} entrance={entrance}>
       <IconMapPin aria-hidden className="size-5 text-muted-foreground/60" />
       <span className="mt-1 font-medium">{intro.location}</span>
       <span className="mt-0.5 text-muted-foreground text-sm">
-        working at <span className="font-semibold">ValidaTek</span>
+        working at{' '}
+        <a
+          className="font-semibold"
+          href="https://validatek.com"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          ValidaTek
+        </a>
       </span>
     </Hex>
   )
@@ -176,7 +180,7 @@ const cellRenderer: Record<HoneycombCellId, HoneycombCellRenderer> = {
     <OtherProjectsHex hue={hueFor(3)} entrance={entrance} />
   ),
   socials: ({ entrance }) => <SocialsHex hue={hueFor(6)} entrance={entrance} />,
-  now: ({ entrance }) => <NowHex hue={hueFor(7)} entrance={entrance} />,
+  now: ({ entrance }) => <StatusHex hue={hueFor(7)} entrance={entrance} />,
   thesis: ({ entrance }) => <ThesisHex hue={hueFor(8)} entrance={entrance} />,
 }
 

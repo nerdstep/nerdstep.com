@@ -4,6 +4,7 @@
 
 export type ProjectStatus = 'live' | 'wip'
 export type ProjectKind = 'product' | 'oss' | 'personal'
+export type ProjectSummary = string | readonly string[]
 
 export interface Project {
   name: string
@@ -17,8 +18,8 @@ export interface Project {
   kind: ProjectKind
   /** Short one-liner shown on the hex. */
   description: string
-  /** 2-3 sentence writeup shown in the detail dialog. */
-  summary?: string
+  /** One or more paragraphs shown in the detail dialog. */
+  summary?: ProjectSummary
   /** Your relationship to the project, e.g. "creator & maintainer". */
   role?: string
   /** Tech tags shown in the detail meta row. */
@@ -42,7 +43,7 @@ export const siteProject: Project = {
   kind: 'oss',
   description: 'Personal site built on the Cloudflare developer platform',
   summary:
-    'My personal corner of the web and a playground for polished interface experiments. The site is open source and built as a TanStack Start application deployed to Cloudflare Workers.',
+    'My personal corner of the web. The site is open source and built as a TanStack Start application deployed to Cloudflare Workers.',
   role: 'creator',
   stack: ['TypeScript', 'React', 'TanStack Start', 'Cloudflare Workers'],
 }
@@ -57,10 +58,13 @@ export const projects: Project[] = [
     status: 'live',
     kind: 'product',
     description: 'Personal recipe manager and meal planner',
-    summary:
-      'Save any recipe from around the web and cook from a clean, ad-free view — no ten-paragraph life story before the ingredients. Import by URL, organize into collections, and plan meals for the week.',
-    role: 'creator & maintainer',
-    stack: ['TypeScript', 'React', 'TanStack', 'Cloudflare'],
+    summary: [
+      'Mostly Recipes is a local-first recipe app I built because saving recipes from the web is usually a mess.',
+      "You paste in a URL, and it extracts the recipe into a clean, editable format, with all of the details saved to your local device. The app works offline, avoids the usual ads and clutter, and keeps the recipe data under the user's control.",
+      "It also includes AI-assisted imports for recipes that don't follow a standard format, generated cover images, and a meal planner for organizing what to cook throughout the week.",
+    ],
+    role: 'creator',
+    stack: ['TypeScript', 'React', 'TanStack', 'Cloudflare Workers/D1/R2/KV'],
   },
   {
     name: 'mostly.page',
@@ -69,10 +73,9 @@ export const projects: Project[] = [
     status: 'wip',
     kind: 'product',
     description: 'The next thing in the mostly.* family',
-    summary:
-      'The next thing in the mostly.* family — still under construction. Replace this with the real pitch once it is ready to share.',
+    summary: 'The next thing in the mostly.* family — under construction.',
     role: 'creator',
-    stack: ['TypeScript', 'React', 'TanStack', 'Cloudflare'],
+    stack: ['TypeScript', 'React', 'TanStack', 'Cloudflare Workers/D1/R2/KV'],
   },
   {
     name: 'recipe-scrapers',
@@ -82,9 +85,12 @@ export const projects: Project[] = [
     status: 'live',
     kind: 'oss',
     description: 'Recipe scraping library for TypeScript',
-    summary:
-      'An open-source TypeScript library that extracts structured recipe data — ingredients, steps, yield, timing — from hundreds of cooking sites. It powers the import pipeline behind mostly.recipes.',
-    role: 'creator & maintainer',
+    summary: [
+      'Recipe Scrapers is an open-source TypeScript library for extracting structured recipe data from cooking sites.',
+      "It's a spiritual port of the Python recipe-scrapers package, rebuilt around TypeScript, modern JavaScript tooling, and a strongly typed API.",
+      'I built it to power the import pipeline for mostly.recipes, while keeping it useful as a standalone package for other projects.',
+    ],
+    role: 'creator / maintainer',
     stack: ['Bun', 'TypeScript'],
   },
 ]
