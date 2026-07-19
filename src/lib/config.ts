@@ -25,7 +25,7 @@ export interface SiteConfig {
   }
 }
 
-export const BASE_URL = 'https://www.nerdstep.com'
+export const BASE_URL = 'https://nerdstep.com'
 
 export const siteConfig = {
   name: 'nerdstep',

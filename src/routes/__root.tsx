@@ -12,7 +12,7 @@ import { Header } from '@/components/header'
 import { HexagonGrid } from '@/components/hexagon-grid'
 import { NotFound } from '@/components/not-found'
 import { siteConfig } from '@/lib/config'
-import { seo } from '@/lib/seo'
+import { seoHead } from '@/lib/seo'
 import css from '@/styles/index.css?url'
 
 const { language = 'en', textDirection = 'ltr' } = siteConfig
@@ -49,20 +49,35 @@ function RootLayout() {
 }
 
 export const Route = createRootRoute({
-  head: () => ({
-    meta: [
-      { charSet: 'utf-8' },
-      {
-        name: 'viewport',
-        content: 'width=device-width, initial-scale=1',
-      },
-      ...seo(siteConfig),
-    ],
-    links: [
-      { rel: 'stylesheet', href: css },
-      { rel: 'icon', href: '/favicon.ico' },
-    ],
-  }),
+  head: () => {
+    const routeSeo = seoHead({
+      title: siteConfig.name,
+      path: '/',
+    })
+
+    return {
+      meta: [
+        { charSet: 'utf-8' },
+        {
+          name: 'viewport',
+          content: 'minimum-scale=1, initial-scale=1, width=device-width',
+        },
+        ...routeSeo.meta,
+      ],
+      links: [
+        { rel: 'stylesheet', href: css },
+        { rel: 'icon', href: '/favicon.ico' },
+        { rel: 'icon', type: 'image/svg+xml', href: '/favicon.svg' },
+        {
+          rel: 'apple-touch-icon',
+          href: '/apple-touch-icon.png',
+          sizes: '180x180',
+        },
+        { rel: 'manifest', href: '/site.webmanifest' },
+        ...routeSeo.links,
+      ],
+    }
+  },
   component: RootLayout,
   errorComponent: ({ error, reset }: ErrorComponentProps) => (
     <main className="container flex min-h-screen py-8">

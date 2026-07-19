@@ -1,26 +1,35 @@
-import type { SiteConfig } from './config'
+import { siteConfig } from './config'
+import { createSeoBuilder, type SeoPageInput } from './seo/index'
 
-export const seo = ({ title, description, keywords, image }: SiteConfig) => {
-  // @TODO set theme-color
-  const tags = [
-    { title },
-    { name: 'description', content: description },
-    { name: 'keywords', content: keywords },
-    { name: 'twitter:title', content: title },
-    { name: 'twitter:description', content: description },
-    { name: 'twitter:creator', content: '@n3rdstep' },
-    { name: 'twitter:site', content: '@n3rdstep' },
-    { name: 'og:type', content: 'website' },
-    { name: 'og:title', content: title },
-    { name: 'og:description', content: description },
-    ...(image
-      ? [
-          { name: 'twitter:image', content: image },
-          { name: 'twitter:card', content: 'summary_large_image' },
-          { name: 'og:image', content: image },
-        ]
-      : []),
-  ]
+const DEFAULT_SOCIAL_IMAGE = {
+  alt: 'screenshot of nerdstep.com',
+  url: '/img/hotlink-ok/nerdstep-screenshot.webp',
+  width: 1024,
+  height: 600,
+}
 
-  return tags
+const buildSeoHead = createSeoBuilder({
+  applicationName: siteConfig.name,
+  defaultDescription: siteConfig.description,
+  defaultImage: DEFAULT_SOCIAL_IMAGE,
+  locale: 'en_US',
+  siteName: siteConfig.name,
+  siteUrl: siteConfig.url,
+  themeColor: '#0f172b',
+  twitterCreator: `@${siteConfig.social.x}`,
+  twitterSite: `@${siteConfig.social.x}`,
+})
+
+/**
+ * Builds complete route head metadata for Mostly Recipes pages.
+ */
+export function seoHead(input: SeoPageInput) {
+  return buildSeoHead(input)
+}
+
+/**
+ * Builds route meta tags for Mostly Recipes pages.
+ */
+export function seo(input: SeoPageInput) {
+  return seoHead(input).meta
 }
