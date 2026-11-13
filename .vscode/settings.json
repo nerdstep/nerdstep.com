@@ -1,12 +1,12 @@
 {
   // Formatting: oxfmt (extension `oxc.oxc-vscode`, binary from devDependencies).
-  // Linting: Biome (until oxlint migration).
+  // Linting: Oxlint.
   // formatOnSave is off so codeActionsOnSave can pin the order:
-  // lint fixes first, oxfmt formatting last.
+  // Oxlint fixes first, oxfmt formatting last.
   "editor.formatOnSave": false,
   "editor.formatOnSaveMode": "file",
   "editor.codeActionsOnSave": {
-    "source.fixAll.biome": "explicit",
+    "source.fixAll.oxc": "explicit",
     "source.organizeImports": "never",
     "source.format.oxc": "always"
   },

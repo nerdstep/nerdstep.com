@@ -83,7 +83,7 @@ export function Hex({
 }: HexProps) {
   const isInteractive = Boolean(href || onSelect || interactive)
   const outerClass = cn(
-    'relative block shrink-0 bg-border/45 in-data-[suppress-hover-motion]:transition-none transition-colors duration-200',
+    'relative block shrink-0 bg-border/45 transition-colors duration-200 in-data-[suppress-hover-motion]:transition-none',
     isInteractive &&
       'hover:bg-(--hex-accent) focus-visible:z-10 focus-visible:bg-(--hex-accent) focus-visible:outline-none',
     isInteractive && 'cursor-pointer',

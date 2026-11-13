@@ -27,7 +27,7 @@ export function ErrorPage({ error, onRetry }: ErrorPageProps) {
             {import.meta.env.DEV ? (
               <details className="w-full text-left">
                 <summary className="cursor-pointer font-medium">Technical details</summary>
-                <pre className="wrap-break-word mt-2 max-h-40 overflow-auto whitespace-pre-wrap rounded-lg bg-muted p-3 font-mono text-xs">
+                <pre className="mt-2 max-h-40 overflow-auto rounded-lg bg-muted p-3 font-mono text-xs wrap-break-word whitespace-pre-wrap">
                   {error.message}
                 </pre>
               </details>

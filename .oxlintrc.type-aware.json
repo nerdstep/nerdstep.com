@@ -1,0 +1,39 @@
+{
+  "$schema": "./node_modules/oxlint/configuration_schema.json",
+  "plugins": ["typescript"],
+  "options": {
+    "typeAware": true,
+    "reportUnusedDisableDirectives": "off"
+  },
+  "categories": {
+    "correctness": "off"
+  },
+  "rules": {
+    "typescript/no-floating-promises": "error",
+    "typescript/no-misused-promises": "error",
+    "typescript/await-thenable": "error",
+    "typescript/only-throw-error": [
+      "error",
+      {
+        "allow": [
+          {
+            "from": "package",
+            "name": ["NotFoundError", "Redirect"],
+            "package": "@tanstack/router-core"
+          }
+        ]
+      }
+    ],
+    "typescript/switch-exhaustiveness-check": "error"
+  },
+  "ignorePatterns": [
+    "**/.impeccable/**",
+    "**/.tanstack/**",
+    "**/.wrangler/**",
+    "**/dist/**",
+    "**/node_modules/**",
+    "**/public/**",
+    "**/routeTree.gen.ts",
+    "**/worker-configuration.d.ts"
+  ]
+}

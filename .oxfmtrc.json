@@ -13,6 +13,10 @@
   "bracketSpacing": true,
   "sortImports": true,
   "sortPackageJson": true,
+  "sortTailwindcss": {
+    "stylesheet": "./src/styles/index.css",
+    "functions": ["clsx", "cn", "cva"]
+  },
   "overrides": [
     {
       "files": ["**/*.css"],

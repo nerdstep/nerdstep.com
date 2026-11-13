@@ -176,7 +176,7 @@ export function useHexagonParticles(
     }
 
     // Initialize particle states
-    statesRef.current = new Array(particleCount).fill(0).map(() => {
+    statesRef.current = Array.from({ length: particleCount }, () => {
       const curr = randomInt(verticesStable.length)
       const next = pickNextVertex(curr, -1)
       return {
@@ -192,7 +192,7 @@ export function useHexagonParticles(
     })
 
     // Place circles initially and hide until positioned
-    for (let i = 0; i < particleCount; i++) {
+    for (let i = 0; i < particleCount; i += 1) {
       const circle = circlesRef.current[i]
       if (!circle) {
         continue
@@ -217,7 +217,7 @@ export function useHexagonParticles(
 
     const step = (ts: number) => {
       let anyActive = false
-      for (let i = 0; i < particleCount; i++) {
+      for (let i = 0; i < particleCount; i += 1) {
         const state = statesRef.current[i]
         const circle = circlesRef.current[i]
         if (!circle || state.next == null) {

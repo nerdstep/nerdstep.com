@@ -98,8 +98,8 @@ export function useHexagons(): HexagonGridData {
       return idx
     }
 
-    for (let row = 0; row < rows; row++) {
-      for (let col = 0; col < cols; col++) {
+    for (let row = 0; row < rows; row += 1) {
+      for (let col = 0; col < cols; col += 1) {
         const x = col * HEX_WIDTH
         const y = col % 2 === 0 ? row * HEX_HEIGHT : row * HEX_HEIGHT - HEX_HALF_HEIGHT
         const vertices = createHexagonVertices(x, y)
@@ -123,7 +123,7 @@ export function useHexagons(): HexagonGridData {
         }
 
         // Add edges between consecutive vertices to build vertex adjacency
-        for (let i = 0; i < vertices.length; i++) {
+        for (let i = 0; i < vertices.length; i += 1) {
           const a = ensureVertexIndex(vertices[i])
           const b = ensureVertexIndex(vertices[(i + 1) % vertices.length])
           vertexNeighborSets[a].add(b)
