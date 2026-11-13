@@ -3,11 +3,13 @@ import { Card, CardContent } from './ui/card'
 import { Empty, EmptyContent, EmptyDescription, EmptyHeader, EmptyTitle } from './ui/empty'
 
 interface ErrorPageProps {
-  error: Error
+  error: unknown
   onRetry: () => void
 }
 
 export function ErrorPage({ error, onRetry }: ErrorPageProps) {
+  const message = error instanceof Error ? error.message : String(error)
+
   return (
     <Card className="m-auto max-w-xl">
       <CardContent className="p-6 md:p-12 md:pb-11">
@@ -28,7 +30,7 @@ export function ErrorPage({ error, onRetry }: ErrorPageProps) {
               <details className="w-full text-left">
                 <summary className="cursor-pointer font-medium">Technical details</summary>
                 <pre className="mt-2 max-h-40 overflow-auto rounded-lg bg-muted p-3 font-mono text-xs wrap-break-word whitespace-pre-wrap">
-                  {error.message}
+                  {message}
                 </pre>
               </details>
             ) : null}
