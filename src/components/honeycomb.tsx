@@ -7,7 +7,9 @@
  */
 import { useNavigate, useSearch } from '@tanstack/react-router'
 import { useEffect, useState } from 'react'
+
 import { projects, siteProject } from '@/lib/projects'
+
 import { HoneycombCell, SITE_HUE } from './honeycomb/cells'
 import { ProjectDetailDialog } from './honeycomb/dialogs'
 import { HUE_SEED, hueFor } from './honeycomb/hex-cell'
@@ -55,9 +57,7 @@ export function Honeycomb() {
         hue={selectedIndex >= 0 ? hueFor(selectedIndex) : HUE_SEED}
         open={selectedProject !== null}
         onClose={closeProject}
-        triggerId={
-          selectedProject?.slug ? `project-${selectedProject.slug}` : undefined
-        }
+        triggerId={selectedProject?.slug ? `project-${selectedProject.slug}` : undefined}
       />
       <ProjectDetailDialog
         project={siteProject}

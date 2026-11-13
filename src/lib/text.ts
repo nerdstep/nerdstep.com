@@ -22,11 +22,7 @@ export function normalizeText(value?: string | null): string {
  * Selects the singular or plural noun for a count. The plural defaults to the
  * singular with an appended `s`; pass it explicitly for irregular nouns.
  */
-export function pluralize(
-  count: number,
-  singular: string,
-  plural = `${singular}s`,
-): string {
+export function pluralize(count: number, singular: string, plural = `${singular}s`): string {
   return count === 1 ? singular : plural
 }
 
@@ -55,7 +51,5 @@ export function splitStringList(value?: string | null) {
  * Trims, drops empty values, and deduplicates a string list.
  */
 export function normalizeStringList(values: string[]): string[] {
-  return dedupe(
-    values.map((value) => value.trim()).filter((value) => value.length > 0),
-  )
+  return dedupe(values.map((value) => value.trim()).filter((value) => value.length > 0))
 }

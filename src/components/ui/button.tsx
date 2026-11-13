@@ -1,8 +1,10 @@
 import { Button as ButtonPrimitive } from '@base-ui/react/button'
 import { createLink, type LinkComponent } from '@tanstack/react-router'
 import { cva, type VariantProps } from 'class-variance-authority'
+
 import { cn } from '@/lib/utils'
 import type { IconElement } from '@/types'
+
 import { Spinner } from './spinner'
 
 export const buttonVariants = cva(

@@ -1,5 +1,6 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { z } from 'zod'
+
 import { Honeycomb } from '@/components/honeycomb'
 
 // `?p=<slug>` deep-links an open project detail dialog.

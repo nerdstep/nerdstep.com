@@ -1,4 +1,5 @@
 import type { Entries } from 'type-fest'
+
 import { iconMap } from '@/lib/icon-map'
 
 export interface SiteConfig {
@@ -32,8 +33,7 @@ export const siteConfig = {
   url: BASE_URL,
   metadataBase: new URL(BASE_URL),
   title: 'nerdstep',
-  description:
-    'Justin Williams is a full-stack software engineer in Oakland, California.',
+  description: 'Justin Williams is a full-stack software engineer in Oakland, California.',
   keywords: '',
   copyright: 'Justin Williams',
   language: 'en',
@@ -61,9 +61,7 @@ export const socialLinks = {
   github: `https://github.com/${social.github}`,
 } as const satisfies Partial<Record<keyof typeof iconMap, string>>
 
-const socialLinkEntries = Object.entries(socialLinks) as Entries<
-  typeof socialLinks
->
+const socialLinkEntries = Object.entries(socialLinks) as Entries<typeof socialLinks>
 
 export const socialLinkLitems = socialLinkEntries.map(([key, url]) => ({
   key,

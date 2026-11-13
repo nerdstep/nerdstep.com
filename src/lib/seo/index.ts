@@ -1,4 +1,5 @@
 import { isString, isUndefined } from 'es-toolkit'
+
 import { normalizeStringList, normalizeText } from '../text'
 
 export type SeoMetaDescriptor =
@@ -60,20 +61,13 @@ export interface SeoHead {
  * Creates an app-scoped SEO builder from shared Mostly metadata rules.
  */
 export function createSeoBuilder(siteConfig: SeoSiteConfig) {
-  return (pageInput: SeoPageInput) =>
-    buildSeoHead({ page: pageInput, site: siteConfig })
+  return (pageInput: SeoPageInput) => buildSeoHead({ page: pageInput, site: siteConfig })
 }
 
 /**
  * Builds route metadata and canonical links from site defaults plus page input.
  */
-export function buildSeoHead({
-  page,
-  site,
-}: {
-  page: SeoPageInput
-  site: SeoSiteConfig
-}): SeoHead {
+export function buildSeoHead({ page, site }: { page: SeoPageInput; site: SeoSiteConfig }): SeoHead {
   const title = formatTitle(page.title, site.titleTemplate)
   const description = page.description ?? site.defaultDescription
   const image = resolveImage(page.image ?? site.defaultImage, site.siteUrl)
@@ -125,10 +119,7 @@ function compactMeta(
 ): SeoMetaDescriptor[] {
   return descriptors.filter((descriptor): descriptor is SeoMetaDescriptor => {
     if ('content' in descriptor) {
-      return (
-        !isUndefined(descriptor.content) &&
-        normalizeText(descriptor.content) !== ''
-      )
+      return !isUndefined(descriptor.content) && normalizeText(descriptor.content) !== ''
     }
 
     return true

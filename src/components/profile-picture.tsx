@@ -1,4 +1,5 @@
 import Tilt from 'react-parallax-tilt'
+
 import { cn } from '@/lib/utils'
 
 export function ProfilePicture({ className }: { className?: string }) {

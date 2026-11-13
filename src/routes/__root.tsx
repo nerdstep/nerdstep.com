@@ -6,6 +6,7 @@ import {
   Scripts,
 } from '@tanstack/react-router'
 import { ThemeProvider } from 'tanstack-theme-kit'
+
 import { ErrorPage } from '@/components/error-page'
 import { Footer } from '@/components/footer'
 import { Header } from '@/components/header'
@@ -13,6 +14,7 @@ import { HexagonGrid } from '@/components/hexagon-grid'
 import { NotFound } from '@/components/not-found'
 import { siteConfig } from '@/lib/config'
 import { seoHead } from '@/lib/seo'
+
 import css from '@/styles/index.css?url'
 
 const { language = 'en', textDirection = 'ltr' } = siteConfig

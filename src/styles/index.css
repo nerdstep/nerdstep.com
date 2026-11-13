@@ -96,8 +96,8 @@
 
 @theme inline {
   --font-sans:
-    "Manrope Variable", ui-sans-serif, system-ui, sans-serif,
-    "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+    "Manrope Variable", ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji",
+    "Segoe UI Symbol", "Noto Color Emoji";
   --font-mono: "JetBrains Mono Variable", monospace;
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
@@ -233,11 +233,7 @@
 }
 
 .dark .logo-glow::before {
-  background-image: linear-gradient(
-    to bottom right,
-    transparent,
-    rgb(29, 78, 216)
-  );
+  background-image: linear-gradient(to bottom right, transparent, rgb(29, 78, 216));
   opacity: 0.1;
 }
 

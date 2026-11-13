@@ -1,6 +1,7 @@
 import { IconArrowUpRight, IconPlus } from '@tabler/icons-react'
 import { motion } from 'motion/react'
 import type { CSSProperties } from 'react'
+
 import {
   Dialog,
   DialogContent,
@@ -10,6 +11,7 @@ import {
 } from '@/components/ui/dialog'
 import { otherProjects, type Project } from '@/lib/projects'
 import { cn } from '@/lib/utils'
+
 import { projectKindLabel } from './catalog'
 import { HexFill, hexCellVariants, hexStyle } from './hex-cell'
 
@@ -59,9 +61,7 @@ export function OtherProjectsHex({ hue, entrance }: OtherProjectsHexProps) {
 
       <DialogContent className="sm:max-w-lg">
         <DialogTitle>Other projects</DialogTitle>
-        <p className="text-muted-foreground text-sm">
-          Smaller and older side work.
-        </p>
+        <p className="text-muted-foreground text-sm">Smaller and older side work.</p>
         <ul className="mt-2 flex flex-col divide-y divide-border">
           {otherProjects.map((project) => {
             const RowTag = project.url ? 'a' : 'div'
@@ -95,10 +95,7 @@ export function OtherProjectsHex({ hue, entrance }: OtherProjectsHexProps) {
                     <span className="ml-auto flex items-center gap-1.5 text-muted-foreground text-xs">
                       <span
                         aria-hidden
-                        className={cn(
-                          'size-1.5 rounded-full',
-                          statusDotColor[project.status],
-                        )}
+                        className={cn('size-1.5 rounded-full', statusDotColor[project.status])}
                       />
                       {statusLabel[project.status]}
                     </span>
@@ -145,10 +142,7 @@ export function ProjectDetailDialog({
         }
       }}
     >
-      <DialogContent
-        className="sm:max-w-lg"
-        style={{ '--hex-hue': hue } as CSSProperties}
-      >
+      <DialogContent className="sm:max-w-lg" style={{ '--hex-hue': hue } as CSSProperties}>
         {project ? (
           <>
             <div className="flex items-start justify-between gap-4">
@@ -159,18 +153,12 @@ export function ProjectDetailDialog({
                 <DialogTitle className="mt-0.5 font-semibold text-xl tracking-tight">
                   {project.name}
                 </DialogTitle>
-                <span
-                  aria-hidden
-                  className="mt-2 block h-0.5 w-9 rounded-full bg-(--hex-accent)"
-                />
+                <span aria-hidden className="mt-2 block h-0.5 w-9 rounded-full bg-(--hex-accent)" />
               </div>
               <span className="mt-1 mr-8 flex shrink-0 items-center gap-1.5 text-muted-foreground text-xs">
                 <span
                   aria-hidden
-                  className={cn(
-                    'size-1.5 rounded-full',
-                    statusDotColor[project.status],
-                  )}
+                  className={cn('size-1.5 rounded-full', statusDotColor[project.status])}
                 />
                 {statusLabel[project.status]}
               </span>
@@ -181,9 +169,7 @@ export function ProjectDetailDialog({
               render={<div />}
             >
               {Array.isArray(project.summary)
-                ? project.summary.map((paragraph) => (
-                    <p key={paragraph}>{paragraph}</p>
-                  ))
+                ? project.summary.map((paragraph) => <p key={paragraph}>{paragraph}</p>)
                 : (project.summary ?? project.description)}
             </DialogDescription>
 
@@ -191,17 +177,13 @@ export function ProjectDetailDialog({
               <dl className="flex flex-col gap-3 border-border border-t pt-4">
                 {project.role ? (
                   <div className="flex items-baseline gap-3 text-sm">
-                    <dt className="w-12 shrink-0 text-muted-foreground text-xs">
-                      role
-                    </dt>
+                    <dt className="w-12 shrink-0 text-muted-foreground text-xs">role</dt>
                     <dd className="font-medium">{project.role}</dd>
                   </div>
                 ) : null}
                 {project.stack && project.stack.length > 0 ? (
                   <div className="flex items-baseline gap-3">
-                    <dt className="w-12 shrink-0 text-muted-foreground text-xs">
-                      stack
-                    </dt>
+                    <dt className="w-12 shrink-0 text-muted-foreground text-xs">stack</dt>
                     <dd>
                       <ul className="flex flex-wrap gap-1.5">
                         {project.stack.map((tech) => (

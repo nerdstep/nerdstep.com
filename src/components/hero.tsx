@@ -1,4 +1,5 @@
 import { motion } from 'motion/react'
+
 import { ProfilePicture } from './profile-picture'
 import { Card, CardContent } from './ui/card'
 
@@ -52,10 +53,7 @@ export function Hero() {
           >
             Software engineer, outdoor enthusiast, cat dad.
           </motion.h1>
-          <motion.p
-            variants={itemVariants}
-            className="font-medium text-2xl text-muted-foreground"
-          >
+          <motion.p variants={itemVariants} className="font-medium text-2xl text-muted-foreground">
             Perpetually Under Construction
           </motion.p>
         </motion.div>
