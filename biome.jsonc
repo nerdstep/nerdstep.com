@@ -23,23 +23,13 @@
       "!worker-configuration.d.ts"
     ]
   },
+  // Formatting and import sorting are handled by oxfmt (.oxfmtrc.json).
   "formatter": {
-    "enabled": true,
-    "indentStyle": "space",
-    "useEditorconfig": true
+    "enabled": false
   },
   "css": {
     "parser": {
       "tailwindDirectives": true
-    }
-  },
-  "javascript": {
-    "formatter": {
-      "indentWidth": 2,
-      "quoteStyle": "single",
-      "lineWidth": 80,
-      "semicolons": "asNeeded",
-      "trailingCommas": "all"
     }
   },
   "json": {
@@ -50,7 +40,7 @@
   "assist": {
     "actions": {
       "source": {
-        "organizeImports": "on"
+        "organizeImports": "off"
       }
     }
   },
