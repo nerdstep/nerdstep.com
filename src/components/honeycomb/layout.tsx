@@ -7,7 +7,9 @@ import {
   useRef,
   useState,
 } from 'react'
+
 import { cn } from '@/lib/utils'
+
 import { type HoneycombCellId, honeycombCellIds } from './catalog'
 
 const FLOWER_HEX = 210
@@ -94,16 +96,11 @@ interface MorphingHoneycombProps {
  * stack. Animation frames write directly to cell wrappers to avoid rerendering
  * the entire content tree during the morph.
  */
-function MorphingHoneycomb({
-  renderCell,
-  reducedMotion,
-}: MorphingHoneycombProps) {
+function MorphingHoneycomb({ renderCell, reducedMotion }: MorphingHoneycombProps) {
   const containerRef = useRef<HTMLDivElement>(null)
   const flowerRef = useRef<HTMLDivElement>(null)
   const stackRef = useRef<HTMLDivElement>(null)
-  const cellRefs = useRef<
-    Partial<Record<HoneycombCellId, HTMLDivElement | null>>
-  >({})
+  const cellRefs = useRef<Partial<Record<HoneycombCellId, HTMLDivElement | null>>>({})
   const progressRef = useRef(0)
 
   useLayoutEffect(() => {
@@ -117,8 +114,7 @@ function MorphingHoneycomb({
     const apply = () => {
       const progress = progressRef.current
       const measuredStackHex = stack.querySelector('[data-cell]')
-      const stackHexWidth =
-        measuredStackHex?.getBoundingClientRect().width ?? STACK_HEX
+      const stackHexWidth = measuredStackHex?.getBoundingClientRect().width ?? STACK_HEX
       const hexWidth = FLOWER_HEX + (stackHexWidth - FLOWER_HEX) * progress
       container.style.setProperty('--hex-w', `${hexWidth}px`)
       container.style.setProperty('--hex-h', `${hexWidth * HEX_HEIGHT_RATIO}px`)
@@ -136,17 +132,12 @@ function MorphingHoneycomb({
         const toRect = to.getBoundingClientRect()
         const fromX = fromRect.left + fromRect.width / 2 - base.left
         const fromY = fromRect.top + fromRect.height / 2 - base.top
-        const x =
-          fromX +
-          (toRect.left + toRect.width / 2 - base.left - fromX) * progress
-        const y =
-          fromY + (toRect.top + toRect.height / 2 - base.top - fromY) * progress
+        const x = fromX + (toRect.left + toRect.width / 2 - base.left - fromX) * progress
+        const y = fromY + (toRect.top + toRect.height / 2 - base.top - fromY) * progress
         element.style.transform = `translate3d(${x}px, ${y}px, 0) translate(-50%, -50%)`
       }
 
-      const height =
-        flower.offsetHeight +
-        (stack.offsetHeight - flower.offsetHeight) * progress
+      const height = flower.offsetHeight + (stack.offsetHeight - flower.offsetHeight) * progress
       container.style.height = `${Math.round(height)}px`
     }
 
@@ -246,10 +237,7 @@ function MorphingHoneycomb({
   )
 }
 
-function StaticHoneycomb({
-  renderCell,
-  reducedMotion,
-}: MorphingHoneycombProps) {
+function StaticHoneycomb({ renderCell, reducedMotion }: MorphingHoneycombProps) {
   const columnsFor = (columns: HoneycombCellId[][]) =>
     columns.map((column) => column.map((id) => renderCell(id, true)))
 

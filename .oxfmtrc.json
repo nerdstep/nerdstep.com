@@ -1,0 +1,48 @@
+{
+  "$schema": "node_modules/oxfmt/configuration_schema.json",
+  "useTabs": false,
+  "tabWidth": 2,
+  "printWidth": 100,
+  "singleQuote": true,
+  "jsxSingleQuote": false,
+  "quoteProps": "as-needed",
+  "trailingComma": "all",
+  "semi": false,
+  "arrowParens": "always",
+  "bracketSameLine": false,
+  "bracketSpacing": true,
+  "sortImports": true,
+  "sortPackageJson": true,
+  "sortTailwindcss": {
+    "stylesheet": "./src/styles/index.css",
+    "functions": ["clsx", "cn", "cva"]
+  },
+  "overrides": [
+    {
+      "files": ["**/*.css"],
+      "options": { "singleQuote": false }
+    },
+    {
+      "files": ["**/*.jsonc", "**/*.json5"],
+      "options": { "trailingComma": "none" }
+    },
+    {
+      "files": ["./package.json"],
+      "options": { "sortPackageJson": false }
+    }
+  ],
+  "ignorePatterns": [
+    "**/node_modules",
+    "**/.tanstack",
+    "**/.wrangler",
+    "**/dist",
+    "public",
+    "**/routeTree.gen.ts",
+    "worker-configuration.d.ts",
+    "**/*.md",
+    "**/*.mdx",
+    "**/*.yml",
+    "**/*.yaml",
+    "**/*.toml"
+  ]
+}

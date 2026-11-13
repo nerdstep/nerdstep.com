@@ -1,4 +1,5 @@
 import type { ReactNode } from 'react'
+
 import {
   Empty,
   EmptyContent,
@@ -6,6 +7,7 @@ import {
   EmptyHeader,
   EmptyTitle,
 } from '@/components/ui/empty'
+
 import { Button, ButtonLink } from './ui/button'
 import { Card, CardContent } from './ui/card'
 

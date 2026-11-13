@@ -58,8 +58,7 @@ const createPathFromVertices = (vertices: Point[]): string =>
     .map((v) => `L ${v.x} ${v.y}`)
     .join(' ')} Z`
 
-const getVertexKey = (point: Point) =>
-  `${Math.round(point.x * 1000)}:${Math.round(point.y * 1000)}`
+const getVertexKey = (point: Point) => `${Math.round(point.x * 1000)}:${Math.round(point.y * 1000)}`
 
 // Deterministic hash so the shading is stable across server and client renders
 const cellShade = (col: number, row: number): number => {
@@ -99,11 +98,10 @@ export function useHexagons(): HexagonGridData {
       return idx
     }
 
-    for (let row = 0; row < rows; row++) {
-      for (let col = 0; col < cols; col++) {
+    for (let row = 0; row < rows; row += 1) {
+      for (let col = 0; col < cols; col += 1) {
         const x = col * HEX_WIDTH
-        const y =
-          col % 2 === 0 ? row * HEX_HEIGHT : row * HEX_HEIGHT - HEX_HALF_HEIGHT
+        const y = col % 2 === 0 ? row * HEX_HEIGHT : row * HEX_HEIGHT - HEX_HALF_HEIGHT
         const vertices = createHexagonVertices(x, y)
 
         for (const vertex of vertices) {
@@ -125,7 +123,7 @@ export function useHexagons(): HexagonGridData {
         }
 
         // Add edges between consecutive vertices to build vertex adjacency
-        for (let i = 0; i < vertices.length; i++) {
+        for (let i = 0; i < vertices.length; i += 1) {
           const a = ensureVertexIndex(vertices[i])
           const b = ensureVertexIndex(vertices[(i + 1) % vertices.length])
           vertexNeighborSets[a].add(b)

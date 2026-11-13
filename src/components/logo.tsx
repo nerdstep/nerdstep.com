@@ -1,5 +1,6 @@
 import { Link, useLocation } from '@tanstack/react-router'
 import { motion } from 'motion/react'
+
 import { siteConfig } from '@/lib/config'
 
 const { title } = siteConfig

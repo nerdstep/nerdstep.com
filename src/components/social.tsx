@@ -1,6 +1,7 @@
 import { socialLinkLitems } from '@/lib/config'
 import { cn } from '@/lib/utils'
 import type { IconElement } from '@/types'
+
 import { Button } from './ui/button'
 
 interface SocialLinkItem {
@@ -27,13 +28,7 @@ export function Social({ className, items = socialLinkLitems }: SocialProps) {
           size="icon-lg"
           variant="outline"
           render={(props) => (
-            <a
-              {...props}
-              aria-label={label}
-              href={url}
-              rel="noopener noreferrer"
-              target="_blank"
-            />
+            <a {...props} aria-label={label} href={url} rel="noopener noreferrer" target="_blank" />
           )}
         />
       ))}

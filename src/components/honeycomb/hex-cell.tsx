@@ -1,17 +1,16 @@
 import { motion } from 'motion/react'
 import type { CSSProperties, ReactNode } from 'react'
+
 import { cn } from '@/lib/utils'
 
 const GOLDEN_ANGLE = 137.508
 
 export const HUE_SEED = 210
 
-export const hueFor = (index: number) =>
-  Math.round(HUE_SEED + index * GOLDEN_ANGLE) % 360
+export const hueFor = (index: number) => Math.round(HUE_SEED + index * GOLDEN_ANGLE) % 360
 
 // Flat-top hexagon (matching the background grid).
-export const HEX_CLIP =
-  'polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%)'
+export const HEX_CLIP = 'polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%)'
 
 export const hexCellVariants = {
   hidden: { opacity: 0, scale: 0.8 },
@@ -84,7 +83,7 @@ export function Hex({
 }: HexProps) {
   const isInteractive = Boolean(href || onSelect || interactive)
   const outerClass = cn(
-    'relative block shrink-0 bg-border/45 in-data-[suppress-hover-motion]:transition-none transition-colors duration-200',
+    'relative block shrink-0 bg-border/45 transition-colors duration-200 in-data-[suppress-hover-motion]:transition-none',
     isInteractive &&
       'hover:bg-(--hex-accent) focus-visible:z-10 focus-visible:bg-(--hex-accent) focus-visible:outline-none',
     isInteractive && 'cursor-pointer',

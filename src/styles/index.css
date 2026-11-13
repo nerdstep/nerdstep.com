@@ -96,8 +96,8 @@
 
 @theme inline {
   --font-sans:
-    "Manrope Variable", ui-sans-serif, system-ui, sans-serif,
-    "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+    "Manrope Variable", ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji",
+    "Segoe UI Symbol", "Noto Color Emoji";
   --font-mono: "JetBrains Mono Variable", monospace;
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
@@ -150,14 +150,12 @@
 
   /* Fix scrollbar issue: https://github.com/shadcn-ui/ui/issues/977#issuecomment-2493044621 */
   html > body[data-scroll-locked] {
-    /* biome-ignore lint/complexity/noImportantStyles: fo */
     overflow: visible !important;
-    /* biome-ignore lint/complexity/noImportantStyles: fo */
     margin-right: 0 !important;
   }
 
   a {
-    @apply text-primary underline-offset-4 hover:underline font-medium;
+    @apply font-medium text-primary underline-offset-4 hover:underline;
   }
 }
 
@@ -233,11 +231,7 @@
 }
 
 .dark .logo-glow::before {
-  background-image: linear-gradient(
-    to bottom right,
-    transparent,
-    rgb(29, 78, 216)
-  );
+  background-image: linear-gradient(to bottom right, transparent, rgb(29, 78, 216));
   opacity: 0.1;
 }
 

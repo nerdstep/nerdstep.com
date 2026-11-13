@@ -1,0 +1,95 @@
+{
+  "$schema": "./node_modules/oxlint/configuration_schema.json",
+  "plugins": ["eslint", "typescript", "unicorn", "oxc", "import", "react", "jsx-a11y"],
+  "options": {
+    "reportUnusedDisableDirectives": "error"
+  },
+  "categories": {
+    "correctness": "error"
+  },
+  "ignorePatterns": [
+    "**/.impeccable/**",
+    "**/.tanstack/**",
+    "**/.wrangler/**",
+    "**/dist/**",
+    "**/node_modules/**",
+    "**/public/**",
+    "**/routeTree.gen.ts",
+    "**/worker-configuration.d.ts"
+  ],
+  "rules": {
+    "curly": ["error", "all"],
+    "default-param-last": "error",
+    "eqeqeq": ["error", "always", { "null": "ignore" }],
+    "import/no-absolute-path": "error",
+    "import/no-cycle": "error",
+    "import/no-duplicates": "error",
+    "import/no-self-import": "error",
+    "no-await-in-loop": "error",
+    "no-bitwise": "error",
+    "no-constant-binary-expression": "error",
+    "no-else-return": "error",
+    "no-implicit-coercion": "error",
+    "no-lonely-if": "error",
+    "no-loss-of-precision": "error",
+    "no-nested-ternary": "error",
+    "no-param-reassign": "error",
+    "no-plusplus": "error",
+    "no-shadow": "error",
+    "no-unused-vars": [
+      "error",
+      {
+        "argsIgnorePattern": "^_",
+        "caughtErrorsIgnorePattern": "^_",
+        "ignoreRestSiblings": true
+      }
+    ],
+    "no-useless-concat": "error",
+    "no-useless-escape": "error",
+    "one-var": ["error", "never"],
+    "operator-assignment": ["error", "always"],
+    "prefer-exponentiation-operator": "error",
+    "prefer-object-spread": "error",
+    "react/jsx-key": "error",
+    "react/no-children-prop": "error",
+    "react/no-danger": "off",
+    "react/jsx-no-constructed-context-values": "error",
+    "react/rules-of-hooks": "error",
+    "react/self-closing-comp": "error",
+    "react-hooks/exhaustive-deps": "error",
+    "react/incompatible-library": "off",
+    "react/preserve-manual-memoization": "off",
+    "react/no-object-type-as-default-prop": "error",
+    "react/refs": "off",
+    "react/set-state-in-effect": "off",
+    "react/use-memo": "off",
+    "typescript/ban-ts-comment": "error",
+    "typescript/consistent-type-imports": [
+      "error",
+      {
+        "disallowTypeAnnotations": false,
+        "fixStyle": "inline-type-imports"
+      }
+    ],
+    "typescript/no-explicit-any": "error",
+    "typescript/no-inferrable-types": "error",
+    // Narrow with a guard or restructure; use es-toolkit `invariant` for a real
+    // assumption the compiler can't see, so a wrong one fails with a message.
+    "typescript/no-non-null-assertion": "error",
+    "typescript/prefer-as-const": "error",
+    "typescript/prefer-enum-initializers": "error",
+    "typescript/prefer-for-of": "error",
+    "unicorn/explicit-length-check": "error",
+    "unicorn/no-array-for-each": "error",
+    "unicorn/no-document-cookie": "error",
+    "unicorn/numeric-separators-style": "off",
+    "unicorn/prefer-at": "error",
+    "unicorn/prefer-number-properties": "error",
+    "jsx-a11y/anchor-has-content": "off",
+    "jsx-a11y/control-has-associated-label": "error",
+    "jsx-a11y/interactive-supports-focus": "error",
+    "jsx-a11y/no-autofocus": "off",
+    "jsx-a11y/no-noninteractive-element-interactions": "error",
+    "jsx-a11y/prefer-tag-over-role": "off"
+  }
+}

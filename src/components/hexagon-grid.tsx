@@ -1,5 +1,6 @@
 import { useReducedMotion } from 'motion/react'
 import { useMemo } from 'react'
+
 import { useHexagonParticles } from '@/hooks/use-hexagon-particles'
 import { useHexagons } from '@/hooks/use-hexagons'
 
@@ -47,9 +48,7 @@ export function HexagonGrid({
 
   const particleColors = useMemo(() => {
     if (colors && colors.length > 0) {
-      return Array.from({ length: particleCount }).map(
-        (_, i) => colors[i % colors.length],
-      )
+      return Array.from({ length: particleCount }).map((_, i) => colors[i % colors.length])
     }
     if (randomizeColors) {
       const seed = (particleCount * 23) % 360
@@ -91,11 +90,7 @@ export function HexagonGrid({
       >
         <defs>
           <filter id="particleGlow" filterUnits="userSpaceOnUse">
-            <feGaussianBlur
-              in="SourceGraphic"
-              stdDeviation={particleRadius * 0.9}
-              result="blur1"
-            />
+            <feGaussianBlur in="SourceGraphic" stdDeviation={particleRadius * 0.9} result="blur1" />
             <feMerge>
               <feMergeNode in="blur1" />
               <feMergeNode in="SourceGraphic" />

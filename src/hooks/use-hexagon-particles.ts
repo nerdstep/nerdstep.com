@@ -55,9 +55,7 @@ export interface UseHexagonParticlesOptions {
 export interface UseHexagonParticlesResult {
   getCircleRef: (index: number) => (el: SVGCircleElement | null) => void
   getTrailPathRef: (index: number) => (el: SVGPathElement | null) => void
-  getGradientRef: (
-    index: number,
-  ) => (el: SVGLinearGradientElement | null) => void
+  getGradientRef: (index: number) => (el: SVGLinearGradientElement | null) => void
   radius: number
 }
 
@@ -73,8 +71,7 @@ type ParticleState = {
   trail: Array<{ x: number; y: number }>
 }
 
-const easeInOutQuad = (t: number) =>
-  t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t
+const easeInOutQuad = (t: number) => (t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t)
 
 const randomInt = (n: number) => Math.floor(Math.random() * n)
 
@@ -138,10 +135,7 @@ export function useHexagonParticles(
       }
 
       // Step 1: avoid immediate backtrack
-      let pool =
-        avoidBacktrack && previous >= 0
-          ? nbrs.filter((i) => i !== previous)
-          : [...nbrs]
+      let pool = avoidBacktrack && previous >= 0 ? nbrs.filter((i) => i !== previous) : [...nbrs]
 
       // Step 2: forward-only constraint based on angle to previous direction
       if (forwardOnly && previous >= 0 && vertices.length > 0) {
@@ -182,7 +176,7 @@ export function useHexagonParticles(
     }
 
     // Initialize particle states
-    statesRef.current = new Array(particleCount).fill(0).map(() => {
+    statesRef.current = Array.from({ length: particleCount }, () => {
       const curr = randomInt(verticesStable.length)
       const next = pickNextVertex(curr, -1)
       return {
@@ -198,7 +192,7 @@ export function useHexagonParticles(
     })
 
     // Place circles initially and hide until positioned
-    for (let i = 0; i < particleCount; i++) {
+    for (let i = 0; i < particleCount; i += 1) {
       const circle = circlesRef.current[i]
       if (!circle) {
         continue
@@ -223,7 +217,7 @@ export function useHexagonParticles(
 
     const step = (ts: number) => {
       let anyActive = false
-      for (let i = 0; i < particleCount; i++) {
+      for (let i = 0; i < particleCount; i += 1) {
         const state = statesRef.current[i]
         const circle = circlesRef.current[i]
         if (!circle || state.next == null) {
@@ -261,9 +255,7 @@ export function useHexagonParticles(
             if (state.trail.length > 1) {
               const d =
                 'M ' +
-                state.trail
-                  .map((p, idx) => `${idx === 0 ? '' : 'L '}${p.x} ${p.y}`)
-                  .join(' ')
+                state.trail.map((p, idx) => `${idx === 0 ? '' : 'L '}${p.x} ${p.y}`).join(' ')
               path.setAttribute('d', d)
               path.setAttribute('opacity', String(trailMaxOpacity))
               const head = state.trail[0]
@@ -303,9 +295,7 @@ export function useHexagonParticles(
             if (state.trail.length > 1) {
               const d =
                 'M ' +
-                state.trail
-                  .map((p, idx) => `${idx === 0 ? '' : 'L '}${p.x} ${p.y}`)
-                  .join(' ')
+                state.trail.map((p, idx) => `${idx === 0 ? '' : 'L '}${p.x} ${p.y}`).join(' ')
               path.setAttribute('d', d)
               path.setAttribute('opacity', String(trailMaxOpacity))
               const head = state.trail[0]

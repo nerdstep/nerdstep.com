@@ -1,8 +1,5 @@
-import {
-  IconBrandGithubFilled,
-  IconBrandLinkedin,
-  IconBrandXFilled,
-} from '@tabler/icons-react'
+import { IconBrandGithubFilled, IconBrandLinkedin, IconBrandXFilled } from '@tabler/icons-react'
+
 import type { IconElement } from '@/types'
 
 export type IconConfig = {
