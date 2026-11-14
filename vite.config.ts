@@ -16,6 +16,11 @@ const vendor = (packages: RegExp) => {
 }
 
 export default defineConfig({
+  // When this build was made, for the footer's "Updated" date and copyright
+  // year. Baked in at build time so the server and browser render the same text.
+  define: {
+    __BUILD_DATE__: JSON.stringify(new Date().toISOString()),
+  },
   server: {
     port: 3100,
     strictPort: true,
