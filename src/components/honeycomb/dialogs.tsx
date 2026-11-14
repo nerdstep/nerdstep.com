@@ -98,7 +98,8 @@ interface ProjectDetailDialogProps {
   hue: number
   open: boolean
   onClose: () => void
-  triggerId?: string
+  /** Always pass a value (null for none); Base UI warns if it switches to undefined. */
+  triggerId: string | null
 }
 
 /** Controlled project dialog used by both cell clicks and deep links. */

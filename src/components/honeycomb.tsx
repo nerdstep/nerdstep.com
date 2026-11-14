@@ -42,6 +42,13 @@ export function Honeycomb() {
   const navigate = useNavigate({ from: '/' })
   const { p } = useSearch({ from: '/' })
   const selected = p ? deepLinkable.find((entry) => entry.project.slug === p) : undefined
+  // Keep showing the last project while its dialog animates closed, and keep
+  // `triggerId` controlled (never back to undefined) so focus returns to it.
+  const [lastSelected, setLastSelected] = useState(selected)
+  if (selected && selected !== lastSelected) {
+    setLastSelected(selected)
+  }
+  const shown = selected ?? lastSelected
 
   const openProject = (slug: string) => {
     setOpenSourceOpen(false)
@@ -82,11 +89,11 @@ export function Honeycomb() {
         onSelectProject={openProject}
       />
       <ProjectDetailDialog
-        project={selected?.project ?? null}
-        hue={selected?.hue ?? OSS_HUE}
+        project={shown?.project ?? null}
+        hue={shown?.hue ?? OSS_HUE}
         open={selected !== undefined}
         onClose={closeProject}
-        triggerId={selected?.triggerId}
+        triggerId={shown?.triggerId ?? null}
       />
       <ProjectDetailDialog
         project={siteProject}
