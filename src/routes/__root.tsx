@@ -53,7 +53,8 @@ function RootLayout() {
 export const Route = createRootRoute({
   head: () => {
     const routeSeo = seoHead({
-      title: siteConfig.name,
+      // Names the person as well as the site, for tabs, search results, and shared links.
+      title: `Justin Williams · ${siteConfig.name}`,
       path: '/',
     })
 
@@ -68,7 +69,8 @@ export const Route = createRootRoute({
       ],
       links: [
         { rel: 'stylesheet', href: css },
-        { rel: 'icon', href: '/favicon.ico' },
+        // `sizes` on the ICO lets browsers that support SVG favicons prefer the SVG.
+        { rel: 'icon', href: '/favicon.ico', sizes: '32x32' },
         { rel: 'icon', type: 'image/svg+xml', href: '/favicon.svg' },
         {
           rel: 'apple-touch-icon',
