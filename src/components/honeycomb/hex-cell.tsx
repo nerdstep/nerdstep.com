@@ -1,4 +1,4 @@
-import { motion } from 'motion/react'
+import { m } from 'motion/react'
 import type { CSSProperties, ReactNode } from 'react'
 
 import { cn } from '@/lib/utils'
@@ -109,7 +109,7 @@ export function Hex({
 
   if (onSelect) {
     return (
-      <motion.button
+      <m.button
         id={id}
         aria-label={label}
         className={cn(outerClass, 'group text-inherit')}
@@ -119,13 +119,13 @@ export function Hex({
         {...motionProps}
       >
         {inner}
-      </motion.button>
+      </m.button>
     )
   }
 
   if (href) {
     return (
-      <motion.a
+      <m.a
         id={id}
         aria-label={label}
         className={cn(
@@ -139,13 +139,13 @@ export function Hex({
         {...motionProps}
       >
         {inner}
-      </motion.a>
+      </m.a>
     )
   }
 
   return (
-    <motion.div className={outerClass} style={hexStyle(hue)} {...motionProps}>
+    <m.div className={outerClass} style={hexStyle(hue)} {...motionProps}>
       {inner}
-    </motion.div>
+    </m.div>
   )
 }

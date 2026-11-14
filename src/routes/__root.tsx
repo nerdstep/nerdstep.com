@@ -5,6 +5,7 @@ import {
   Outlet,
   Scripts,
 } from '@tanstack/react-router'
+import { domAnimation, LazyMotion } from 'motion/react'
 
 import { ErrorPage } from '@/components/error-page'
 import { Footer } from '@/components/footer'
@@ -37,13 +38,15 @@ function RootDocument({
 
 function RootLayout() {
   return (
-    <>
+    // Components use the slim `m` instead of `motion`, so only the animation
+    // features are bundled. `strict` throws if a full `motion` component sneaks in.
+    <LazyMotion features={domAnimation} strict>
       <HexagonGrid />
       <main className="container flex flex-auto pt-24 pb-8 md:pt-28">
         <Outlet />
       </main>
       <Footer />
-    </>
+    </LazyMotion>
   )
 }
 

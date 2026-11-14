@@ -1,4 +1,4 @@
-import { motion, useReducedMotion } from 'motion/react'
+import { m, useReducedMotion } from 'motion/react'
 import {
   type CSSProperties,
   type ReactNode,
@@ -247,7 +247,7 @@ function StaticHoneycomb({ renderCell, reducedMotion }: MorphingHoneycombProps) 
     columns.map((column) => column.map((id) => renderCell(id, true)))
 
   return (
-    <motion.div
+    <m.div
       className="w-full py-4"
       initial={reducedMotion ? false : 'hidden'}
       animate="visible"
@@ -263,7 +263,7 @@ function StaticHoneycomb({ renderCell, reducedMotion }: MorphingHoneycombProps) 
       <div className="lg:hidden" style={stackVars}>
         <HexColumns columns={columnsFor(stackColumns)} />
       </div>
-    </motion.div>
+    </m.div>
   )
 }
 

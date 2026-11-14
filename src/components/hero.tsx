@@ -1,4 +1,4 @@
-import { motion } from 'motion/react'
+import { m } from 'motion/react'
 
 import { ProfilePicture } from './profile-picture'
 import { Card, CardContent } from './ui/card'
@@ -19,7 +19,7 @@ export function Hero() {
   return (
     <Card className="m-auto max-w-xl bg-card/50 backdrop-blur-sm">
       <CardContent className="p-6 text-center md:p-12 md:pb-11">
-        <motion.div
+        <m.div
           variants={{
             hidden: { opacity: 0 },
             visible: {
@@ -33,7 +33,7 @@ export function Hero() {
           initial="hidden"
           animate="visible"
         >
-          <motion.div
+          <m.div
             variants={{
               hidden: { opacity: 0, scale: 0.4 },
               visible: {
@@ -46,17 +46,17 @@ export function Hero() {
             }}
           >
             <ProfilePicture />
-          </motion.div>
-          <motion.h1
+          </m.div>
+          <m.h1
             variants={itemVariants}
             className="my-4 text-3xl leading-tight font-bold tracking-tight md:text-4xl"
           >
             Software engineer, outdoor enthusiast, cat dad.
-          </motion.h1>
-          <motion.p variants={itemVariants} className="text-2xl font-medium text-muted-foreground">
+          </m.h1>
+          <m.p variants={itemVariants} className="text-2xl font-medium text-muted-foreground">
             Perpetually Under Construction
-          </motion.p>
-        </motion.div>
+          </m.p>
+        </m.div>
       </CardContent>
     </Card>
   )

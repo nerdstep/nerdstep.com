@@ -4,6 +4,17 @@ import { tanstackStart } from '@tanstack/react-start/plugin/vite'
 import viteReact from '@vitejs/plugin-react'
 import { defineConfig } from 'vite'
 
+// TanStack Start's client packages import the app's router (and through it all
+// site code). A chunk group pulls in its modules' dependencies, so grouping these
+// would drag the whole app along. They stay with the entry chunk instead.
+const START_CLIENT = /\/node_modules\/@tanstack\/(?:react-start|start-)[^/]*\//
+
+/** Matches modules in the given node_modules packages, except Start's client. */
+const vendor = (packages: RegExp) => {
+  const pattern = new RegExp(String.raw`/node_modules/(?:${packages.source})/`)
+  return (id: string) => pattern.test(id) && !START_CLIENT.test(id)
+}
+
 export default defineConfig({
   server: {
     port: 3100,
@@ -11,6 +22,25 @@ export default defineConfig({
   },
   build: {
     emptyOutDir: true,
+  },
+  environments: {
+    client: {
+      build: {
+        rolldownOptions: {
+          output: {
+            // Split vendor code by how often it changes, so a deploy that only
+            // touches site code keeps React and the router cached.
+            codeSplitting: {
+              groups: [
+                { name: 'react', test: vendor(/react|react-dom|scheduler/), priority: 3 },
+                { name: 'tanstack', test: vendor(/@tanstack\/[^/]+|seroval[^/]*/), priority: 2 },
+                { name: 'vendor', test: vendor(/[^/]+/), priority: 1 },
+              ],
+            },
+          },
+        },
+      },
+    },
   },
   resolve: {
     tsconfigPaths: true,

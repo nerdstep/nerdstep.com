@@ -1,11 +1,15 @@
 import { createFileRoute } from '@tanstack/react-router'
-import { z } from 'zod'
+import { isString } from 'es-toolkit'
 
 import { Honeycomb } from '@/components/honeycomb'
 
-// `?p=<slug>` deep-links an open project detail dialog.
-const searchSchema = z.object({
-  p: z.string().optional(),
+interface HomeSearch {
+  /** `?p=<slug>` deep-links an open project detail dialog. */
+  p?: string
+}
+
+const validateSearch = (search: Record<string, unknown>): HomeSearch => ({
+  p: isString(search.p) ? search.p : undefined,
 })
 
 function Home() {
@@ -18,5 +22,5 @@ function Home() {
 
 export const Route = createFileRoute('/')({
   component: Home,
-  validateSearch: searchSchema,
+  validateSearch,
 })
