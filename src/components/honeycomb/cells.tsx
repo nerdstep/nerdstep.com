@@ -19,7 +19,7 @@ function IntroHex({ hue, entrance }: ContentCellProps) {
       <img
         alt="profile"
         // Smaller below 360px so the role stays clear of the hex's tapered bottom.
-        className="size-16 rounded-full border-2 border-gray-600/50 min-[360px]:size-20"
+        className="size-16 rounded-full border-2 border-white/15 min-[360px]:size-20"
         height={80}
         src="/img/profile-sm.jpg"
         width={80}

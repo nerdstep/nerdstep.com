@@ -56,7 +56,7 @@ export function HexFill() {
     <>
       <span
         aria-hidden
-        className="absolute inset-0.5 bg-[oklch(0.2_0.038_264.7/0.84)] lg:bg-[oklch(0.2_0.038_264.7/0.64)]"
+        className="absolute inset-0.5 bg-[oklch(0.18_0.005_270/0.84)] lg:bg-[oklch(0.18_0.005_270/0.64)]"
         style={{ clipPath: HEX_CLIP }}
       />
       <span

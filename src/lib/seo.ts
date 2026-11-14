@@ -16,8 +16,8 @@ const buildSeoHead = createSeoBuilder({
   locale: 'en_US',
   siteName: siteConfig.name,
   siteUrl: siteConfig.url,
-  // The page background (slate-950); the site is dark-only.
-  themeColor: '#020617',
+  // The page background (charcoal, `--background`); the site is dark-only.
+  themeColor: '#070709',
   twitterCreator: `@${siteConfig.social.x}`,
   twitterSite: `@${siteConfig.social.x}`,
 })
