@@ -6,13 +6,23 @@
  * modules under `./honeycomb`.
  */
 import { useNavigate, useSearch } from '@tanstack/react-router'
-import { useEffect, useState } from 'react'
+import { lazy, Suspense, useEffect, useState } from 'react'
 
 import { openSourceProjects, type Project, projects, siteProject } from '@/lib/projects'
 
+import { OPEN_SOURCE_TRIGGER_ID } from './honeycomb/catalog'
 import { FEATURED_HUES, HoneycombCell, OSS_HUE, SITE_HUE } from './honeycomb/cells'
-import { OPEN_SOURCE_TRIGGER_ID, OpenSourceDialog, ProjectDetailDialog } from './honeycomb/dialogs'
 import { HoneycombLayout } from './honeycomb/layout'
+
+// The dialogs (and Base UI's dialog with them) load in their own chunk. Nothing
+// needs them until a cell is clicked or a `?p=` link opens one.
+const loadDialogs = () => import('./honeycomb/dialogs')
+const OpenSourceDialog = lazy(() =>
+  loadDialogs().then((module) => ({ default: module.OpenSourceDialog })),
+)
+const ProjectDetailDialog = lazy(() =>
+  loadDialogs().then((module) => ({ default: module.ProjectDetailDialog })),
+)
 
 interface DeepLinkable {
   project: Project
@@ -49,6 +59,12 @@ export function Honeycomb() {
     setLastSelected(selected)
   }
   const shown = selected ?? lastSelected
+  // Mount the dialogs the first time one is wanted, then keep them mounted so
+  // they can animate closed.
+  const [dialogsMounted, setDialogsMounted] = useState(false)
+  if (!dialogsMounted && (siteDialogOpen || openSourceOpen || selected)) {
+    setDialogsMounted(true)
+  }
 
   const openProject = (slug: string) => {
     setOpenSourceOpen(false)
@@ -57,6 +73,16 @@ export function Honeycomb() {
   const closeProject = () => {
     void navigate({ search: (previous) => ({ ...previous, p: undefined }) })
   }
+
+  // Fetch the dialog chunk once the page is idle so the first click is instant.
+  useEffect(() => {
+    if (typeof requestIdleCallback === 'function') {
+      const handle = requestIdleCallback(() => void loadDialogs())
+      return () => cancelIdleCallback(handle)
+    }
+    const timeout = setTimeout(() => void loadDialogs(), 2000)
+    return () => clearTimeout(timeout)
+  }, [])
 
   // Remove stale deep links so renamed or mistyped project slugs do not linger.
   useEffect(() => {
@@ -82,26 +108,30 @@ export function Honeycomb() {
           />
         )}
       />
-      <OpenSourceDialog
-        hue={OSS_HUE}
-        open={openSourceOpen}
-        onOpenChange={setOpenSourceOpen}
-        onSelectProject={openProject}
-      />
-      <ProjectDetailDialog
-        project={shown?.project ?? null}
-        hue={shown?.hue ?? OSS_HUE}
-        open={selected !== undefined}
-        onClose={closeProject}
-        triggerId={shown?.triggerId ?? null}
-      />
-      <ProjectDetailDialog
-        project={siteProject}
-        hue={SITE_HUE}
-        open={siteDialogOpen}
-        onClose={() => setSiteDialogOpen(false)}
-        triggerId="site-about"
-      />
+      {dialogsMounted && (
+        <Suspense fallback={null}>
+          <OpenSourceDialog
+            hue={OSS_HUE}
+            open={openSourceOpen}
+            onOpenChange={setOpenSourceOpen}
+            onSelectProject={openProject}
+          />
+          <ProjectDetailDialog
+            project={shown?.project ?? null}
+            hue={shown?.hue ?? OSS_HUE}
+            open={selected !== undefined}
+            onClose={closeProject}
+            triggerId={shown?.triggerId ?? null}
+          />
+          <ProjectDetailDialog
+            project={siteProject}
+            hue={SITE_HUE}
+            open={siteDialogOpen}
+            onClose={() => setSiteDialogOpen(false)}
+            triggerId="site-about"
+          />
+        </Suspense>
+      )}
     </>
   )
 }

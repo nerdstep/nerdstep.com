@@ -5,7 +5,7 @@ import { Dialog, DialogContent, DialogDescription, DialogTitle } from '@/compone
 import { openSourceProjects, type Project } from '@/lib/projects'
 import { cn } from '@/lib/utils'
 
-import { projectKindLabel } from './catalog'
+import { OPEN_SOURCE_TRIGGER_ID, projectKindLabel } from './catalog'
 
 const statusDotColor: Record<Project['status'], string> = {
   live: 'bg-emerald-500',
@@ -49,9 +49,6 @@ function ProjectRow({ project, onSelect }: { project: Project; onSelect: () => v
     </button>
   )
 }
-
-/** Element id of the open-source cell; detail dialogs return focus here. */
-export const OPEN_SOURCE_TRIGGER_ID = 'open-source'
 
 interface OpenSourceDialogProps {
   hue: number

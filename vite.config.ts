@@ -34,7 +34,13 @@ export default defineConfig({
               groups: [
                 { name: 'react', test: vendor(/react|react-dom|scheduler/), priority: 3 },
                 { name: 'tanstack', test: vendor(/@tanstack\/[^/]+|seroval[^/]*/), priority: 2 },
-                { name: 'vendor', test: vendor(/[^/]+/), priority: 1 },
+                // UI kits the lazy dialogs share are left out, so Rolldown puts
+                // their dialog-only modules in the dialogs chunk.
+                {
+                  name: 'vendor',
+                  test: vendor(/(?!@base-ui\/|@floating-ui\/|@tabler\/)[^/]+/),
+                  priority: 1,
+                },
               ],
             },
           },
@@ -59,10 +65,4 @@ export default defineConfig({
     // in plugin-react v6). Fatal diagnostics fail the transform.
     viteReact({ compiler: { logDiagnostics: true } }),
   ],
-  ssr: {
-    noExternal: ['react-use'],
-  },
-  optimizeDeps: {
-    include: ['react-use'],
-  },
 })

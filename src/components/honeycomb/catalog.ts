@@ -15,6 +15,9 @@ export const honeycombCellIds = [
 
 export type HoneycombCellId = (typeof honeycombCellIds)[number]
 
+/** Element id of the open-source cell; detail dialogs return focus here. */
+export const OPEN_SOURCE_TRIGGER_ID = 'open-source'
+
 /** User-facing project-kind copy shared by cells and dialogs. */
 export const projectKindLabel: Record<Project['kind'], string> = {
   product: 'product',

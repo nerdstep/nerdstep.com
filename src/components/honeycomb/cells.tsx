@@ -4,8 +4,7 @@ import type { ReactNode } from 'react'
 import { Social } from '@/components/social'
 import { intro, openSourceProjects, type Project, projects } from '@/lib/projects'
 
-import { type HoneycombCellId, projectKindLabel } from './catalog'
-import { OPEN_SOURCE_TRIGGER_ID } from './dialogs'
+import { type HoneycombCellId, OPEN_SOURCE_TRIGGER_ID, projectKindLabel } from './catalog'
 import { Hex, hueFor } from './hex-cell'
 
 interface ContentCellProps {

@@ -147,10 +147,6 @@
   }
 }
 
-.tilt {
-  transform: translateZ(10px) scale(0.96);
-}
-
 /* Fallback hue so the honeycomb's `hsl(var(--hex-hue) …)` glass tints resolve
  * even on any element that hasn't set its own; every cell overrides this. */
 :root {
@@ -172,19 +168,4 @@
 .group:hover .hex-hover-accent,
 .group:focus-visible .hex-hover-accent {
   color: var(--hex-accent);
-}
-
-.logo-glow::before {
-  background-image: linear-gradient(to bottom right, transparent, rgb(29, 78, 216));
-  opacity: 0.1;
-}
-
-.logo-glow::after {
-  background-image: conic-gradient(
-    from 180deg at 50% 50%,
-    rgb(12, 74, 110),
-    rgb(28, 100, 242),
-    transparent
-  );
-  opacity: 0.4;
 }
