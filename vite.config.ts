@@ -25,7 +25,9 @@ export default defineConfig({
         routesDirectory: 'routes',
       },
     }),
-    viteReact(),
+    // React Compiler via oxc-transform-react, the native Rust port (experimental
+    // in plugin-react v6). Fatal diagnostics fail the transform.
+    viteReact({ compiler: { logDiagnostics: true } }),
   ],
   ssr: {
     noExternal: ['react-use'],

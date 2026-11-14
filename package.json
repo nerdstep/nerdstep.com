@@ -46,6 +46,7 @@
     "@tailwindcss/vite": "^4.3.5",
     "@types/bun": "latest",
     "@vitejs/plugin-react": "^6.3.0",
+    "oxc-transform-react": "^0.158.0",
     "oxfmt": "0.78.0",
     "oxlint": "^1.93.0",
     "oxlint-tsgolint": "7.0.2007",
