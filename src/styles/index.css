@@ -204,6 +204,33 @@
 }
 
 /*
+ * Ambient glow behind a honeycomb project cell (see HexagonGrid). Centered on
+ * the cell with `translate`, drifting with `transform` so the two compose.
+ */
+.ambient-glow {
+  position: absolute;
+  translate: -50% -50%;
+  border-radius: 50%;
+  background: radial-gradient(closest-side, hsl(var(--glow-hue) 75% 55% / 0.2), transparent);
+  animation: ambient-drift 36s ease-in-out infinite alternate;
+}
+
+@keyframes ambient-drift {
+  0% {
+    transform: translate(0, 0) scale(1);
+  }
+  33% {
+    transform: translate(9%, -6%) scale(1.08);
+  }
+  66% {
+    transform: translate(-7%, 8%) scale(0.94);
+  }
+  100% {
+    transform: translate(5%, 5%) scale(1.04);
+  }
+}
+
+/*
  * Per-hex kind label. Each cell sets its own `--hex-hue` inline; the color is
  * declared here on the label element itself (not on :root) so `var(--hex-hue)`
  * resolves against the cell's hue. The bright fill hue (hsl H 70% 55%) fails

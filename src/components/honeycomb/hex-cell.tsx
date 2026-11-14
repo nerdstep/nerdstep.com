@@ -68,9 +68,15 @@ export function HexFill() {
         aria-hidden
         className="hex-rim absolute inset-0 bg-(--hex-accent) opacity-0 transition-opacity duration-200 group-hover/hex:opacity-100 group-focus-visible/hex:opacity-100 in-data-suppress-hover-motion:transition-none"
       />
+      {/*
+       * Glass optics: a specular highlight near the top over a faint diagonal
+       * sheen, plus a bevel (a light line on the top edge, a dark one on the
+       * bottom). The inset shadows run along the box, so the hexagon clip
+       * leaves them only on its two flat edges.
+       */}
       <span
         aria-hidden
-        className="absolute inset-0.5 bg-linear-to-br from-white/12 via-transparent to-foreground/10"
+        className="absolute inset-0.5 bg-[radial-gradient(ellipse_70%_45%_at_32%_0%,rgb(255_255_255/0.11),transparent_70%),linear-gradient(to_bottom_right,rgb(255_255_255/0.06),transparent_45%,rgb(0_0_0/0.12))] shadow-[inset_0_1px_0_rgb(255_255_255/0.16),inset_0_-1px_0_rgb(0_0_0/0.35)]"
         style={{ clipPath: HEX_CLIP }}
       />
     </>

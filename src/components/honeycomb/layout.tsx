@@ -8,6 +8,7 @@ import {
   useState,
 } from 'react'
 
+import { type LatticeCell, publishHexLattice } from '@/lib/hex-lattice'
 import { cn } from '@/lib/utils'
 
 import { type HoneycombCellId, honeycombCellIds } from './catalog'
@@ -17,7 +18,8 @@ const FLOWER_HEX = 210
 const STACK_HEX = 195
 const STACK_HEX_WIDTH = 'clamp(8rem, calc(57.143vw - 1.267rem), 12.1875rem)'
 const STACK_HEX_HEIGHT = 'clamp(6.928rem, calc(49.486vw - 1.097rem), 10.554rem)'
-const HEX_GAP = 4
+// Wide enough for background particles to visibly travel between cells.
+const HEX_GAP = 10
 const HEX_HEIGHT_RATIO = 0.866
 const LG_QUERY = '(min-width: 64rem)'
 const MORPH_MS = 600
@@ -135,9 +137,13 @@ function MeasureGrid({ columns }: { columns: HoneycombCellId[][] }) {
 
 type CellRenderer = (id: HoneycombCellId, entrance: boolean) => ReactNode
 
+/** Hue of the background glow behind each cell that has one. */
+export type GlowHues = Partial<Record<HoneycombCellId, number>>
+
 interface MorphingHoneycombProps {
   renderCell: CellRenderer
   reducedMotion: boolean
+  glowHues: GlowHues
 }
 
 /**
@@ -145,7 +151,7 @@ interface MorphingHoneycombProps {
  * stack. Animation frames write directly to cell wrappers to avoid rerendering
  * the entire content tree during the morph.
  */
-function MorphingHoneycomb({ renderCell, reducedMotion }: MorphingHoneycombProps) {
+function MorphingHoneycomb({ renderCell, reducedMotion, glowHues }: MorphingHoneycombProps) {
   const containerRef = useRef<HTMLDivElement>(null)
   const flowerRef = useRef<HTMLDivElement>(null)
   const stackRef = useRef<HTMLDivElement>(null)
@@ -169,8 +175,16 @@ function MorphingHoneycomb({ renderCell, reducedMotion }: MorphingHoneycombProps
       const hexWidth = flowerHexWidth + (stackHexWidth - flowerHexWidth) * progress
       container.style.setProperty('--hex-w', `${hexWidth}px`)
       container.style.setProperty('--hex-h', `${hexWidth * HEX_HEIGHT_RATIO}px`)
+      // Size the container before measuring it: its height re-centers it on the
+      // page, which moves every cell and the lattice published below.
+      const height = flower.offsetHeight + (stack.offsetHeight - flower.offsetHeight) * progress
+      container.style.height = `${Math.round(height)}px`
 
       const base = container.getBoundingClientRect()
+      const pageX = base.left + window.scrollX
+      const pageY = base.top + window.scrollY
+      let anchor: { x: number; y: number } | null = null
+      const cells: LatticeCell[] = []
       for (const id of honeycombCellIds) {
         const from = flower.querySelector(`[data-cell="${id}"]`)
         const to = stack.querySelector(`[data-cell="${id}"]`)
@@ -186,10 +200,21 @@ function MorphingHoneycomb({ renderCell, reducedMotion }: MorphingHoneycombProps
         const x = fromX + (toRect.left + toRect.width / 2 - base.left - fromX) * progress
         const y = fromY + (toRect.top + toRect.height / 2 - base.top - fromY) * progress
         element.style.transform = `translate3d(${x}px, ${y}px, 0) translate(-50%, -50%)`
+        cells.push({ id, x: pageX + x, y: pageY + y, glowHue: glowHues[id] })
+        if (id === LATTICE_ANCHOR) {
+          anchor = { x, y }
+        }
       }
 
-      const height = flower.offsetHeight + (stack.offsetHeight - flower.offsetHeight) * progress
-      container.style.height = `${Math.round(height)}px`
+      if (anchor) {
+        publishHexLattice({
+          originX: pageX + anchor.x,
+          originY: pageY + anchor.y,
+          cells,
+          hexWidth,
+          gap: HEX_GAP,
+        })
+      }
     }
 
     const easeOutQuint = (progress: number) => 1 - (1 - progress) ** 5
@@ -230,29 +255,26 @@ function MorphingHoneycomb({ renderCell, reducedMotion }: MorphingHoneycombProps
     const onBreakpoint = () => tweenTo(query.matches ? 0 : 1)
     query.addEventListener('change', onBreakpoint)
 
-    let resizeFrame = 0
-    const onResize = () => {
-      if (!resizeFrame) {
-        resizeFrame = requestAnimationFrame(() => {
-          resizeFrame = 0
-          apply()
-        })
-      }
-    }
-    // Watch the measurement grids rather than the window. They resize with the
-    // viewport and also when a `--hex-scale` step changes the hex size.
-    const resizeObserver = new ResizeObserver(onResize)
+    // The measurement grids resize when a `--hex-scale` step changes the hex
+    // size. The honeycomb can also move without them resizing (a taller window
+    // re-centers it, as does a wider one once the page container stops
+    // growing), so watch the root element too: it resizes with the window on
+    // either axis and when a scrollbar comes or goes. Any of these re-publish
+    // the lattice so the background grid stays aligned.
+    // Observer callbacks run after layout and before paint, once per frame, so
+    // applying right away keeps cells and the background in the same frame.
+    const resizeObserver = new ResizeObserver(() => apply())
     resizeObserver.observe(flower)
     resizeObserver.observe(stack)
+    resizeObserver.observe(document.documentElement)
 
     return () => {
       query.removeEventListener('change', onBreakpoint)
       resizeObserver.disconnect()
       cancelAnimationFrame(tweenFrame)
-      cancelAnimationFrame(resizeFrame)
       cancelAnimationFrame(releaseHoverMotionFrame)
     }
-  }, [reducedMotion])
+  }, [reducedMotion, glowHues])
 
   return (
     <div
@@ -292,6 +314,9 @@ function MorphingHoneycomb({ renderCell, reducedMotion }: MorphingHoneycombProps
   )
 }
 
+// The background grid draws the honeycomb's lattice, anchored on this cell.
+const LATTICE_ANCHOR: HoneycombCellId = 'intro'
+
 const flowerDelays = cascadeDelays(flowerEntrance)
 const stackDelays = cascadeDelays(stackEntrance)
 
@@ -300,18 +325,71 @@ const ENTRANCE_MS = Math.ceil(
   (Math.max(...flowerDelays.values(), ...stackDelays.values()) + HEX_ENTRANCE_S) * 1000 + 100,
 )
 
-function StaticHoneycomb({ renderCell, reducedMotion }: MorphingHoneycombProps) {
+function StaticHoneycomb({ renderCell, reducedMotion, glowHues }: MorphingHoneycombProps) {
+  const rootRef = useRef<HTMLDivElement>(null)
+
+  // Publish the lattice for the background grid. The cascade wrapper is
+  // measured rather than the cell, since the cell scales in during the entrance.
+  useLayoutEffect(() => {
+    const root = rootRef.current
+    if (!root) {
+      return
+    }
+    const measure = () => {
+      // Both formations are rendered; only the visible one has a size.
+      const wrappers = [...root.querySelectorAll<HTMLElement>('[data-lattice-cell]')].filter(
+        (element) => element.offsetWidth > 0,
+      )
+      const cells = wrappers.map((element) => {
+        const rect = element.getBoundingClientRect()
+        const id = (element.dataset.latticeCell ?? '') as HoneycombCellId
+        return {
+          id,
+          glowHue: glowHues[id],
+          x: rect.left + rect.width / 2 + window.scrollX,
+          y: rect.top + rect.height / 2 + window.scrollY,
+          width: rect.width,
+        }
+      })
+      const anchor = cells.find((cell) => cell.id === LATTICE_ANCHOR)
+      if (!anchor) {
+        return
+      }
+      publishHexLattice({
+        originX: anchor.x,
+        originY: anchor.y,
+        cells: cells.map(({ id, x, y, glowHue }) => ({ id, x, y, glowHue })),
+        hexWidth: anchor.width,
+        gap: HEX_GAP,
+      })
+    }
+    // Fires once on observe, then whenever the page resizes (see the morph).
+    const resizeObserver = new ResizeObserver(measure)
+    resizeObserver.observe(document.documentElement)
+    return () => resizeObserver.disconnect()
+  }, [glowHues])
+
   const columnsFor = (columns: HoneycombCellId[][], delays: Map<HoneycombCellId, number>) =>
     columns.map((column) =>
       column.map((id) => (
-        <m.div key={id} custom={delays.get(id) ?? 0} variants={cascadeVariants}>
+        <m.div
+          key={id}
+          custom={delays.get(id) ?? 0}
+          variants={cascadeVariants}
+          data-lattice-cell={id}
+        >
           {renderCell(id, delays.has(id))}
         </m.div>
       )),
     )
 
   return (
-    <m.div className="w-full py-4" initial={reducedMotion ? false : 'hidden'} animate="visible">
+    <m.div
+      ref={rootRef}
+      className="w-full py-4"
+      initial={reducedMotion ? false : 'hidden'}
+      animate="visible"
+    >
       <div className="hidden lg:block" style={flowerVars}>
         <HexColumns columns={columnsFor(flowerColumns, flowerDelays)} />
       </div>
@@ -324,13 +402,16 @@ function StaticHoneycomb({ renderCell, reducedMotion }: MorphingHoneycombProps) 
 
 interface HoneycombLayoutProps {
   renderCell: CellRenderer
+  glowHues?: GlowHues
 }
+
+const NO_GLOWS: GlowHues = {}
 
 /**
  * Renders an SSR-safe static formation first, then takes ownership of the
  * breakpoint morph after the entrance animation settles.
  */
-export function HoneycombLayout({ renderCell }: HoneycombLayoutProps) {
+export function HoneycombLayout({ renderCell, glowHues = NO_GLOWS }: HoneycombLayoutProps) {
   const reducedMotion = useReducedMotion() ?? false
   const [morphReady, setMorphReady] = useState(false)
 
@@ -340,9 +421,12 @@ export function HoneycombLayout({ renderCell }: HoneycombLayoutProps) {
     return () => clearTimeout(timeout)
   }, [reducedMotion])
 
+  // Leaving the page takes the honeycomb's lattice with it.
+  useEffect(() => () => publishHexLattice(null), [])
+
   return morphReady ? (
-    <MorphingHoneycomb renderCell={renderCell} reducedMotion={reducedMotion} />
+    <MorphingHoneycomb renderCell={renderCell} reducedMotion={reducedMotion} glowHues={glowHues} />
   ) : (
-    <StaticHoneycomb renderCell={renderCell} reducedMotion={reducedMotion} />
+    <StaticHoneycomb renderCell={renderCell} reducedMotion={reducedMotion} glowHues={glowHues} />
   )
 }

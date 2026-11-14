@@ -28,7 +28,7 @@ function RootDocument({
       <head>
         <HeadContent />
       </head>
-      <body className="flex min-h-screen min-w-0 flex-col bg-background font-sans text-foreground antialiased">
+      <body className="relative flex min-h-screen min-w-0 flex-col bg-background font-sans text-foreground antialiased">
         {children}
         <Scripts />
       </body>

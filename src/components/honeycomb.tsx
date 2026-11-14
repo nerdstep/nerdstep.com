@@ -12,7 +12,7 @@ import { openSourceProjects, type Project, projects, siteProject } from '@/lib/p
 
 import { OPEN_SOURCE_TRIGGER_ID } from './honeycomb/catalog'
 import { FEATURED_HUES, HoneycombCell, OSS_HUE, SITE_HUE } from './honeycomb/cells'
-import { HoneycombLayout } from './honeycomb/layout'
+import { type GlowHues, HoneycombLayout } from './honeycomb/layout'
 
 // The dialogs (and Base UI's dialog with them) load in their own chunk. Nothing
 // needs them until a cell is clicked or a `?p=` link opens one.
@@ -23,6 +23,14 @@ const OpenSourceDialog = lazy(() =>
 const ProjectDetailDialog = lazy(() =>
   loadDialogs().then((module) => ({ default: module.ProjectDetailDialog })),
 )
+
+// Project cells cast a soft glow of their color onto the background.
+const glowHues: GlowHues = {
+  recipes: FEATURED_HUES[0],
+  page: FEATURED_HUES[1],
+  garden: FEATURED_HUES[2],
+  oss: OSS_HUE,
+}
 
 interface DeepLinkable {
   project: Project
@@ -97,6 +105,7 @@ export function Honeycomb() {
   return (
     <>
       <HoneycombLayout
+        glowHues={glowHues}
         renderCell={(id, entrance) => (
           <HoneycombCell
             key={id}
