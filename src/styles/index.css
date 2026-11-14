@@ -17,6 +17,16 @@
   }
 }
 
+/*
+ * A slim scrollbar in the theme's colors for scrolling panels, with its space
+ * reserved so content doesn't shift when it appears.
+ */
+@utility scrollbar-thin {
+  scrollbar-width: thin;
+  scrollbar-color: color-mix(in oklab, var(--color-muted-foreground) 35%, transparent) transparent;
+  scrollbar-gutter: stable;
+}
+
 @layer base {
   html,
   body {

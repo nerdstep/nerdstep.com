@@ -2,7 +2,7 @@
  * Honeycomb home layout -- hex-shaped glass cells interlocked into a hive.
  *
  * This file is the module's public interface. Cell presentation, content,
- * dialogs, and responsive formation mechanics live in focused implementation
+ * drawers, and responsive formation mechanics live in focused implementation
  * modules under `./honeycomb`.
  */
 import { useNavigate, useSearch } from '@tanstack/react-router'
@@ -13,14 +13,14 @@ import { openSourceProjects, type Project, projects, siteProject } from '@/lib/p
 import { FEATURED_HUES, HoneycombCell, OSS_HUE, SITE_HUE } from './honeycomb/cells'
 import { type GlowHues, HoneycombLayout } from './honeycomb/layout'
 
-// The dialogs (and Base UI's dialog with them) load in their own chunk. Nothing
+// The drawers (and Base UI's drawer with them) load in their own chunk. Nothing
 // needs them until a cell is clicked or a `?p=` link opens one.
-const loadDialogs = () => import('./honeycomb/dialogs')
-const OpenSourceDialog = lazy(() =>
-  loadDialogs().then((module) => ({ default: module.OpenSourceDialog })),
+const loadDrawers = () => import('./honeycomb/drawers')
+const OpenSourceDrawer = lazy(() =>
+  loadDrawers().then((module) => ({ default: module.OpenSourceDrawer })),
 )
-const ProjectDetailDialog = lazy(() =>
-  loadDialogs().then((module) => ({ default: module.ProjectDetailDialog })),
+const ProjectDetailDrawer = lazy(() =>
+  loadDrawers().then((module) => ({ default: module.ProjectDetailDrawer })),
 )
 
 // Project cells cast a soft glow of their color onto the background.
@@ -34,12 +34,12 @@ const glowHues: GlowHues = {
 interface FeaturedEntry {
   project: Project
   hue: number
-  /** Element that opened the dialog and gets focus back when it closes. */
+  /** Element that opened the drawer and gets focus back when it closes. */
   triggerId: string
 }
 
 // Every project is reachable through `?p=<slug>`. Featured cells open their own
-// detail dialog; open-source projects open the open-source list with that
+// detail drawer; open-source projects open the open-source list with that
 // project expanded.
 const featured: FeaturedEntry[] = projects
   .filter((project) => project.slug)
@@ -51,13 +51,13 @@ const featured: FeaturedEntry[] = projects
 const openSourceSlugs = new Set(openSourceProjects.map((project) => project.slug))
 
 export function Honeycomb() {
-  const [siteDialogOpen, setSiteDialogOpen] = useState(false)
+  const [siteDrawerOpen, setSiteDrawerOpen] = useState(false)
   const [openSourceOpen, setOpenSourceOpen] = useState(false)
   const navigate = useNavigate({ from: '/' })
   const { p } = useSearch({ from: '/' })
 
   const selected = p ? featured.find((entry) => entry.project.slug === p) : undefined
-  // Keep showing the last project while its dialog animates closed, and keep
+  // Keep showing the last project while its drawer animates closed, and keep
   // `triggerId` controlled (never back to undefined) so focus returns to it.
   const [lastSelected, setLastSelected] = useState(selected)
   if (selected && selected !== lastSelected) {
@@ -73,11 +73,11 @@ export function Honeycomb() {
     setLastExpanded(expandedOss)
   }
 
-  // Mount the dialogs the first time one is wanted, then keep them mounted so
+  // Mount the drawers the first time one is wanted, then keep them mounted so
   // they can animate closed.
-  const [dialogsMounted, setDialogsMounted] = useState(false)
-  if (!dialogsMounted && (siteDialogOpen || openSourceShown || selected)) {
-    setDialogsMounted(true)
+  const [drawersMounted, setDrawersMounted] = useState(false)
+  if (!drawersMounted && (siteDrawerOpen || openSourceShown || selected)) {
+    setDrawersMounted(true)
   }
 
   const setProjectParam = (slug: string | null, replace = false) => {
@@ -90,20 +90,20 @@ export function Honeycomb() {
     setLastExpanded(slug)
     setProjectParam(slug, true)
   }
-  const setOpenSourceDialog = (open: boolean) => {
+  const setOpenSourceDrawer = (open: boolean) => {
     setOpenSourceOpen(open)
     if (!open && expandedOss) {
       setProjectParam(null, true)
     }
   }
 
-  // Fetch the dialog chunk once the page is idle so the first click is instant.
+  // Fetch the drawer chunk once the page is idle so the first click is instant.
   useEffect(() => {
     if (typeof requestIdleCallback === 'function') {
-      const handle = requestIdleCallback(() => void loadDialogs())
+      const handle = requestIdleCallback(() => void loadDrawers())
       return () => cancelIdleCallback(handle)
     }
-    const timeout = setTimeout(() => void loadDialogs(), 2000)
+    const timeout = setTimeout(() => void loadDrawers(), 2000)
     return () => clearTimeout(timeout)
   }, [])
 
@@ -127,32 +127,32 @@ export function Honeycomb() {
             id={id}
             entrance={entrance}
             onSelectProject={(slug) => setProjectParam(slug)}
-            onSelectSite={() => setSiteDialogOpen(true)}
+            onSelectSite={() => setSiteDrawerOpen(true)}
             onSelectOpenSource={() => setOpenSourceOpen(true)}
           />
         )}
       />
-      {dialogsMounted && (
+      {drawersMounted && (
         <Suspense fallback={null}>
-          <OpenSourceDialog
+          <OpenSourceDrawer
             hue={OSS_HUE}
             open={openSourceShown}
-            onOpenChange={setOpenSourceDialog}
+            onOpenChange={setOpenSourceDrawer}
             expanded={openSourceShown ? expandedOss : lastExpanded}
             onExpandedChange={expandOpenSource}
           />
-          <ProjectDetailDialog
+          <ProjectDetailDrawer
             project={shown?.project ?? null}
             hue={shown?.hue ?? OSS_HUE}
             open={selected !== undefined}
             onClose={() => setProjectParam(null)}
             triggerId={shown?.triggerId ?? null}
           />
-          <ProjectDetailDialog
+          <ProjectDetailDrawer
             project={siteProject}
             hue={SITE_HUE}
-            open={siteDialogOpen}
-            onClose={() => setSiteDialogOpen(false)}
+            open={siteDrawerOpen}
+            onClose={() => setSiteDrawerOpen(false)}
             triggerId="site-about"
           />
         </Suspense>

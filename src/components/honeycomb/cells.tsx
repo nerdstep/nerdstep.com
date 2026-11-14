@@ -182,7 +182,7 @@ const GREEN = 130
 const PURPLE = 270
 
 export const OSS_HUE = PURPLE
-/** Hue per featured project, by index in `projects`; shared with its detail dialog. */
+/** Hue per featured project, by index in `projects`; shared with its detail drawer. */
 export const FEATURED_HUES = [
   RED, // mostly.recipes
   BLUE, // mostly.page

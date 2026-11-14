@@ -4,7 +4,7 @@ import { isString } from 'es-toolkit'
 import { Honeycomb } from '@/components/honeycomb'
 
 interface HomeSearch {
-  /** `?p=<slug>` deep-links an open project detail dialog. */
+  /** `?p=<slug>` deep-links an open project drawer. */
   p?: string
 }
 

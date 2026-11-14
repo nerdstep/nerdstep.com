@@ -10,7 +10,7 @@ export interface ProjectScreenshot {
   /** Image URL, also used as the fallback when `srcSet` isn't supported. */
   src: string
   srcSet?: string
-  /** Intrinsic size, so the dialog reserves space before the image loads. */
+  /** Intrinsic size, so the drawer reserves space before the image loads. */
   width: number
   height: number
   alt: string
@@ -28,15 +28,15 @@ export interface Project {
   kind: ProjectKind
   /** Short one-liner shown on the hex. */
   description: string
-  /** One or more paragraphs shown in the detail dialog. */
+  /** One or more paragraphs shown in the detail drawer. */
   summary?: ProjectSummary
   /** Your relationship to the project, e.g. "creator & maintainer". */
   role?: string
   /** Tech tags shown in the detail meta row. */
   stack?: string[]
-  /** Square app icon, shown on the cell, in lists, and in the detail dialog. */
+  /** Square app icon, shown on the cell, in lists, and in the detail drawer. */
   icon?: string
-  /** Screenshot shown in the detail dialog. */
+  /** Screenshot shown in the detail drawer. */
   screenshot?: ProjectScreenshot
 }
 
@@ -123,7 +123,7 @@ export const projects: Project[] = [
   },
 ]
 
-// Listed by the honeycomb's "open source" cell; each opens its own detail dialog.
+// Listed by the honeycomb's "open source" cell; each expands in place in its drawer.
 export const openSourceProjects: Project[] = [
   {
     name: 'recipe-scrapers',

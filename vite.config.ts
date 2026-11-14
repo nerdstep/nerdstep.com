@@ -34,8 +34,8 @@ export default defineConfig({
               groups: [
                 { name: 'react', test: vendor(/react|react-dom|scheduler/), priority: 3 },
                 { name: 'tanstack', test: vendor(/@tanstack\/[^/]+|seroval[^/]*/), priority: 2 },
-                // UI kits the lazy dialogs share are left out, so Rolldown puts
-                // their dialog-only modules in the dialogs chunk.
+                // UI kits the lazy drawers share are left out, so Rolldown puts
+                // their drawer-only modules in the drawers chunk.
                 {
                   name: 'vendor',
                   test: vendor(/(?!@base-ui\/|@floating-ui\/|@tabler\/)[^/]+/),
