@@ -19,6 +19,13 @@ const EXTENT_STEP = 4
 // Ambient glow diameter, in lattice cells.
 const GLOW_SIZE = 2.4
 
+/** The lattice cell (k, j) containing a point, given the anchor cell center. */
+function latticeIndexAt(originX: number, originY: number, unit: number, x: number, y: number) {
+  const k = Math.round((x - originX) / unit / 0.75)
+  const j = Math.round((y - originY) / unit / UNIT_HEX_HEIGHT - (Math.abs(k) % 2) / 2)
+  return { k, j }
+}
+
 export type HexagonGridProps = {
   particleCount?: number
   minDurationMs?: number
@@ -126,12 +133,20 @@ export function HexagonGrid({
   const occupied = new Set<string>()
   if (lattice) {
     for (const cell of lattice.cells) {
-      const k = Math.round((cell.x - lattice.originX) / unit / 0.75)
-      const j = Math.round(
-        (cell.y - lattice.originY) / unit / UNIT_HEX_HEIGHT - (Math.abs(k) % 2) / 2,
-      )
+      const { k, j } = latticeIndexAt(lattice.originX, lattice.originY, unit, cell.x, cell.y)
       occupied.add(`${k}:${j}`)
     }
+  }
+
+  // Particles stay on screen: only vertices inside the grid's box are visited.
+  const canVisit = (index: number) => {
+    const vertex = vertices[index]
+    if (!box || !vertex) {
+      return true
+    }
+    const x = originX + vertex.x * unit
+    const y = originY + vertex.y * unit
+    return x >= 0 && x <= box.width && y >= 0 && y <= box.height
   }
 
   const particleColors = useMemo(() => {
@@ -161,6 +176,7 @@ export function HexagonGrid({
       trailCount,
       trailSampleMs,
       trailMaxOpacity,
+      canVisit,
     },
   )
 
@@ -204,7 +220,12 @@ export function HexagonGrid({
         className="absolute inset-0 h-full w-full"
       >
         <defs>
-          <filter id="particleGlow" filterUnits="userSpaceOnUse">
+          {/*
+           * Region sized to each particle. The default region is relative to
+           * the whole viewport, which made every particle move re-blur a
+           * screen-sized area each frame.
+           */}
+          <filter id="particleGlow" x="-200%" y="-200%" width="500%" height="500%">
             <feGaussianBlur in="SourceGraphic" stdDeviation={particleRadius * 0.9} result="blur1" />
             <feMerge>
               <feMergeNode in="blur1" />
