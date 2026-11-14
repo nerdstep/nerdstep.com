@@ -1,3 +1,4 @@
+import manropeLatin from '@fontsource-variable/manrope/files/manrope-latin-wght-normal.woff2?url'
 import {
   createRootRoute,
   type ErrorComponentProps,
@@ -69,6 +70,15 @@ export const Route = createRootRoute({
       ],
       links: [
         { rel: 'stylesheet', href: css },
+        // The CSS only reveals the font once parsed; preload it so first paint
+        // doesn't render in the fallback and then swap.
+        {
+          rel: 'preload',
+          href: manropeLatin,
+          as: 'font',
+          type: 'font/woff2',
+          crossOrigin: 'anonymous',
+        },
         // `sizes` on the ICO lets browsers that support SVG favicons prefer the SVG.
         { rel: 'icon', href: '/favicon.ico', sizes: '32x32' },
         { rel: 'icon', type: 'image/svg+xml', href: '/favicon.svg' },

@@ -99,11 +99,12 @@ export function Honeycomb() {
 
   // Fetch the drawer chunk once the page is idle so the first click is instant.
   useEffect(() => {
+    const prefetch = () => void loadDrawers()
     if (typeof requestIdleCallback === 'function') {
-      const handle = requestIdleCallback(() => void loadDrawers())
+      const handle = requestIdleCallback(prefetch)
       return () => cancelIdleCallback(handle)
     }
-    const timeout = setTimeout(() => void loadDrawers(), 2000)
+    const timeout = setTimeout(prefetch, 2000)
     return () => clearTimeout(timeout)
   }, [])
 

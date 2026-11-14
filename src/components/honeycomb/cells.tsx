@@ -18,13 +18,14 @@ function IntroHex({ hue, entrance }: ContentCellProps) {
     <Hex hue={hue} entrance={entrance}>
       <img
         alt="profile"
-        className="rounded-full border-2 border-gray-600/50"
+        // Smaller below 360px so the role stays clear of the hex's tapered bottom.
+        className="size-16 rounded-full border-2 border-gray-600/50 min-[360px]:size-20"
         height={80}
         src="/img/profile-sm.jpg"
         width={80}
       />
-      <span className="mt-2 font-bold tracking-tight sm:text-base">{intro.name}</span>
-      <span className="text-xs text-muted-foreground">{intro.role}</span>
+      <span className="mt-2 text-base font-bold tracking-tight sm:text-lg">{intro.name}</span>
+      <span className="text-xs text-muted-foreground sm:text-sm">{intro.role}</span>
     </Hex>
   )
 }
@@ -52,19 +53,19 @@ function ProjectHex({
       {project.icon ? (
         <ProjectIcon project={project} className="size-8 sm:size-9" />
       ) : (
-        <span className="hex-kind text-[0.8125rem] font-medium tracking-tight lowercase">
-          {projectKindLabel[project.kind]}
-        </span>
+        <span className="hex-kind type-label lowercase">{projectKindLabel[project.kind]}</span>
       )}
-      <span className="mt-2 flex max-w-full min-w-0 flex-wrap items-center justify-center gap-1 text-sm font-semibold tracking-tight wrap-break-word sm:text-base">
+      <span className="mt-2 max-w-full text-sm font-semibold tracking-tight text-balance wrap-break-word sm:text-base">
         {project.name}
+        {/* A word joiner keeps the icon on the last line when a long name wraps. */}
+        {'⁠'}
         <IconPlus
           aria-hidden
-          className="hex-hover-accent size-3.5 text-muted-foreground/60 transition-all duration-200 group-hover:rotate-90 group-focus-visible:rotate-90 in-data-suppress-hover-motion:transition-none sm:size-4"
+          className="hex-hover-accent ml-1 inline-block size-3.5 align-[-0.125em] text-muted-foreground/60 transition-all duration-200 group-hover:rotate-90 group-focus-visible:rotate-90 in-data-suppress-hover-motion:transition-none sm:size-4"
         />
       </span>
       {project.status === 'wip' && (
-        <span className="mt-1.5 rounded-full border border-amber-500/50 px-2 py-0.5 text-[11px] font-medium tracking-wide text-amber-400">
+        <span className="mt-1.5 rounded-full border border-amber-500/50 px-2 py-0.5 type-label text-amber-400">
           coming soon
         </span>
       )}
@@ -81,9 +82,7 @@ function OpenSourceHex({ hue, entrance, onSelect }: ContentCellProps & { onSelec
       onSelect={onSelect}
       label="Open the open source projects list"
     >
-      <span className="hex-kind text-[0.8125rem] font-medium tracking-tight lowercase">
-        {projectKindLabel.oss}
-      </span>
+      <span className="hex-kind type-label lowercase">{projectKindLabel.oss}</span>
       <span className="mt-1 flex items-center justify-center gap-1 text-sm font-semibold tracking-tight sm:text-base">
         {openSourceProjects.length} projects
         <IconPlus
@@ -98,9 +97,7 @@ function OpenSourceHex({ hue, entrance, onSelect }: ContentCellProps & { onSelec
 function SocialsHex({ hue, entrance }: ContentCellProps) {
   return (
     <Hex hue={hue} entrance={entrance}>
-      <span className="hex-kind mb-2 text-[0.8125rem] font-medium tracking-tight lowercase">
-        connect
-      </span>
+      <span className="hex-kind mb-2 type-label lowercase">connect</span>
       <Social />
     </Hex>
   )
@@ -110,8 +107,8 @@ function StatusHex({ hue, entrance }: ContentCellProps) {
   return (
     <Hex hue={hue} entrance={entrance}>
       <IconMapPin aria-hidden className="size-5 text-muted-foreground/60" />
-      <span className="mt-1 font-medium">{intro.location}</span>
-      <span className="mt-0.5 text-sm text-muted-foreground">
+      <span className="mt-1 text-xs font-medium sm:text-sm">{intro.location}</span>
+      <span className="mt-0.5 text-xs text-muted-foreground">
         working at{' '}
         <a
           className="font-semibold"
@@ -150,7 +147,7 @@ function ThesisHex({ hue, entrance }: ContentCellProps) {
       <p className="text-sm leading-snug text-balance sm:text-base">
         Building{' '}
         <a
-          className="font-medium text-sky-400 italic"
+          className="font-semibold text-sky-400"
           href="https://mostly.global"
           target="_blank"
           rel="noopener noreferrer"

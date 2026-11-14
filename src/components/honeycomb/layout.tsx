@@ -255,22 +255,34 @@ function MorphingHoneycomb({ renderCell, reducedMotion, glowHues }: MorphingHone
     const onBreakpoint = () => tweenTo(query.matches ? 0 : 1)
     query.addEventListener('change', onBreakpoint)
 
-    // The measurement grids resize when a `--hex-scale` step changes the hex
-    // size. The honeycomb can also move without them resizing (a taller window
-    // re-centers it, as does a wider one once the page container stops
-    // growing), so watch the root element too: it resizes with the window on
-    // either axis and when a scrollbar comes or goes. Any of these re-publish
-    // the lattice so the background grid stays aligned.
-    // Observer callbacks run after layout and before paint, once per frame, so
-    // applying right away keeps cells and the background in the same frame.
-    const resizeObserver = new ResizeObserver(() => apply())
+    // Re-apply (and re-publish the lattice for the background grid) whenever
+    // the honeycomb can move or resize:
+    // - Window resizes, on either axis. A taller window re-centers it, as does
+    //   a wider one once the page container stops growing, without the
+    //   measurement grids changing size. Resize events run before layout, so
+    //   applying right away lands in the same frame.
+    // - The measurement grids resizing: a `--hex-scale` step, or a scrollbar
+    //   appearing. Deferred a frame, because `apply` sets the container's
+    //   height, and resizing anything from inside an observer callback can
+    //   trip the browser's "ResizeObserver loop" error.
+    window.addEventListener('resize', apply)
+    let resizeFrame = 0
+    const resizeObserver = new ResizeObserver(() => {
+      if (!resizeFrame) {
+        resizeFrame = requestAnimationFrame(() => {
+          resizeFrame = 0
+          apply()
+        })
+      }
+    })
     resizeObserver.observe(flower)
     resizeObserver.observe(stack)
-    resizeObserver.observe(document.documentElement)
 
     return () => {
       query.removeEventListener('change', onBreakpoint)
+      window.removeEventListener('resize', apply)
       resizeObserver.disconnect()
+      cancelAnimationFrame(resizeFrame)
       cancelAnimationFrame(tweenFrame)
       cancelAnimationFrame(releaseHoverMotionFrame)
     }
@@ -363,10 +375,9 @@ function StaticHoneycomb({ renderCell, reducedMotion, glowHues }: MorphingHoneyc
         gap: HEX_GAP,
       })
     }
-    // Fires once on observe, then whenever the page resizes (see the morph).
-    const resizeObserver = new ResizeObserver(measure)
-    resizeObserver.observe(document.documentElement)
-    return () => resizeObserver.disconnect()
+    measure()
+    window.addEventListener('resize', measure)
+    return () => window.removeEventListener('resize', measure)
   }, [glowHues])
 
   const columnsFor = (columns: HoneycombCellId[][], delays: Map<HoneycombCellId, number>) =>

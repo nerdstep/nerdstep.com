@@ -17,7 +17,7 @@ export function NotFound({ children }: { children?: ReactNode }) {
       <CardContent className="p-6 md:p-12 md:pb-11">
         <Empty>
           <EmptyHeader>
-            <EmptyTitle>404 - Not Found</EmptyTitle>
+            <EmptyTitle className="type-title">404 · Not found</EmptyTitle>
             <EmptyDescription>
               {children || <p>The page you are looking for does not exist.</p>}
             </EmptyDescription>
@@ -25,7 +25,7 @@ export function NotFound({ children }: { children?: ReactNode }) {
           <EmptyContent>
             <p className="flex flex-wrap items-center gap-2">
               <Button onClick={() => window.history.back()}>Go back</Button>
-              <ButtonLink to="/">Start Over</ButtonLink>
+              <ButtonLink to="/">Start over</ButtonLink>
             </p>
           </EmptyContent>
         </Empty>

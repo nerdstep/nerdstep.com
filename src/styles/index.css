@@ -1,5 +1,4 @@
 @import "@fontsource-variable/manrope";
-@import "@fontsource-variable/jetbrains-mono";
 @import "tailwindcss";
 @import "tw-animate-css";
 @import "./shadcn.css";
@@ -15,6 +14,64 @@
   @media (width >= 1400px) {
     max-width: 1400px;
   }
+}
+
+/*
+ * Stand-in for Manrope while it loads: Arial resized to Manrope's average
+ * advance width and vertical metrics (measured: 1.011x wider, ascent 1.066em,
+ * descent 0.30em), so text doesn't reflow when the web font swaps in.
+ */
+@font-face {
+  font-family: "Manrope Fallback";
+  src: local("Arial"), local("Liberation Sans"), local("Helvetica");
+  size-adjust: 101.1%;
+  ascent-override: 105.4%;
+  descent-override: 29.7%;
+  line-gap-override: 0%;
+}
+
+/*
+ * Type roles. One family (Manrope); roles differ by size, weight, tracking,
+ * and color, with clear steps between them.
+ * - label: kind labels, definition terms, status, chips. Color and case tell
+ *   them apart, not size. Slightly open tracking for small light-on-dark text.
+ * - meta: secondary copy beside a name or title.
+ * - name: an item's name where it heads its own content.
+ * - title: a drawer or page title, a clear step above body text.
+ * - prose: running paragraphs. Manrope's word spaces are tight (0.20em), so
+ *   they're opened up for reading.
+ */
+@utility type-label {
+  font-size: 0.75rem;
+  line-height: 1rem;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+}
+
+@utility type-meta {
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  font-weight: 400;
+}
+
+@utility type-name {
+  font-size: 1rem;
+  line-height: 1.375rem;
+  font-weight: 600;
+  letter-spacing: -0.025em;
+}
+
+@utility type-title {
+  font-size: 1.5rem;
+  line-height: 2rem;
+  font-weight: 600;
+  letter-spacing: -0.025em;
+}
+
+@utility type-prose {
+  font-size: 1rem;
+  line-height: 1.7;
+  word-spacing: 0.06em;
 }
 
 /*
@@ -77,9 +134,8 @@
 
 @theme inline {
   --font-sans:
-    "Manrope Variable", ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji",
-    "Segoe UI Symbol", "Noto Color Emoji";
-  --font-mono: "JetBrains Mono Variable", monospace;
+    "Manrope Variable", "Manrope Fallback", ui-sans-serif, system-ui, sans-serif,
+    "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);

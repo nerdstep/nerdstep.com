@@ -41,7 +41,10 @@ const primaryLinkLabel = (project: Project) =>
 function ProjectStatus({ project, className }: { project: Project; className?: string }) {
   return (
     <span
-      className={cn('flex shrink-0 items-center gap-1.5 text-xs text-muted-foreground', className)}
+      className={cn(
+        'flex shrink-0 items-center gap-1.5 type-label text-muted-foreground',
+        className,
+      )}
     >
       <span aria-hidden className={cn('size-1.5 rounded-full', statusDotColor[project.status])} />
       {statusLabel[project.status]}
@@ -129,7 +132,11 @@ function ProjectBody({
   const summary: ReactNode = Array.isArray(project.summary)
     ? project.summary.map((paragraph) => <p key={paragraph}>{paragraph}</p>)
     : (project.summary ?? project.description)
-  const summaryClass = 'space-y-3 text-sm leading-relaxed text-pretty text-muted-foreground'
+  // Set for reading: the prose role, brighter than muted text, and lines held
+  // to about 65 characters since the drawer is wider than a comfortable
+  // measure. (A `ch` cap misleads: it's the width of "0", wider than an
+  // average character.)
+  const summaryClass = 'max-w-[32rem] space-y-4 type-prose text-pretty text-foreground/85'
 
   return (
     <>
@@ -147,7 +154,7 @@ function ProjectBody({
       ) : null}
 
       {describesDrawer ? (
-        <DrawerDescription className={cn(summaryClass, 'text-wrap')} render={<div />}>
+        <DrawerDescription className={summaryClass} render={<div />}>
           {summary}
         </DrawerDescription>
       ) : (
@@ -158,19 +165,19 @@ function ProjectBody({
         <dl className="flex flex-col gap-3 border-t border-border pt-4">
           {project.role ? (
             <div className="flex items-baseline gap-3 text-sm">
-              <dt className="w-12 shrink-0 text-xs text-muted-foreground">role</dt>
+              <dt className="w-12 shrink-0 type-label text-muted-foreground">role</dt>
               <dd className="font-medium">{project.role}</dd>
             </div>
           ) : null}
           {project.stack && project.stack.length > 0 ? (
             <div className="flex items-baseline gap-3">
-              <dt className="w-12 shrink-0 text-xs text-muted-foreground">stack</dt>
+              <dt className="w-12 shrink-0 type-label text-muted-foreground">stack</dt>
               <dd>
                 <ul className="flex flex-wrap gap-1.5">
                   {project.stack.map((tech) => (
                     <li
                       key={tech}
-                      className="max-w-full rounded-full border border-border bg-muted/40 px-2 py-0.5 text-xs font-medium wrap-break-word text-foreground/80"
+                      className="max-w-full rounded-full border border-border bg-muted/40 px-2 py-0.5 type-label wrap-break-word text-foreground/80"
                     >
                       {tech}
                     </li>
@@ -266,7 +273,7 @@ export function OpenSourceDrawer({
       bodyRef={bodyRef}
       header={
         <div>
-          <DrawerTitle className="text-xl font-semibold tracking-tight">Open source</DrawerTitle>
+          <DrawerTitle className="type-title">Open source</DrawerTitle>
           <AccentBar />
           <DrawerDescription className="mt-3">
             Libraries and tools I build in the open.
@@ -287,14 +294,14 @@ export function OpenSourceDrawer({
                   <ProjectIcon project={project} className="mt-0.5 size-9" />
                   <span className="min-w-0 flex-1">
                     <span className="flex items-center gap-2">
-                      <span className="font-medium text-foreground">{project.name}</span>
+                      <span className="type-name text-foreground">{project.name}</span>
                       <IconPlus
                         aria-hidden
                         className="size-3.5 text-muted-foreground/70 transition-transform duration-200 group-data-panel-open:rotate-45"
                       />
                       <ProjectStatus project={project} className="ml-auto" />
                     </span>
-                    <span className="mt-1 block text-sm text-muted-foreground">
+                    <span className="mt-1 block text-sm text-pretty text-muted-foreground">
                       {project.description}
                     </span>
                   </span>
@@ -346,14 +353,12 @@ export function ProjectDetailDrawer({
             <ProjectIcon project={project} className="mt-1 size-11" />
             <div className="min-w-0">
               <span className="flex items-center gap-3">
-                <span className="hex-kind text-[0.8125rem] font-medium tracking-tight lowercase">
+                <span className="hex-kind type-label lowercase">
                   {projectKindLabel[project.kind]}
                 </span>
                 <ProjectStatus project={project} />
               </span>
-              <DrawerTitle className="mt-0.5 text-xl font-semibold tracking-tight">
-                {project.name}
-              </DrawerTitle>
+              <DrawerTitle className="mt-0.5 type-title">{project.name}</DrawerTitle>
               <AccentBar />
             </div>
           </div>
