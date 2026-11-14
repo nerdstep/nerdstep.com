@@ -2,6 +2,7 @@
   "name": "nerdstep.com",
   "version": "1.0.0",
   "private": true,
+  "license": "MIT",
   "module": "index.ts",
   "type": "module",
   "scripts": {
