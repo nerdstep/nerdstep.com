@@ -1,4 +1,8 @@
-import { IconBrandGithubFilled, IconBrandLinkedin, IconBrandXFilled } from '@tabler/icons-react'
+import {
+  IconBrandGithubFilled,
+  IconBrandLinkedinFilled,
+  IconBrandXFilled,
+} from '@tabler/icons-react'
 
 import type { IconElement } from '@/types'
 
@@ -11,12 +15,12 @@ export type IconMap = Record<string, IconConfig>
 
 export const iconMap = {
   github: {
-    label: 'Github',
+    label: 'GitHub',
     icon: IconBrandGithubFilled,
   },
   linkedin: {
     label: 'LinkedIn',
-    icon: IconBrandLinkedin,
+    icon: IconBrandLinkedinFilled,
   },
   x: {
     label: 'X',

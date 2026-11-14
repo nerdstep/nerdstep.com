@@ -56,7 +56,7 @@ const { social } = siteConfig
 
 // Order by display preference
 export const socialLinks = {
-  //linkedin: 'https://www.linkedin.com/in/jwilliams42',
+  linkedin: `https://www.linkedin.com/in/${social.linkedin}`,
   x: `https://x.com/${social.x}`,
   github: `https://github.com/${social.github}`,
 } as const satisfies Partial<Record<keyof typeof iconMap, string>>
