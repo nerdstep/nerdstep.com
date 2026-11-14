@@ -18,7 +18,5 @@
     "*.css": "tailwindcss"
   },
   "tailwindCSS.colorDecorators": false,
-  "tailwindCSS.experimental.classRegex": [["cva\\(([^)]*)\\)", "[\"'`]([^\"'`]*).*?[\"'`]"]],
-  "js/ts.tsdk.path": "node_modules\\typescript\\lib",
-  "js/ts.tsdk.promptToUseWorkspaceVersion": true
+  "tailwindCSS.experimental.classRegex": [["cva\\(([^)]*)\\)", "[\"'`]([^\"'`]*).*?[\"'`]"]]
 }

@@ -1,20 +1,7 @@
 import { useMemo } from 'react'
 
-const GRID_SCALE = 1.42
-
-const BASE_HEX_WIDTH = 30
-const BASE_HEX_HEIGHT = 34.641
-const BASE_HEX_HALF_HEIGHT = 17.32
-const BASE_EDGE_SHORT = 10
-const BASE_EDGE_MEDIUM = 20
-const BASE_EDGE_LONG = 30
-
-const HEX_WIDTH = BASE_HEX_WIDTH * GRID_SCALE
-const HEX_HEIGHT = BASE_HEX_HEIGHT * GRID_SCALE
-const HEX_HALF_HEIGHT = BASE_HEX_HALF_HEIGHT * GRID_SCALE
-const EDGE_SHORT = BASE_EDGE_SHORT * GRID_SCALE
-const EDGE_MEDIUM = BASE_EDGE_MEDIUM * GRID_SCALE
-const EDGE_LONG = BASE_EDGE_LONG * GRID_SCALE
+/** Height of a flat-top hexagon one unit wide. */
+export const UNIT_HEX_HEIGHT = Math.sqrt(3) / 2
 
 interface Point {
   x: number
@@ -22,34 +9,44 @@ interface Point {
 }
 
 interface Hexagon {
-  vertices: Point[]
+  /** Lattice column, relative to the anchor cell at (0, 0). */
+  k: number
+  /** Lattice row within the column, relative to the anchor cell. */
+  j: number
+  center: Point
   pathData: string
   /** Deterministic per-cell shade in [0, 1) for the tiled background effect */
   shade: number
 }
 
-interface HexagonGridBounds {
-  minX: number
-  minY: number
-  width: number
-  height: number
+/** Columns and rows to draw on each side of the anchor cell. */
+export interface LatticeExtent {
+  columns: number
+  rows: number
 }
 
 export interface HexagonGridData {
   hexagons: Hexagon[]
-  viewBox: HexagonGridBounds
-  scale: number
   vertices: Point[]
   vertexNeighbors: number[][]
 }
 
-const createHexagonVertices = (x: number, y: number): Point[] => [
-  { x, y },
-  { x: x + EDGE_MEDIUM, y },
-  { x: x + EDGE_LONG, y: y + HEX_HALF_HEIGHT },
-  { x: x + EDGE_MEDIUM, y: y + HEX_HEIGHT },
-  { x, y: y + HEX_HEIGHT },
-  { x: x - EDGE_SHORT, y: y + HEX_HALF_HEIGHT },
+/**
+ * Center of lattice cell (k, j) in unit coordinates. Columns interlock at 3/4
+ * of a cell width, and odd columns sit half a cell lower.
+ */
+export const latticeCenter = (k: number, j: number): Point => ({
+  x: k * 0.75,
+  y: (j + (Math.abs(k) % 2) / 2) * UNIT_HEX_HEIGHT,
+})
+
+const hexagonVertices = ({ x, y }: Point): Point[] => [
+  { x: x - 0.25, y: y - UNIT_HEX_HEIGHT / 2 },
+  { x: x + 0.25, y: y - UNIT_HEX_HEIGHT / 2 },
+  { x: x + 0.5, y },
+  { x: x + 0.25, y: y + UNIT_HEX_HEIGHT / 2 },
+  { x: x - 0.25, y: y + UNIT_HEX_HEIGHT / 2 },
+  { x: x - 0.5, y },
 ]
 
 const createPathFromVertices = (vertices: Point[]): string =>
@@ -58,111 +55,63 @@ const createPathFromVertices = (vertices: Point[]): string =>
     .map((v) => `L ${v.x} ${v.y}`)
     .join(' ')} Z`
 
-const getVertexKey = (point: Point) => `${Math.round(point.x * 1000)}:${Math.round(point.y * 1000)}`
+const getVertexKey = (point: Point) =>
+  `${Math.round(point.x * 10_000)}:${Math.round(point.y * 10_000)}`
 
-// Deterministic hash so the shading is stable across server and client renders
-const cellShade = (col: number, row: number): number => {
-  const s = Math.sin(col * 127.1 + row * 311.7) * 43_758.5453
+// Deterministic hash so each lattice cell keeps its shade across re-renders
+const cellShade = (k: number, j: number): number => {
+  const s = Math.sin(k * 127.1 + j * 311.7) * 43_758.5453
   return s - Math.floor(s)
 }
 
-export function useHexagons(): HexagonGridData {
-  const data = useMemo((): HexagonGridData => {
-    const cols = 20
-    const rows = 10
-    const result: Hexagon[] = []
-    // Global vertex registry and adjacency (for vertex-to-vertex traversal)
+/**
+ * A flat-top hex lattice in unit coordinates (cells one unit wide), centered on
+ * the anchor cell, plus its vertex graph for particles to travel along.
+ */
+export function useHexagons({ columns, rows }: LatticeExtent): HexagonGridData {
+  return useMemo((): HexagonGridData => {
+    const hexagons: Hexagon[] = []
     const vertexKeyToIndex = new Map<string, number>()
-    const verticesUnique: Point[] = []
-    const vertexNeighborSets: Array<Set<number>> = []
-    let minX = Number.POSITIVE_INFINITY
-    let minY = Number.POSITIVE_INFINITY
-    let maxX = Number.NEGATIVE_INFINITY
-    let maxY = Number.NEGATIVE_INFINITY
+    const vertices: Point[] = []
+    const neighborSets: Array<Set<number>> = []
 
-    const ensureVertexIndex = (p: Point): number => {
-      const key = getVertexKey(p)
+    const vertexIndex = (point: Point): number => {
+      const key = getVertexKey(point)
       const existing = vertexKeyToIndex.get(key)
-
       if (existing !== undefined) {
         return existing
       }
-
-      const idx = verticesUnique.length
-      verticesUnique.push(p)
-      vertexKeyToIndex.set(key, idx)
-
-      if (!vertexNeighborSets[idx]) {
-        vertexNeighborSets[idx] = new Set<number>()
-      }
-      return idx
+      const index = vertices.length
+      vertices.push(point)
+      vertexKeyToIndex.set(key, index)
+      neighborSets[index] = new Set<number>()
+      return index
     }
 
-    for (let row = 0; row < rows; row += 1) {
-      for (let col = 0; col < cols; col += 1) {
-        const x = col * HEX_WIDTH
-        const y = col % 2 === 0 ? row * HEX_HEIGHT : row * HEX_HEIGHT - HEX_HALF_HEIGHT
-        const vertices = createHexagonVertices(x, y)
-
-        for (const vertex of vertices) {
-          if (vertex.x < minX) {
-            minX = vertex.x
-          }
-          if (vertex.y < minY) {
-            minY = vertex.y
-          }
-          if (vertex.x > maxX) {
-            maxX = vertex.x
-          }
-          if (vertex.y > maxY) {
-            maxY = vertex.y
-          }
-
-          // register vertex globally
-          ensureVertexIndex(vertex)
+    for (let k = -columns; k <= columns; k += 1) {
+      for (let j = -rows; j <= rows; j += 1) {
+        const center = latticeCenter(k, j)
+        const corners = hexagonVertices(center)
+        for (const [i, corner] of corners.entries()) {
+          const a = vertexIndex(corner)
+          const b = vertexIndex(corners[(i + 1) % corners.length])
+          neighborSets[a].add(b)
+          neighborSets[b].add(a)
         }
-
-        // Add edges between consecutive vertices to build vertex adjacency
-        for (let i = 0; i < vertices.length; i += 1) {
-          const a = ensureVertexIndex(vertices[i])
-          const b = ensureVertexIndex(vertices[(i + 1) % vertices.length])
-          vertexNeighborSets[a].add(b)
-          vertexNeighborSets[b].add(a)
-        }
-
-        result.push({
-          vertices,
-          pathData: createPathFromVertices(vertices),
-          shade: cellShade(col, row),
+        hexagons.push({
+          k,
+          j,
+          center,
+          pathData: createPathFromVertices(corners),
+          shade: cellShade(k, j),
         })
       }
     }
 
-    if (
-      !Number.isFinite(minX) ||
-      !Number.isFinite(minY) ||
-      !Number.isFinite(maxX) ||
-      !Number.isFinite(maxY)
-    ) {
-      minX = 0
-      minY = 0
-      maxX = HEX_WIDTH
-      maxY = HEX_HEIGHT
-    }
-
     return {
-      hexagons: result,
-      viewBox: {
-        minX,
-        minY,
-        width: maxX - minX,
-        height: maxY - minY,
-      },
-      scale: GRID_SCALE,
-      vertices: verticesUnique,
-      vertexNeighbors: vertexNeighborSets.map((s) => Array.from(s)),
+      hexagons,
+      vertices,
+      vertexNeighbors: neighborSets.map((set) => Array.from(set)),
     }
-  }, [])
-
-  return data
+  }, [columns, rows])
 }

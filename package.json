@@ -2,6 +2,7 @@
   "name": "nerdstep.com",
   "version": "1.0.0",
   "private": true,
+  "license": "MIT",
   "module": "index.ts",
   "type": "module",
   "scripts": {
@@ -21,7 +22,6 @@
   },
   "dependencies": {
     "@base-ui/react": "^1.9.0",
-    "@fontsource-variable/jetbrains-mono": "^5.3.0",
     "@fontsource-variable/manrope": "^5.3.0",
     "@tabler/icons-react": "^3.51.0",
     "@tanstack/react-router": "^1.170.46",
@@ -31,22 +31,18 @@
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "es-toolkit": "^1.53.2",
-    "lucide-react": "^1.72.0",
     "motion": "^14.14.0",
     "react": "19.3.1",
     "react-dom": "19.3.1",
-    "react-parallax-tilt": "^1.7.352",
-    "react-use": "^17.6.1",
     "tailwind-merge": "^3.7.0",
-    "tanstack-theme-kit": "^0.2.1",
-    "type-fest": "^5.10.0",
-    "zod": "^4.6.7"
+    "type-fest": "^5.10.0"
   },
   "devDependencies": {
     "@cloudflare/vite-plugin": "^1.69.1",
     "@tailwindcss/vite": "^4.3.5",
     "@types/bun": "latest",
     "@vitejs/plugin-react": "^6.3.0",
+    "oxc-transform-react": "^0.158.0",
     "oxfmt": "0.78.0",
     "oxlint": "^1.93.0",
     "oxlint-tsgolint": "7.0.2007",

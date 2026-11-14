@@ -12,17 +12,11 @@ export interface SiteConfig {
   copyright: string
   language: string
   textDirection: string
-  image?: string
   manifest: string
   social: {
     github: string
     linkedin: string
     x: string
-  }
-  icons: {
-    icon: string
-    shortcut: string
-    apple: string
   }
 }
 
@@ -33,22 +27,17 @@ export const siteConfig = {
   url: BASE_URL,
   metadataBase: new URL(BASE_URL),
   title: 'nerdstep',
-  description: 'Justin Williams is a full-stack software engineer in Oakland, California.',
+  description:
+    'Justin Williams is a software engineer in the San Francisco Bay Area building mostly useful things for the web, including Mostly Recipes, Mostly Page, and Mostly Garden.',
   keywords: '',
   copyright: 'Justin Williams',
   language: 'en',
   textDirection: 'ltr',
-  image: `${BASE_URL}/img/nerdstep-icon.svg`,
   manifest: `${BASE_URL}/site.webmanifest`,
   social: {
     github: 'nerdstep',
     linkedin: 'jwilliams42',
     x: 'n3rdstep',
-  },
-  icons: {
-    icon: '/favicon.ico',
-    shortcut: '/favicon-16x16.png',
-    apple: '/apple-touch-icon.png',
   },
 } as const satisfies SiteConfig
 
@@ -56,7 +45,7 @@ const { social } = siteConfig
 
 // Order by display preference
 export const socialLinks = {
-  //linkedin: 'https://www.linkedin.com/in/jwilliams42',
+  linkedin: `https://www.linkedin.com/in/${social.linkedin}`,
   x: `https://x.com/${social.x}`,
   github: `https://github.com/${social.github}`,
 } as const satisfies Partial<Record<keyof typeof iconMap, string>>

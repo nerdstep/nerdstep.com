@@ -1,5 +1,4 @@
 @import "@fontsource-variable/manrope";
-@import "@fontsource-variable/jetbrains-mono";
 @import "tailwindcss";
 @import "tw-animate-css";
 @import "./shadcn.css";
@@ -17,6 +16,74 @@
   }
 }
 
+/*
+ * Stand-in for Manrope while it loads: Arial resized to Manrope's average
+ * advance width and vertical metrics (measured: 1.011x wider, ascent 1.066em,
+ * descent 0.30em), so text doesn't reflow when the web font swaps in.
+ */
+@font-face {
+  font-family: "Manrope Fallback";
+  src: local("Arial"), local("Liberation Sans"), local("Helvetica");
+  size-adjust: 101.1%;
+  ascent-override: 105.4%;
+  descent-override: 29.7%;
+  line-gap-override: 0%;
+}
+
+/*
+ * Type roles. One family (Manrope); roles differ by size, weight, tracking,
+ * and color, with clear steps between them.
+ * - label: kind labels, definition terms, status, chips. Color and case tell
+ *   them apart, not size. Slightly open tracking for small light-on-dark text.
+ * - meta: secondary copy beside a name or title.
+ * - name: an item's name where it heads its own content.
+ * - title: a drawer or page title, a clear step above body text.
+ * - prose: running paragraphs. Manrope's word spaces are tight (0.20em), so
+ *   they're opened up for reading.
+ */
+@utility type-label {
+  font-size: 0.75rem;
+  line-height: 1rem;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+}
+
+@utility type-meta {
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  font-weight: 400;
+}
+
+@utility type-name {
+  font-size: 1rem;
+  line-height: 1.375rem;
+  font-weight: 600;
+  letter-spacing: -0.025em;
+}
+
+@utility type-title {
+  font-size: 1.5rem;
+  line-height: 2rem;
+  font-weight: 600;
+  letter-spacing: -0.025em;
+}
+
+@utility type-prose {
+  font-size: 1rem;
+  line-height: 1.7;
+  word-spacing: 0.06em;
+}
+
+/*
+ * A slim scrollbar in the theme's colors for scrolling panels, with its space
+ * reserved so content doesn't shift when it appears.
+ */
+@utility scrollbar-thin {
+  scrollbar-width: thin;
+  scrollbar-color: color-mix(in oklab, var(--color-muted-foreground) 35%, transparent) transparent;
+  scrollbar-gutter: stable;
+}
+
 @layer base {
   html,
   body {
@@ -25,80 +92,56 @@
   }
 }
 
+/*
+ * The site is dark-only. `<html>` always carries `.dark` so the `dark:` variants in
+ * vendored shadcn/ui components still apply; everything else uses dark values directly.
+ */
 :root {
+  color-scheme: dark;
   --radius: 0.625rem;
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.129 0.042 264.695);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.129 0.042 264.695);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.129 0.042 264.695);
-  --primary: oklch(0.208 0.042 265.755);
-  --primary-foreground: oklch(0.984 0.003 247.858);
-  --secondary: oklch(0.968 0.007 247.896);
-  --secondary-foreground: oklch(0.208 0.042 265.755);
-  --muted: oklch(0.968 0.007 247.896);
-  --muted-foreground: oklch(0.554 0.046 257.417);
-  --accent: oklch(0.968 0.007 247.896);
-  --accent-foreground: oklch(0.208 0.042 265.755);
-  --destructive: oklch(0.577 0.245 27.325);
-  --border: oklch(0.929 0.013 255.508);
-  --input: oklch(0.929 0.013 255.508);
-  --ring: oklch(0.704 0.04 256.788);
-  --chart-1: oklch(0.646 0.222 41.116);
-  --chart-2: oklch(0.6 0.118 184.704);
-  --chart-3: oklch(0.398 0.07 227.392);
-  --chart-4: oklch(0.828 0.189 84.429);
-  --chart-5: oklch(0.769 0.188 70.08);
-  --sidebar: oklch(0.984 0.003 247.858);
-  --sidebar-foreground: oklch(0.129 0.042 264.695);
-  --sidebar-primary: oklch(0.208 0.042 265.755);
-  --sidebar-primary-foreground: oklch(0.984 0.003 247.858);
-  --sidebar-accent: oklch(0.968 0.007 247.896);
-  --sidebar-accent-foreground: oklch(0.208 0.042 265.755);
-  --sidebar-border: oklch(0.929 0.013 255.508);
-  --sidebar-ring: oklch(0.704 0.04 256.788);
-}
-
-.dark {
-  --background: oklch(0.129 0.042 264.695);
-  --foreground: oklch(0.984 0.003 247.858);
-  --card: oklch(0.208 0.042 265.755);
-  --card-foreground: oklch(0.984 0.003 247.858);
-  --popover: oklch(0.208 0.042 265.755);
-  --popover-foreground: oklch(0.984 0.003 247.858);
-  --primary: oklch(0.929 0.013 255.508);
-  --primary-foreground: oklch(0.208 0.042 265.755);
-  --secondary: oklch(0.279 0.041 260.031);
-  --secondary-foreground: oklch(0.984 0.003 247.858);
-  --muted: oklch(0.279 0.041 260.031);
-  --muted-foreground: oklch(0.704 0.04 256.788);
-  --accent: oklch(0.279 0.041 260.031);
-  --accent-foreground: oklch(0.984 0.003 247.858);
+  /*
+   * Charcoal: near-black neutrals with a whisper of cool (hue 270, chroma
+   * ~0.005), so they read as charcoal rather than flat gray or slate blue and
+   * the project hues carry the color. Surfaces step up in lightness for
+   * elevation; text is off-white to avoid halation on dark screens.
+   */
+  --background: oklch(0.13 0.004 270);
+  --foreground: oklch(0.965 0.003 270);
+  --card: oklch(0.175 0.005 270);
+  --card-foreground: oklch(0.965 0.003 270);
+  --popover: oklch(0.175 0.005 270);
+  --popover-foreground: oklch(0.965 0.003 270);
+  --primary: oklch(0.93 0.004 270);
+  --primary-foreground: oklch(0.175 0.005 270);
+  --secondary: oklch(0.245 0.006 270);
+  --secondary-foreground: oklch(0.965 0.003 270);
+  --muted: oklch(0.245 0.006 270);
+  --muted-foreground: oklch(0.72 0.008 270);
+  --accent: oklch(0.245 0.006 270);
+  --accent-foreground: oklch(0.965 0.003 270);
   --destructive: oklch(0.704 0.191 22.216);
-  --border: oklch(1 0 0 / 10%);
-  --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.551 0.027 264.364);
+  --border: oklch(1 0 0 / 9%);
+  --input: oklch(1 0 0 / 14%);
+  --ring: oklch(0.56 0.01 270);
   --chart-1: oklch(0.488 0.243 264.376);
   --chart-2: oklch(0.696 0.17 162.48);
   --chart-3: oklch(0.769 0.188 70.08);
   --chart-4: oklch(0.627 0.265 303.9);
   --chart-5: oklch(0.645 0.246 16.439);
-  --sidebar: oklch(0.208 0.042 265.755);
-  --sidebar-foreground: oklch(0.984 0.003 247.858);
+  --sidebar: oklch(0.175 0.005 270);
+  --sidebar-foreground: oklch(0.965 0.003 270);
   --sidebar-primary: oklch(0.488 0.243 264.376);
-  --sidebar-primary-foreground: oklch(0.984 0.003 247.858);
-  --sidebar-accent: oklch(0.279 0.041 260.031);
-  --sidebar-accent-foreground: oklch(0.984 0.003 247.858);
-  --sidebar-border: oklch(1 0 0 / 10%);
-  --sidebar-ring: oklch(0.551 0.027 264.364);
+  --sidebar-primary-foreground: oklch(0.965 0.003 270);
+  --sidebar-accent: oklch(0.245 0.006 270);
+  --sidebar-accent-foreground: oklch(0.965 0.003 270);
+  --sidebar-border: oklch(1 0 0 / 9%);
+  --sidebar-ring: oklch(0.56 0.01 270);
 }
 
 @theme inline {
   --font-sans:
-    "Manrope Variable", ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji",
-    "Segoe UI Symbol", "Noto Color Emoji";
-  --font-mono: "JetBrains Mono Variable", monospace;
+    "Manrope Variable", "Manrope Fallback", ui-sans-serif, system-ui, sans-serif,
+    "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
@@ -176,10 +219,6 @@
   }
 }
 
-.tilt {
-  transform: translateZ(10px) scale(0.96);
-}
-
 /* Fallback hue so the honeycomb's `hsl(var(--hex-hue) …)` glass tints resolve
  * even on any element that hasn't set its own; every cell overrides this. */
 :root {
@@ -187,60 +226,95 @@
 }
 
 /*
+ * Honeycomb scale. The desktop flower is sized for a 1440px-wide screen and
+ * grows in steps on wider ones, only where the screen is also tall enough to
+ * fit it above the footer. Steps rather than a fluid size because deriving a
+ * unitless factor from the viewport needs typed CSS arithmetic. Hex sizes and
+ * the text inside them both read this.
+ */
+@property --hex-scale {
+  syntax: "<number>";
+  inherits: true;
+  initial-value: 1;
+}
+
+/* Registered as a number so crossing a step animates the size change. */
+:root {
+  --hex-scale: 1;
+  transition: --hex-scale 450ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@media (min-width: 1600px) and (min-height: 880px) {
+  :root {
+    --hex-scale: 1.1;
+  }
+}
+
+@media (min-width: 1880px) and (min-height: 940px) {
+  :root {
+    --hex-scale: 1.2;
+  }
+}
+
+@media (min-width: 2400px) and (min-height: 1200px) {
+  :root {
+    --hex-scale: 1.5;
+  }
+}
+
+/*
+ * Hover rim: the 2px border band of a hex cell, masked out of a full-cell layer
+ * by cutting away the same inner hexagon the fill covers. The cell's own
+ * clip-path trims the outer edge.
+ */
+.hex-rim {
+  --hex-inner: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100' preserveAspectRatio='none'%3E%3Cpolygon points='25,0 75,0 100,50 75,100 25,100 0,50'/%3E%3C/svg%3E");
+  mask:
+    linear-gradient(#000 0 0),
+    var(--hex-inner) center / calc(100% - 4px) calc(100% - 4px) no-repeat;
+  mask-composite: exclude;
+}
+
+/*
+ * Ambient glow behind a honeycomb project cell (see HexagonGrid). Centered on
+ * the cell with `translate`, drifting with `transform` so the two compose.
+ */
+.ambient-glow {
+  position: absolute;
+  translate: -50% -50%;
+  border-radius: 50%;
+  background: radial-gradient(closest-side, hsl(var(--glow-hue) 75% 55% / 0.2), transparent);
+  animation: ambient-drift 36s ease-in-out infinite alternate;
+}
+
+@keyframes ambient-drift {
+  0% {
+    transform: translate(0, 0) scale(1);
+  }
+  33% {
+    transform: translate(9%, -6%) scale(1.08);
+  }
+  66% {
+    transform: translate(-7%, 8%) scale(0.94);
+  }
+  100% {
+    transform: translate(5%, 5%) scale(1.04);
+  }
+}
+
+/*
  * Per-hex kind label. Each cell sets its own `--hex-hue` inline; the color is
  * declared here on the label element itself (not on :root) so `var(--hex-hue)`
  * resolves against the cell's hue. The bright fill hue (hsl H 70% 55%) fails
- * contrast as small text, so the label darkens the hue in light mode and
- * lightens it in dark mode — keeping each cell's personality while staying AA.
+ * contrast as small text, so the label lightens it to stay AA while keeping
+ * each cell's personality.
  */
 .hex-kind {
-  color: hsl(var(--hex-hue, 210) 60% 33%);
+  color: hsl(var(--hex-hue, 210) 70% 68%);
   transition: color 200ms;
 }
 
-.dark .hex-kind {
-  color: hsl(var(--hex-hue, 210) 70% 68%);
-}
-
-:root:not(.dark) .group:hover .hex-hover-ink,
-:root:not(.dark) .group:focus-visible .hex-hover-ink {
-  color: var(--hex-hover-ink);
-}
-
-:root:not(.dark) .group:hover .hex-hover-ink-border,
-:root:not(.dark) .group:focus-visible .hex-hover-ink-border {
-  border-color: var(--hex-hover-ink);
-}
-
-.dark .group:hover .hex-hover-accent-dark,
-.dark .group:focus-visible .hex-hover-accent-dark {
+.group:hover .hex-hover-accent,
+.group:focus-visible .hex-hover-accent {
   color: var(--hex-accent);
-}
-
-.logo-glow::before {
-  background-image: radial-gradient(circle, white, transparent);
-}
-
-.logo-glow::after {
-  background-image: conic-gradient(
-    from 180deg at 50% 50%,
-    rgb(186, 230, 253),
-    rgb(191, 219, 254),
-    transparent
-  );
-}
-
-.dark .logo-glow::before {
-  background-image: linear-gradient(to bottom right, transparent, rgb(29, 78, 216));
-  opacity: 0.1;
-}
-
-.dark .logo-glow::after {
-  background-image: conic-gradient(
-    from 180deg at 50% 50%,
-    rgb(12, 74, 110),
-    rgb(28, 100, 242),
-    transparent
-  );
-  opacity: 0.4;
 }

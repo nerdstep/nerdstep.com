@@ -5,9 +5,9 @@ export const honeycombCellIds = [
   'logo',
   'recipes',
   'page',
-  'parsers',
+  'oss',
   'intro',
-  'other',
+  'garden',
   'socials',
   'now',
   'thesis',
@@ -15,7 +15,10 @@ export const honeycombCellIds = [
 
 export type HoneycombCellId = (typeof honeycombCellIds)[number]
 
-/** User-facing project-kind copy shared by cells and dialogs. */
+/** Element id of the open-source cell; its drawer returns focus here. */
+export const OPEN_SOURCE_TRIGGER_ID = 'open-source'
+
+/** User-facing project-kind copy shared by cells and drawers. */
 export const projectKindLabel: Record<Project['kind'], string> = {
   product: 'product',
   oss: 'open source',

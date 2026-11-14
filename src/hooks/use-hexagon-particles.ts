@@ -50,6 +50,12 @@ export interface UseHexagonParticlesOptions {
    * @default 0.35
    */
   trailMaxOpacity?: number
+  /**
+   * Which vertices particles may travel to, e.g. only those on screen. Read
+   * when each move is chosen, so changing it never restarts the particles.
+   * At a boundary a particle turns back rather than leave the allowed area.
+   */
+  canVisit?: (vertexIndex: number) => boolean
 }
 
 export interface UseHexagonParticlesResult {
@@ -92,7 +98,15 @@ export function useHexagonParticles(
     trailMaxOpacity = 0.35,
     forwardOnly = true,
     forwardMinDot = 0,
+    canVisit,
   } = opts
+
+  // Latest visit rule, read at decision time (see `canVisit`).
+  const canVisitRef = useRef(canVisit)
+  useEffect(() => {
+    canVisitRef.current = canVisit
+  }, [canVisit])
+  const allowed = useCallback((index: number) => canVisitRef.current?.(index) ?? true, [])
 
   // Imperative store for circle elements
   const circlesRef = useRef<Array<SVGCircleElement | null>>([])
@@ -160,10 +174,18 @@ export function useHexagonParticles(
         }
       }
 
+      // Step 3: stay inside the allowed area, turning back if every way on leaves it
       const arr = pool.length > 0 ? pool : nbrs
-      return arr[randomInt(arr.length)] ?? null
+      let choices = arr.filter(allowed)
+      if (choices.length === 0) {
+        choices = nbrs.filter(allowed)
+      }
+      if (choices.length === 0) {
+        choices = arr
+      }
+      return choices[randomInt(choices.length)] ?? null
     },
-    [vertexNeighbors, avoidBacktrack, forwardOnly, forwardMinDot, vertices],
+    [vertexNeighbors, avoidBacktrack, forwardOnly, forwardMinDot, vertices, allowed],
   )
 
   // Reset or initialize particles when inputs change
@@ -176,8 +198,11 @@ export function useHexagonParticles(
     }
 
     // Initialize particle states
+    // Spawn on allowed vertices (any vertex if none are allowed yet).
+    const spawnable = verticesStable.map((_, index) => index).filter(allowed)
+    const spawnPool = spawnable.length > 0 ? spawnable : verticesStable.map((_, index) => index)
     statesRef.current = Array.from({ length: particleCount }, () => {
-      const curr = randomInt(verticesStable.length)
+      const curr = spawnPool[randomInt(spawnPool.length)]
       const next = pickNextVertex(curr, -1)
       return {
         prev: -1,
@@ -215,6 +240,27 @@ export function useHexagonParticles(
       }
     }
 
+    // Move a particle to a random allowed vertex and fade it in. Used when the
+    // allowed area moves out from under it (e.g. the layout changed).
+    const respawn = (state: ParticleState, circle: SVGCircleElement, i: number) => {
+      const pool = verticesStable.map((_, index) => index).filter(allowed)
+      if (pool.length === 0) {
+        return
+      }
+      state.prev = -1
+      state.curr = pool[randomInt(pool.length)]
+      state.next = pickNextVertex(state.curr, -1)
+      state.progress = 0
+      state.trail = []
+      trailsPathRef.current[i]?.setAttribute('opacity', '0')
+      circle.setAttribute('cx', String(verticesStable[state.curr].x))
+      circle.setAttribute('cy', String(verticesStable[state.curr].y))
+      circle.style.opacity = '0'
+      requestAnimationFrame(() => {
+        circle.style.opacity = '1'
+      })
+    }
+
     const step = (ts: number) => {
       let anyActive = false
       for (let i = 0; i < particleCount; i += 1) {
@@ -225,6 +271,12 @@ export function useHexagonParticles(
         }
 
         anyActive = true
+
+        // A whole edge outside the allowed area: don't let it walk back in.
+        if (!allowed(state.curr) && !allowed(state.next)) {
+          respawn(state, circle, i)
+          continue
+        }
 
         if (state.lastTs == null) {
           state.lastTs = ts
@@ -276,6 +328,12 @@ export function useHexagonParticles(
         if (state.progress >= 1) {
           state.prev = state.curr
           state.curr = state.next
+          // Arrived outside the allowed area (it moved under the particle).
+          // Moves only ever target allowed vertices, so this is a layout change.
+          if (!allowed(state.curr)) {
+            respawn(state, circle, i)
+            continue
+          }
           circle.setAttribute('cx', String(verticesStable[state.curr].x))
           circle.setAttribute('cy', String(verticesStable[state.curr].y))
           state.next = pickNextVertex(state.curr, state.prev)
@@ -330,6 +388,7 @@ export function useHexagonParticles(
     }
   }, [
     verticesStable,
+    allowed,
     particleCount,
     randomDuration,
     pickNextVertex,

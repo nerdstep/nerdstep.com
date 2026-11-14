@@ -1,3 +1,4 @@
+import manropeLatin from '@fontsource-variable/manrope/files/manrope-latin-wght-normal.woff2?url'
 import {
   createRootRoute,
   type ErrorComponentProps,
@@ -5,11 +6,10 @@ import {
   Outlet,
   Scripts,
 } from '@tanstack/react-router'
-import { ThemeProvider } from 'tanstack-theme-kit'
+import { domAnimation, LazyMotion } from 'motion/react'
 
 import { ErrorPage } from '@/components/error-page'
 import { Footer } from '@/components/footer'
-import { Header } from '@/components/header'
 import { HexagonGrid } from '@/components/hexagon-grid'
 import { NotFound } from '@/components/not-found'
 import { siteConfig } from '@/lib/config'
@@ -25,11 +25,11 @@ function RootDocument({
   children: React.ReactNode
 }>) {
   return (
-    <html className="bg-background" dir={textDirection} lang={language}>
+    <html className="dark bg-background" dir={textDirection} lang={language}>
       <head>
         <HeadContent />
       </head>
-      <body className="flex min-h-screen min-w-0 flex-col bg-background font-sans text-foreground antialiased">
+      <body className="relative flex min-h-screen min-w-0 flex-col bg-background font-sans text-foreground antialiased">
         {children}
         <Scripts />
       </body>
@@ -39,21 +39,23 @@ function RootDocument({
 
 function RootLayout() {
   return (
-    <ThemeProvider attribute="class">
+    // Components use the slim `m` instead of `motion`, so only the animation
+    // features are bundled. `strict` throws if a full `motion` component sneaks in.
+    <LazyMotion features={domAnimation} strict>
       <HexagonGrid />
-      <Header />
-      <main className="container flex flex-auto py-8">
+      <main className="container flex flex-auto pt-24 pb-8 md:pt-28">
         <Outlet />
       </main>
       <Footer />
-    </ThemeProvider>
+    </LazyMotion>
   )
 }
 
 export const Route = createRootRoute({
   head: () => {
     const routeSeo = seoHead({
-      title: siteConfig.name,
+      // Names the person as well as the site, for tabs, search results, and shared links.
+      title: `Justin Williams · ${siteConfig.name}`,
       path: '/',
     })
 
@@ -68,7 +70,17 @@ export const Route = createRootRoute({
       ],
       links: [
         { rel: 'stylesheet', href: css },
-        { rel: 'icon', href: '/favicon.ico' },
+        // The CSS only reveals the font once parsed; preload it so first paint
+        // doesn't render in the fallback and then swap.
+        {
+          rel: 'preload',
+          href: manropeLatin,
+          as: 'font',
+          type: 'font/woff2',
+          crossOrigin: 'anonymous',
+        },
+        // `sizes` on the ICO lets browsers that support SVG favicons prefer the SVG.
+        { rel: 'icon', href: '/favicon.ico', sizes: '32x32' },
         { rel: 'icon', type: 'image/svg+xml', href: '/favicon.svg' },
         {
           rel: 'apple-touch-icon',

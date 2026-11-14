@@ -1,19 +1,31 @@
 {
-  "name": "nerdstep.com",
-  "short_name": "nerdstep.com",
+  "id": "/",
+  "name": "nerdstep",
+  "short_name": "nerdstep",
+  "description": "Justin Williams, a software engineer building mostly useful things for the web.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "theme_color": "#070709",
+  "background_color": "#070709",
   "icons": [
     {
       "src": "/android-chrome-192x192.png",
       "sizes": "192x192",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "any"
     },
     {
       "src": "/android-chrome-512x512.png",
       "sizes": "512x512",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icon-maskable-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
     }
-  ],
-  "theme_color": "#0f172b",
-  "background_color": "#0f172b",
-  "display": "standalone"
+  ]
 }
