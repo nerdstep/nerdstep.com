@@ -40,10 +40,11 @@ export const hexStyle = (hue: number): CSSProperties =>
  * reserved for labels and the hover/focus state, where it reads as an accent
  * instead of changing the perceived material from cell to cell.
  *
- * On hover or focus the rim turns the accent color while the fill grows more
- * opaque, so the accent behind it fades to a hint and the rim does the work.
- * A soft accent glow fades in from the bottom edge. Only `background-color`
- * and `opacity` animate, with no filters or shadows to repaint.
+ * On hover or focus an accent rim and a soft accent glow from the bottom edge
+ * fade in together. Only their `opacity` animates. The rim is its own
+ * ring-shaped layer (`.hex-rim`) rather than the cell's background, because a
+ * background shows through the translucent fill: fading it while the fill
+ * changed made the interior tint swell before settling, a visible bounce.
  *
  * There is deliberately no backdrop blur. The cell's `clip-path` makes it a
  * backdrop root, so a blur here only ever sees the cell's own rim color, never
@@ -55,13 +56,17 @@ export function HexFill() {
     <>
       <span
         aria-hidden
-        className="absolute inset-0.5 bg-[oklch(0.2_0.038_264.7/0.84)] transition-colors duration-200 group-hover/hex:bg-[oklch(0.2_0.038_264.7/0.92)] group-focus-visible/hex:bg-[oklch(0.2_0.038_264.7/0.92)] in-data-suppress-hover-motion:transition-none lg:bg-[oklch(0.2_0.038_264.7/0.64)] lg:group-hover/hex:bg-[oklch(0.2_0.038_264.7/0.92)] lg:group-focus-visible/hex:bg-[oklch(0.2_0.038_264.7/0.92)]"
+        className="absolute inset-0.5 bg-[oklch(0.2_0.038_264.7/0.84)] lg:bg-[oklch(0.2_0.038_264.7/0.64)]"
         style={{ clipPath: HEX_CLIP }}
       />
       <span
         aria-hidden
-        className="absolute inset-0.5 bg-[radial-gradient(ellipse_90%_55%_at_50%_100%,color-mix(in_oklab,var(--hex-accent)_28%,transparent),transparent)] opacity-0 transition-opacity duration-200 group-hover/hex:opacity-100 group-focus-visible/hex:opacity-100 in-data-suppress-hover-motion:transition-none"
+        className="absolute inset-0.5 bg-[radial-gradient(ellipse_100%_65%_at_50%_100%,color-mix(in_oklab,var(--hex-accent)_34%,transparent),transparent)] opacity-0 transition-opacity duration-200 group-hover/hex:opacity-100 group-focus-visible/hex:opacity-100 in-data-suppress-hover-motion:transition-none"
         style={{ clipPath: HEX_CLIP }}
+      />
+      <span
+        aria-hidden
+        className="hex-rim absolute inset-0 bg-(--hex-accent) opacity-0 transition-opacity duration-200 group-hover/hex:opacity-100 group-focus-visible/hex:opacity-100 in-data-suppress-hover-motion:transition-none"
       />
       <span
         aria-hidden
@@ -103,16 +108,16 @@ export function Hex({
 }: HexProps) {
   const isInteractive = Boolean(href || onSelect || interactive)
   const outerClass = cn(
-    'pointer-events-auto relative block shrink-0 bg-border/45 transition-colors duration-200 in-data-[suppress-hover-motion]:transition-none',
-    isInteractive &&
-      'group/hex hover:bg-(--hex-accent) focus-visible:z-10 focus-visible:bg-(--hex-accent) focus-visible:outline-none',
+    'pointer-events-auto relative block shrink-0 bg-border/45',
+    isInteractive && 'group/hex focus-visible:z-10 focus-visible:outline-none',
     isInteractive && 'cursor-pointer',
   )
   const inner = (
     <>
       <HexFill />
       <span className="absolute inset-0 flex flex-col items-center justify-center px-[13%] text-center">
-        {children}
+        {/* Content scales with the hex on wide screens; see `--hex-scale`. */}
+        <span className="flex w-full zoom-(--hex-scale) flex-col items-center">{children}</span>
       </span>
     </>
   )

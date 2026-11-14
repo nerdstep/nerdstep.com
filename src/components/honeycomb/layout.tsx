@@ -80,7 +80,12 @@ const layoutVars = (size: number, height?: string) =>
     '--hex-gap': `${HEX_GAP}px`,
   }) as CSSProperties
 
-const flowerVars = layoutVars(FLOWER_HEX)
+// The flower grows on wide, tall screens by `--hex-scale` (see index.css).
+const flowerVars = {
+  ...layoutVars(FLOWER_HEX),
+  '--hex-w': `calc(${FLOWER_HEX}px * var(--hex-scale))`,
+  '--hex-h': `calc(${FLOWER_HEX * HEX_HEIGHT_RATIO}px * var(--hex-scale))`,
+} as CSSProperties
 const stackVars = {
   ...layoutVars(STACK_HEX, STACK_HEX_HEIGHT),
   '--hex-w': STACK_HEX_WIDTH,
@@ -159,7 +164,9 @@ function MorphingHoneycomb({ renderCell, reducedMotion }: MorphingHoneycombProps
       const progress = progressRef.current
       const measuredStackHex = stack.querySelector('[data-cell]')
       const stackHexWidth = measuredStackHex?.getBoundingClientRect().width ?? STACK_HEX
-      const hexWidth = FLOWER_HEX + (stackHexWidth - FLOWER_HEX) * progress
+      const measuredFlowerHex = flower.querySelector('[data-cell]')
+      const flowerHexWidth = measuredFlowerHex?.getBoundingClientRect().width ?? FLOWER_HEX
+      const hexWidth = flowerHexWidth + (stackHexWidth - flowerHexWidth) * progress
       container.style.setProperty('--hex-w', `${hexWidth}px`)
       container.style.setProperty('--hex-h', `${hexWidth * HEX_HEIGHT_RATIO}px`)
 
@@ -232,11 +239,15 @@ function MorphingHoneycomb({ renderCell, reducedMotion }: MorphingHoneycombProps
         })
       }
     }
-    window.addEventListener('resize', onResize)
+    // Watch the measurement grids rather than the window. They resize with the
+    // viewport and also when a `--hex-scale` step changes the hex size.
+    const resizeObserver = new ResizeObserver(onResize)
+    resizeObserver.observe(flower)
+    resizeObserver.observe(stack)
 
     return () => {
       query.removeEventListener('change', onBreakpoint)
-      window.removeEventListener('resize', onResize)
+      resizeObserver.disconnect()
       cancelAnimationFrame(tweenFrame)
       cancelAnimationFrame(resizeFrame)
       cancelAnimationFrame(releaseHoverMotionFrame)
