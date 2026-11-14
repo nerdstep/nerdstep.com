@@ -39,11 +39,11 @@ export function Logo() {
       {location.pathname === '/' ? (
         <motion.img
           {...imageProps}
-          className="relative dark:drop-shadow-[0_0_0.3rem_#ffffff70] dark:invert"
+          className="relative drop-shadow-[0_0_0.3rem_#ffffff70] invert"
         />
       ) : (
         <Link to="/">
-          <motion.img {...imageProps} className="dark:invert" />
+          <motion.img {...imageProps} className="invert" />
         </Link>
       )}
     </span>

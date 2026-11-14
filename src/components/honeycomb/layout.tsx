@@ -26,13 +26,13 @@ const ENTRANCE_MS = 1200
 const flowerColumns: HoneycombCellId[][] = [
   ['logo'],
   ['recipes', 'page'],
-  ['parsers', 'intro', 'other'],
+  ['oss', 'intro', 'garden'],
   ['socials', 'now'],
   ['thesis'],
 ]
 const stackColumns: HoneycombCellId[][] = [
-  ['intro', 'recipes', 'parsers', 'socials', 'thesis'],
-  ['logo', 'page', 'other', 'now'],
+  ['intro', 'recipes', 'oss', 'socials', 'thesis'],
+  ['logo', 'page', 'garden', 'now'],
 ]
 const layoutVars = (size: number, height?: string) =>
   ({
@@ -47,7 +47,12 @@ const stackVars = {
   '--hex-w': STACK_HEX_WIDTH,
 } as CSSProperties
 
-/** Tiles flat-top hexagons into interlocking vertical columns. */
+/**
+ * Tiles flat-top hexagons into interlocking vertical columns.
+ *
+ * Columns overlap their neighbors by a quarter hex, so the column boxes ignore
+ * the pointer and only each hex's clipped shape receives hover and clicks.
+ */
 function HexColumns({ columns }: { columns: ReactNode[][] }) {
   return (
     <div className="flex items-center justify-center">
@@ -55,7 +60,7 @@ function HexColumns({ columns }: { columns: ReactNode[][] }) {
         <div
           key={index}
           className={cn(
-            'flex flex-col items-center gap-(--hex-gap)',
+            'pointer-events-none flex flex-col items-center gap-(--hex-gap)',
             index > 0 && 'ml-[calc(var(--hex-w)*-0.25+var(--hex-gap)*0.866)]',
           )}
         >
@@ -228,7 +233,7 @@ function MorphingHoneycomb({ renderCell, reducedMotion }: MorphingHoneycombProps
           ref={(element) => {
             cellRefs.current[id] = element
           }}
-          className="absolute top-0 left-0"
+          className="pointer-events-none absolute top-0 left-0"
         >
           {renderCell(id, false)}
         </div>

@@ -1,19 +1,11 @@
 import { IconArrowUpRight, IconPlus } from '@tabler/icons-react'
-import { motion } from 'motion/react'
 import type { CSSProperties } from 'react'
 
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogTitle,
-  DialogTrigger,
-} from '@/components/ui/dialog'
-import { otherProjects, type Project } from '@/lib/projects'
+import { Dialog, DialogContent, DialogDescription, DialogTitle } from '@/components/ui/dialog'
+import { openSourceProjects, type Project } from '@/lib/projects'
 import { cn } from '@/lib/utils'
 
 import { projectKindLabel } from './catalog'
-import { HexFill, hexCellVariants, hexStyle } from './hex-cell'
 
 const statusDotColor: Record<Project['status'], string> = {
   live: 'bg-emerald-500',
@@ -25,87 +17,72 @@ const statusLabel: Record<Project['status'], string> = {
   wip: 'In progress',
 }
 
-interface OtherProjectsHexProps {
-  hue: number
-  entrance: boolean
+/** Portaled dialogs sit outside the cell, so they re-derive its accent from the hue. */
+const dialogAccentStyle = (hue: number) =>
+  ({ '--hex-hue': hue, '--hex-accent': 'hsl(var(--hex-hue) 70% 55%)' }) as CSSProperties
+
+/** One project in a dialog list; selecting it opens the project's detail dialog. */
+function ProjectRow({ project, onSelect }: { project: Project; onSelect: () => void }) {
+  return (
+    <button
+      className="group -mx-2 block w-[calc(100%+1rem)] cursor-pointer rounded-md px-2 py-3 text-left text-inherit hover:bg-muted/60 focus-visible:bg-muted/60 focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
+      onClick={onSelect}
+      type="button"
+    >
+      <span className="flex items-center gap-2">
+        <span className="font-medium text-foreground group-hover:underline group-hover:underline-offset-4">
+          {project.name}
+        </span>
+        <IconPlus
+          aria-hidden
+          className="size-3.5 text-muted-foreground/70 transition-transform duration-200 group-hover:rotate-90 group-focus-visible:rotate-90"
+        />
+        <span className="ml-auto flex items-center gap-1.5 text-xs text-muted-foreground">
+          <span
+            aria-hidden
+            className={cn('size-1.5 rounded-full', statusDotColor[project.status])}
+          />
+          {statusLabel[project.status]}
+        </span>
+      </span>
+      <span className="mt-1 block text-sm text-muted-foreground">{project.description}</span>
+    </button>
+  )
 }
 
-export function OtherProjectsHex({ hue, entrance }: OtherProjectsHexProps) {
-  const motionProps = entrance
-    ? ({ variants: hexCellVariants } as const)
-    : ({ initial: false } as const)
+/** Element id of the open-source cell; detail dialogs return focus here. */
+export const OPEN_SOURCE_TRIGGER_ID = 'open-source'
 
+interface OpenSourceDialogProps {
+  hue: number
+  open: boolean
+  onOpenChange: (open: boolean) => void
+  onSelectProject: (slug: string) => void
+}
+
+/** Lists the open-source projects; picking one hands off to its detail dialog. */
+export function OpenSourceDialog({
+  hue,
+  open,
+  onOpenChange,
+  onSelectProject,
+}: OpenSourceDialogProps) {
   return (
-    <Dialog>
-      <motion.div
-        className="relative shrink-0 bg-border/45 transition-colors duration-200 in-data-suppress-hover-motion:transition-none has-[button:focus-visible]:z-10 has-[button:focus-visible]:bg-(--hex-accent) has-[button:hover]:bg-(--hex-accent)"
-        style={hexStyle(hue)}
-        {...motionProps}
-      >
-        <HexFill />
-        <DialogTrigger>
-          <button
-            className="group absolute inset-0 flex cursor-pointer flex-col items-center justify-center px-[15%] text-center outline-none"
-            type="button"
-          >
-            <span className="flex items-center gap-1 text-sm font-semibold tracking-tight sm:text-base">
-              Other projects
-              <IconPlus
-                aria-hidden
-                className="hex-hover-accent-dark hex-hover-ink size-3.5 text-muted-foreground/60 transition-all duration-200 group-hover:rotate-90 group-focus-visible:rotate-90 in-data-suppress-hover-motion:transition-none sm:size-4"
-              />
-            </span>
-          </button>
-        </DialogTrigger>
-      </motion.div>
-
-      <DialogContent className="sm:max-w-lg">
-        <DialogTitle>Other projects</DialogTitle>
-        <p className="text-sm text-muted-foreground">Smaller and older side work.</p>
-        <ul className="mt-2 flex flex-col divide-y divide-border">
-          {otherProjects.map((project) => {
-            const RowTag = project.url ? 'a' : 'div'
-            return (
-              <li key={project.name}>
-                <RowTag
-                  className={cn(
-                    'group -mx-2 block rounded-md px-2 py-3 text-inherit no-underline',
-                    project.url
-                      ? 'hover:bg-muted/60 hover:no-underline focus-visible:bg-muted/60 focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none'
-                      : 'cursor-default',
-                  )}
-                  {...(project.url
-                    ? {
-                        href: project.url,
-                        rel: 'noopener noreferrer',
-                        target: '_blank',
-                      }
-                    : {})}
-                >
-                  <span className="flex items-center gap-2">
-                    <span className="font-medium text-foreground group-hover:underline group-hover:underline-offset-4">
-                      {project.name}
-                    </span>
-                    {project.url ? (
-                      <IconArrowUpRight
-                        aria-hidden
-                        className="size-3.5 text-muted-foreground/70 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
-                      />
-                    ) : null}
-                    <span className="ml-auto flex items-center gap-1.5 text-xs text-muted-foreground">
-                      <span
-                        aria-hidden
-                        className={cn('size-1.5 rounded-full', statusDotColor[project.status])}
-                      />
-                      {statusLabel[project.status]}
-                    </span>
-                  </span>
-                  <span className="mt-1 block text-sm text-muted-foreground">
-                    {project.description}
-                  </span>
-                </RowTag>
+    <Dialog open={open} onOpenChange={onOpenChange} triggerId={OPEN_SOURCE_TRIGGER_ID}>
+      <DialogContent className="sm:max-w-lg" style={dialogAccentStyle(hue)}>
+        <div>
+          <DialogTitle className="text-xl font-semibold tracking-tight">Open source</DialogTitle>
+          <span aria-hidden className="mt-2 block h-0.5 w-9 rounded-full bg-(--hex-accent)" />
+        </div>
+        <p className="text-sm text-muted-foreground">Libraries and tools I build in the open.</p>
+        <ul className="flex flex-col divide-y divide-border">
+          {openSourceProjects.map((project) => {
+            const slug = project.slug
+            return slug ? (
+              <li key={slug}>
+                <ProjectRow project={project} onSelect={() => onSelectProject(slug)} />
               </li>
-            )
+            ) : null
           })}
         </ul>
       </DialogContent>
@@ -142,7 +119,7 @@ export function ProjectDetailDialog({
         }
       }}
     >
-      <DialogContent className="sm:max-w-lg" style={{ '--hex-hue': hue } as CSSProperties}>
+      <DialogContent className="sm:max-w-lg" style={dialogAccentStyle(hue)}>
         {project ? (
           <>
             <div className="flex items-start justify-between gap-4">
@@ -213,7 +190,7 @@ export function ProjectDetailDialog({
                   <IconArrowUpRight aria-hidden className="size-4" />
                 </a>
               ) : (
-                <span className="inline-flex items-center gap-1.5 rounded-lg border border-amber-500/40 px-3.5 py-2 text-sm font-medium text-amber-700 dark:text-amber-400">
+                <span className="inline-flex items-center gap-1.5 rounded-lg border border-amber-500/40 px-3.5 py-2 text-sm font-medium text-amber-400">
                   In progress
                 </span>
               )}

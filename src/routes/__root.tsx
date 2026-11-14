@@ -5,11 +5,9 @@ import {
   Outlet,
   Scripts,
 } from '@tanstack/react-router'
-import { ThemeProvider } from 'tanstack-theme-kit'
 
 import { ErrorPage } from '@/components/error-page'
 import { Footer } from '@/components/footer'
-import { Header } from '@/components/header'
 import { HexagonGrid } from '@/components/hexagon-grid'
 import { NotFound } from '@/components/not-found'
 import { siteConfig } from '@/lib/config'
@@ -25,7 +23,7 @@ function RootDocument({
   children: React.ReactNode
 }>) {
   return (
-    <html className="bg-background" dir={textDirection} lang={language}>
+    <html className="dark bg-background" dir={textDirection} lang={language}>
       <head>
         <HeadContent />
       </head>
@@ -39,14 +37,13 @@ function RootDocument({
 
 function RootLayout() {
   return (
-    <ThemeProvider attribute="class">
+    <>
       <HexagonGrid />
-      <Header />
-      <main className="container flex flex-auto py-8">
+      <main className="container flex flex-auto pt-24 pb-8 md:pt-28">
         <Outlet />
       </main>
       <Footer />
-    </ThemeProvider>
+    </>
   )
 }
 

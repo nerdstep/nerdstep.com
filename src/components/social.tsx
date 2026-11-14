@@ -2,7 +2,7 @@ import { socialLinkLitems } from '@/lib/config'
 import { cn } from '@/lib/utils'
 import type { IconElement } from '@/types'
 
-import { Button } from './ui/button'
+import { AnchorButton } from './ui/button'
 
 interface SocialLinkItem {
   icon: IconElement
@@ -19,18 +19,20 @@ interface SocialProps {
 export function Social({ className, items = socialLinkLitems }: SocialProps) {
   return (
     <div className={cn('flex gap-1.5', className)}>
-      {items.map(({ icon, key, label, url }) => (
-        <Button
+      {items.map(({ icon: Icon, key, label, url }) => (
+        <AnchorButton
           key={key}
+          aria-label={label}
           className="rounded-full"
           effect="ringHover"
-          icon={icon}
+          href={url}
+          rel="noopener noreferrer"
           size="icon-lg"
+          target="_blank"
           variant="outline"
-          render={(props) => (
-            <a {...props} aria-label={label} href={url} rel="noopener noreferrer" target="_blank" />
-          )}
-        />
+        >
+          <Icon aria-hidden="true" />
+        </AnchorButton>
       ))}
     </div>
   )

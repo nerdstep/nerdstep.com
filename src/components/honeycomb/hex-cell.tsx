@@ -28,7 +28,6 @@ export const hexStyle = (hue: number): CSSProperties =>
     clipPath: HEX_CLIP,
     '--hex-hue': hue,
     '--hex-accent': 'hsl(var(--hex-hue) 70% 55%)',
-    '--hex-hover-ink': 'hsl(var(--hex-hue) 55% 18%)',
   }) as CSSProperties
 
 /**
@@ -38,20 +37,22 @@ export const hexStyle = (hue: number): CSSProperties =>
  * reserved for labels and the hover/focus rim, where it reads as an accent
  * instead of changing the perceived material from cell to cell.
  *
- * Backdrop blur is desktop-only because the animated particle background makes
- * it expensive on mobile GPUs. Smaller layouts use a more opaque fill instead.
+ * There is deliberately no backdrop blur. The cell's `clip-path` makes it a
+ * backdrop root, so a blur here only ever sees the cell's own rim color, never
+ * the page behind it. It changed nothing visually but made Chrome flicker
+ * when hovering a cell next to another one. Smaller layouts use a more opaque fill.
  */
 export function HexFill() {
   return (
     <>
       <span
         aria-hidden
-        className="absolute inset-0.5 bg-[oklch(0.965_0.004_264.7/0.68)] lg:bg-[oklch(0.965_0.004_264.7/0.52)] lg:backdrop-blur-sm dark:bg-[oklch(0.2_0.038_264.7/0.84)] lg:dark:bg-[oklch(0.2_0.038_264.7/0.64)] lg:dark:backdrop-blur-md"
+        className="absolute inset-0.5 bg-[oklch(0.2_0.038_264.7/0.84)] lg:bg-[oklch(0.2_0.038_264.7/0.64)]"
         style={{ clipPath: HEX_CLIP }}
       />
       <span
         aria-hidden
-        className="absolute inset-0.5 bg-linear-to-br from-white/30 via-transparent to-foreground/6 dark:from-white/12 dark:to-foreground/10"
+        className="absolute inset-0.5 bg-linear-to-br from-white/12 via-transparent to-foreground/10"
         style={{ clipPath: HEX_CLIP }}
       />
     </>
@@ -70,7 +71,13 @@ interface HexProps {
   entrance?: boolean
 }
 
-/** Renders the visual, interaction, and accessibility contract for one cell. */
+/**
+ * Renders the visual, interaction, and accessibility contract for one cell.
+ *
+ * Cell wrappers are rectangles that overlap their neighbors' corners, so they
+ * are `pointer-events-none` and the hex opts back in. Its `clip-path` limits
+ * hit testing to the hexagon, which leaves no dead zone between cells.
+ */
 export function Hex({
   children,
   id,
@@ -83,7 +90,7 @@ export function Hex({
 }: HexProps) {
   const isInteractive = Boolean(href || onSelect || interactive)
   const outerClass = cn(
-    'relative block shrink-0 bg-border/45 transition-colors duration-200 in-data-[suppress-hover-motion]:transition-none',
+    'pointer-events-auto relative block shrink-0 bg-border/45 transition-colors duration-200 in-data-[suppress-hover-motion]:transition-none',
     isInteractive &&
       'hover:bg-(--hex-accent) focus-visible:z-10 focus-visible:bg-(--hex-accent) focus-visible:outline-none',
     isInteractive && 'cursor-pointer',

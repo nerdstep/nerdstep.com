@@ -94,8 +94,24 @@ export function Button({
   )
 }
 
-const CreatedLinkComponent = createLink(Button)
+export type AnchorButtonProps = React.ComponentProps<'a'> & VariantProps<typeof buttonVariants>
 
-export const ButtonLink: LinkComponent<typeof Button> = (props) => {
+/**
+ * A real `<a>` styled like a button. Base UI's Button expects to render a
+ * native `<button>`, so links use this instead to keep link semantics.
+ */
+export function AnchorButton({ className, effect, size, variant, ...props }: AnchorButtonProps) {
+  return (
+    <a
+      data-slot="button"
+      className={cn(buttonVariants({ className, effect, size, variant }))}
+      {...props}
+    />
+  )
+}
+
+const CreatedLinkComponent = createLink(AnchorButton)
+
+export const ButtonLink: LinkComponent<typeof AnchorButton> = (props) => {
   return <CreatedLinkComponent preload="intent" {...props} />
 }
