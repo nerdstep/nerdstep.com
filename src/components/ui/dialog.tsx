@@ -1,6 +1,6 @@
 'use client'
 import { Dialog as DialogPrimitive } from '@base-ui/react/dialog'
-import { XIcon } from 'lucide-react'
+import { IconX } from '@tabler/icons-react'
 
 import { cn } from '@/lib/utils'
 
@@ -83,7 +83,7 @@ function DialogContent({
             data-slot="dialog-close"
             render={<Button variant="ghost" className="absolute top-2 right-2" size="icon-sm" />}
           >
-            <XIcon />
+            <IconX />
             <span className="sr-only">Close</span>
           </DialogPrimitive.Close>
         )}
