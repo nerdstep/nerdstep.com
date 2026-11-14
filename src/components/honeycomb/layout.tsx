@@ -11,6 +11,7 @@ import {
 import { cn } from '@/lib/utils'
 
 import { type HoneycombCellId, honeycombCellIds } from './catalog'
+import { HEX_ENTRANCE_S } from './hex-cell'
 
 const FLOWER_HEX = 210
 const STACK_HEX = 195
@@ -20,7 +21,6 @@ const HEX_GAP = 4
 const HEX_HEIGHT_RATIO = 0.866
 const LG_QUERY = '(min-width: 64rem)'
 const MORPH_MS = 600
-const ENTRANCE_MS = 1200
 
 // The wide flower and narrow stack contain the same cells, regrouped.
 const flowerColumns: HoneycombCellId[][] = [
@@ -34,6 +34,45 @@ const stackColumns: HoneycombCellId[][] = [
   ['intro', 'recipes', 'oss', 'socials', 'thesis'],
   ['logo', 'page', 'garden', 'now'],
 ]
+// Cells enter one at a time along a path of neighboring cells, starting beside
+// the logo (which is painted immediately, since it is the largest image above
+// the fold and animating it would delay Largest Contentful Paint). A cell left
+// out of a sequence appears without an entrance.
+const CASCADE_START_S = 0.1
+const CASCADE_INTERVAL_S = 0.09
+
+// Around the flower's ring past the thesis cell, ending on the profile.
+const flowerEntrance: HoneycombCellId[] = [
+  'recipes',
+  'oss',
+  'socials',
+  'thesis',
+  'now',
+  'garden',
+  'page',
+  'intro',
+]
+// Zigzag down the two stacked columns.
+const stackEntrance: HoneycombCellId[] = [
+  'intro',
+  'recipes',
+  'page',
+  'oss',
+  'garden',
+  'socials',
+  'now',
+  'thesis',
+]
+
+/** Seconds each cell waits before entering, by its place in the sequence. */
+const cascadeDelays = (sequence: HoneycombCellId[]) =>
+  new Map(sequence.map((id, index) => [id, CASCADE_START_S + index * CASCADE_INTERVAL_S]))
+
+/** Orchestration only; delays the wrapped cell's own entrance variants. */
+const cascadeVariants = {
+  visible: (delay: number) => ({ transition: { delayChildren: delay } }),
+}
+
 const layoutVars = (size: number, height?: string) =>
   ({
     '--hex-w': `${size}px`,
@@ -242,26 +281,31 @@ function MorphingHoneycomb({ renderCell, reducedMotion }: MorphingHoneycombProps
   )
 }
 
+const flowerDelays = cascadeDelays(flowerEntrance)
+const stackDelays = cascadeDelays(stackEntrance)
+
+// Hand off to the morphing layout only once the farthest cell has fully entered.
+const ENTRANCE_MS = Math.ceil(
+  (Math.max(...flowerDelays.values(), ...stackDelays.values()) + HEX_ENTRANCE_S) * 1000 + 100,
+)
+
 function StaticHoneycomb({ renderCell, reducedMotion }: MorphingHoneycombProps) {
-  const columnsFor = (columns: HoneycombCellId[][]) =>
-    columns.map((column) => column.map((id) => renderCell(id, true)))
+  const columnsFor = (columns: HoneycombCellId[][], delays: Map<HoneycombCellId, number>) =>
+    columns.map((column) =>
+      column.map((id) => (
+        <m.div key={id} custom={delays.get(id) ?? 0} variants={cascadeVariants}>
+          {renderCell(id, delays.has(id))}
+        </m.div>
+      )),
+    )
 
   return (
-    <m.div
-      className="w-full py-4"
-      initial={reducedMotion ? false : 'hidden'}
-      animate="visible"
-      variants={{
-        visible: {
-          transition: { staggerChildren: 0.07, delayChildren: 0.1 },
-        },
-      }}
-    >
+    <m.div className="w-full py-4" initial={reducedMotion ? false : 'hidden'} animate="visible">
       <div className="hidden lg:block" style={flowerVars}>
-        <HexColumns columns={columnsFor(flowerColumns)} />
+        <HexColumns columns={columnsFor(flowerColumns, flowerDelays)} />
       </div>
       <div className="lg:hidden" style={stackVars}>
-        <HexColumns columns={columnsFor(stackColumns)} />
+        <HexColumns columns={columnsFor(stackColumns, stackDelays)} />
       </div>
     </m.div>
   )

@@ -101,7 +101,7 @@ export function Honeycomb() {
           <HoneycombCell
             key={id}
             id={id}
-            entrance={entrance && id !== 'logo'}
+            entrance={entrance}
             onSelectProject={openProject}
             onSelectSite={() => setSiteDialogOpen(true)}
             onSelectOpenSource={() => setOpenSourceOpen(true)}

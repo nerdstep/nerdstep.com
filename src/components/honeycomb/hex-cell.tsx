@@ -12,12 +12,15 @@ export const hueFor = (index: number) => Math.round(HUE_SEED + index * GOLDEN_AN
 // Flat-top hexagon (matching the background grid).
 export const HEX_CLIP = 'polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%)'
 
+/** Seconds one cell takes to fade and scale in. */
+export const HEX_ENTRANCE_S = 0.35
+
 export const hexCellVariants = {
   hidden: { opacity: 0, scale: 0.8 },
   visible: {
     opacity: 1,
     scale: 1,
-    transition: { duration: 0.35, ease: [0.4, 0, 0.2, 1] },
+    transition: { duration: HEX_ENTRANCE_S, ease: [0.4, 0, 0.2, 1] },
   },
 } as const
 
@@ -52,12 +55,12 @@ export function HexFill() {
     <>
       <span
         aria-hidden
-        className="absolute inset-0.5 bg-[oklch(0.2_0.038_264.7/0.84)] transition-colors duration-200 group-hover/hex:bg-[oklch(0.2_0.038_264.7/0.92)] group-focus-visible/hex:bg-[oklch(0.2_0.038_264.7/0.92)] in-data-[suppress-hover-motion]:transition-none lg:bg-[oklch(0.2_0.038_264.7/0.64)] lg:group-hover/hex:bg-[oklch(0.2_0.038_264.7/0.92)] lg:group-focus-visible/hex:bg-[oklch(0.2_0.038_264.7/0.92)]"
+        className="absolute inset-0.5 bg-[oklch(0.2_0.038_264.7/0.84)] transition-colors duration-200 group-hover/hex:bg-[oklch(0.2_0.038_264.7/0.92)] group-focus-visible/hex:bg-[oklch(0.2_0.038_264.7/0.92)] in-data-suppress-hover-motion:transition-none lg:bg-[oklch(0.2_0.038_264.7/0.64)] lg:group-hover/hex:bg-[oklch(0.2_0.038_264.7/0.92)] lg:group-focus-visible/hex:bg-[oklch(0.2_0.038_264.7/0.92)]"
         style={{ clipPath: HEX_CLIP }}
       />
       <span
         aria-hidden
-        className="absolute inset-0.5 bg-[radial-gradient(ellipse_90%_55%_at_50%_100%,color-mix(in_oklab,var(--hex-accent)_28%,transparent),transparent)] opacity-0 transition-opacity duration-200 group-hover/hex:opacity-100 group-focus-visible/hex:opacity-100 in-data-[suppress-hover-motion]:transition-none"
+        className="absolute inset-0.5 bg-[radial-gradient(ellipse_90%_55%_at_50%_100%,color-mix(in_oklab,var(--hex-accent)_28%,transparent),transparent)] opacity-0 transition-opacity duration-200 group-hover/hex:opacity-100 group-focus-visible/hex:opacity-100 in-data-suppress-hover-motion:transition-none"
         style={{ clipPath: HEX_CLIP }}
       />
       <span
