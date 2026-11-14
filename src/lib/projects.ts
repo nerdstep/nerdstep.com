@@ -6,6 +6,16 @@ export type ProjectStatus = 'live' | 'wip'
 export type ProjectKind = 'product' | 'oss' | 'personal'
 export type ProjectSummary = string | readonly string[]
 
+export interface ProjectScreenshot {
+  /** Image URL, also used as the fallback when `srcSet` isn't supported. */
+  src: string
+  srcSet?: string
+  /** Intrinsic size, so the dialog reserves space before the image loads. */
+  width: number
+  height: number
+  alt: string
+}
+
 export interface Project {
   name: string
   /** URL-safe id; drives the `?p=<slug>` detail deep-link. */
@@ -24,7 +34,13 @@ export interface Project {
   role?: string
   /** Tech tags shown in the detail meta row. */
   stack?: string[]
+  /** Square app icon, shown on the cell, in lists, and in the detail dialog. */
+  icon?: string
+  /** Screenshot shown in the detail dialog. */
+  screenshot?: ProjectScreenshot
 }
+
+const img = (file: string) => `/img/projects/${file}`
 
 export const siteProject: Project = {
   name: 'nerdstep.com',
@@ -56,6 +72,14 @@ export const projects: Project[] = [
     ],
     role: 'creator',
     stack: ['TypeScript', 'React', 'TanStack', 'Cloudflare Workers/D1/R2/KV'],
+    icon: img('mostly-recipes.svg'),
+    screenshot: {
+      src: img('mostly-recipes-800.webp'),
+      srcSet: `${img('mostly-recipes-800.webp')} 800w, ${img('mostly-recipes-1600.webp')} 1600w`,
+      width: 1600,
+      height: 1000,
+      alt: 'The Mostly Recipes library, a grid of saved dessert recipes with photos, ratings, and cook times',
+    },
   },
   {
     name: 'mostly.page',
@@ -71,6 +95,14 @@ export const projects: Project[] = [
     ],
     role: 'creator',
     stack: ['TypeScript', 'React', 'TanStack', 'Cloudflare Workers/D1/R2/KV'],
+    icon: img('mostly-page.svg'),
+    screenshot: {
+      src: img('mostly-page-800.webp'),
+      srcSet: `${img('mostly-page-800.webp')} 800w, ${img('mostly-page-1200.webp')} 1200w`,
+      width: 1200,
+      height: 900,
+      alt: 'A Mostly Page dashboard on a tablet, with news feeds, weather, world clocks, a timer, and a to-do list',
+    },
   },
   {
     name: 'mostly.garden',
@@ -87,6 +119,7 @@ export const projects: Project[] = [
     ],
     role: 'creator',
     stack: ['TypeScript', 'React', 'TanStack', 'Cloudflare Workers/D1/R2/KV'],
+    icon: img('mostly-garden.svg'),
   },
 ]
 
@@ -107,6 +140,7 @@ export const openSourceProjects: Project[] = [
     ],
     role: 'creator / maintainer',
     stack: ['Bun', 'TypeScript'],
+    icon: img('recipe-scrapers.svg'),
   },
   {
     name: 'startune',
@@ -122,6 +156,14 @@ export const openSourceProjects: Project[] = [
     ],
     role: 'creator',
     stack: ['TypeScript', 'React', 'Hono', 'Cloudflare Workers/D1', 'Workers AI'],
+    icon: img('startune.svg'),
+    screenshot: {
+      src: img('startune-800.webp'),
+      srcSet: `${img('startune-800.webp')} 800w, ${img('startune-1600.webp')} 1600w`,
+      width: 1600,
+      height: 1000,
+      alt: 'The StarTune overview, with every star plotted in a 3D field beside health-by-class readouts',
+    },
   },
   {
     name: 'manifesto',
@@ -137,6 +179,14 @@ export const openSourceProjects: Project[] = [
     ],
     role: 'creator',
     stack: ['TypeScript', 'Bun', 'Electrobun', 'Preact'],
+    icon: img('manifesto.svg'),
+    screenshot: {
+      src: img('manifesto-800.webp'),
+      srcSet: `${img('manifesto-800.webp')} 800w, ${img('manifesto-1280.webp')} 1280w`,
+      width: 1280,
+      height: 880,
+      alt: 'The Manifesto desktop app processing logo.svg, with its build pipeline and icon previews in context',
+    },
   },
   {
     name: 'ismjs',
@@ -152,6 +202,7 @@ export const openSourceProjects: Project[] = [
     ],
     role: 'creator',
     stack: ['TypeScript'],
+    icon: img('ismjs.svg'),
   },
 ]
 

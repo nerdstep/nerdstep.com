@@ -10,7 +10,6 @@ import { lazy, Suspense, useEffect, useState } from 'react'
 
 import { openSourceProjects, type Project, projects, siteProject } from '@/lib/projects'
 
-import { OPEN_SOURCE_TRIGGER_ID } from './honeycomb/catalog'
 import { FEATURED_HUES, HoneycombCell, OSS_HUE, SITE_HUE } from './honeycomb/cells'
 import { type GlowHues, HoneycombLayout } from './honeycomb/layout'
 
@@ -32,34 +31,32 @@ const glowHues: GlowHues = {
   oss: OSS_HUE,
 }
 
-interface DeepLinkable {
+interface FeaturedEntry {
   project: Project
   hue: number
   /** Element that opened the dialog and gets focus back when it closes. */
   triggerId: string
 }
 
-// Every project reachable through `?p=<slug>`: featured cells open their own
-// dialog, open-source projects open from the open-source cell's list.
-const deepLinkable: DeepLinkable[] = [
-  ...projects.map((project, index) => ({
+// Every project is reachable through `?p=<slug>`. Featured cells open their own
+// detail dialog; open-source projects open the open-source list with that
+// project expanded.
+const featured: FeaturedEntry[] = projects
+  .filter((project) => project.slug)
+  .map((project, index) => ({
     project,
     hue: FEATURED_HUES[index] ?? OSS_HUE,
     triggerId: `project-${project.slug}`,
-  })),
-  ...openSourceProjects.map((project) => ({
-    project,
-    hue: OSS_HUE,
-    triggerId: OPEN_SOURCE_TRIGGER_ID,
-  })),
-].filter((entry) => entry.project.slug)
+  }))
+const openSourceSlugs = new Set(openSourceProjects.map((project) => project.slug))
 
 export function Honeycomb() {
   const [siteDialogOpen, setSiteDialogOpen] = useState(false)
   const [openSourceOpen, setOpenSourceOpen] = useState(false)
   const navigate = useNavigate({ from: '/' })
   const { p } = useSearch({ from: '/' })
-  const selected = p ? deepLinkable.find((entry) => entry.project.slug === p) : undefined
+
+  const selected = p ? featured.find((entry) => entry.project.slug === p) : undefined
   // Keep showing the last project while its dialog animates closed, and keep
   // `triggerId` controlled (never back to undefined) so focus returns to it.
   const [lastSelected, setLastSelected] = useState(selected)
@@ -67,19 +64,37 @@ export function Honeycomb() {
     setLastSelected(selected)
   }
   const shown = selected ?? lastSelected
+
+  const expandedOss = p && openSourceSlugs.has(p) ? p : null
+  const openSourceShown = openSourceOpen || expandedOss !== null
+  // Likewise keep the expanded project open while the list animates closed.
+  const [lastExpanded, setLastExpanded] = useState(expandedOss)
+  if (expandedOss !== null && expandedOss !== lastExpanded) {
+    setLastExpanded(expandedOss)
+  }
+
   // Mount the dialogs the first time one is wanted, then keep them mounted so
   // they can animate closed.
   const [dialogsMounted, setDialogsMounted] = useState(false)
-  if (!dialogsMounted && (siteDialogOpen || openSourceOpen || selected)) {
+  if (!dialogsMounted && (siteDialogOpen || openSourceShown || selected)) {
     setDialogsMounted(true)
   }
 
-  const openProject = (slug: string) => {
-    setOpenSourceOpen(false)
-    void navigate({ search: (previous) => ({ ...previous, p: slug }) })
+  const setProjectParam = (slug: string | null, replace = false) => {
+    void navigate({ search: (previous) => ({ ...previous, p: slug ?? undefined }), replace })
   }
-  const closeProject = () => {
-    void navigate({ search: (previous) => ({ ...previous, p: undefined }) })
+  // Expanding or collapsing replaces the history entry, so Back leaves the list
+  // instead of stepping through every project that was opened in it.
+  const expandOpenSource = (slug: string | null) => {
+    setOpenSourceOpen(true)
+    setLastExpanded(slug)
+    setProjectParam(slug, true)
+  }
+  const setOpenSourceDialog = (open: boolean) => {
+    setOpenSourceOpen(open)
+    if (!open && expandedOss) {
+      setProjectParam(null, true)
+    }
   }
 
   // Fetch the dialog chunk once the page is idle so the first click is instant.
@@ -94,13 +109,13 @@ export function Honeycomb() {
 
   // Remove stale deep links so renamed or mistyped project slugs do not linger.
   useEffect(() => {
-    if (p && !selected) {
+    if (p && !selected && !expandedOss) {
       void navigate({
         search: (previous) => ({ ...previous, p: undefined }),
         replace: true,
       })
     }
-  }, [p, selected, navigate])
+  }, [p, selected, expandedOss, navigate])
 
   return (
     <>
@@ -111,7 +126,7 @@ export function Honeycomb() {
             key={id}
             id={id}
             entrance={entrance}
-            onSelectProject={openProject}
+            onSelectProject={(slug) => setProjectParam(slug)}
             onSelectSite={() => setSiteDialogOpen(true)}
             onSelectOpenSource={() => setOpenSourceOpen(true)}
           />
@@ -121,15 +136,16 @@ export function Honeycomb() {
         <Suspense fallback={null}>
           <OpenSourceDialog
             hue={OSS_HUE}
-            open={openSourceOpen}
-            onOpenChange={setOpenSourceOpen}
-            onSelectProject={openProject}
+            open={openSourceShown}
+            onOpenChange={setOpenSourceDialog}
+            expanded={openSourceShown ? expandedOss : lastExpanded}
+            onExpandedChange={expandOpenSource}
           />
           <ProjectDetailDialog
             project={shown?.project ?? null}
             hue={shown?.hue ?? OSS_HUE}
             open={selected !== undefined}
-            onClose={closeProject}
+            onClose={() => setProjectParam(null)}
             triggerId={shown?.triggerId ?? null}
           />
           <ProjectDetailDialog

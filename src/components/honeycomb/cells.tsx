@@ -6,6 +6,7 @@ import { intro, openSourceProjects, type Project, projects } from '@/lib/project
 
 import { type HoneycombCellId, OPEN_SOURCE_TRIGGER_ID, projectKindLabel } from './catalog'
 import { Hex, hueFor } from './hex-cell'
+import { ProjectIcon } from './project-icon'
 
 interface ContentCellProps {
   hue: number
@@ -47,10 +48,15 @@ function ProjectHex({
       onSelect={slug ? () => onSelect(slug) : undefined}
       label={`Open ${project.name} details`}
     >
-      <span className="hex-kind text-[0.8125rem] font-medium tracking-tight lowercase">
-        {projectKindLabel[project.kind]}
-      </span>
-      <span className="mt-1 flex max-w-full min-w-0 flex-wrap items-center justify-center gap-1 text-sm font-semibold tracking-tight wrap-break-word sm:text-base">
+      {/* The app icon says more than a "product" label repeated on every cell. */}
+      {project.icon ? (
+        <ProjectIcon project={project} className="size-8 sm:size-9" />
+      ) : (
+        <span className="hex-kind text-[0.8125rem] font-medium tracking-tight lowercase">
+          {projectKindLabel[project.kind]}
+        </span>
+      )}
+      <span className="mt-2 flex max-w-full min-w-0 flex-wrap items-center justify-center gap-1 text-sm font-semibold tracking-tight wrap-break-word sm:text-base">
         {project.name}
         <IconPlus
           aria-hidden
